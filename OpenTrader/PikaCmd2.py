@@ -16,7 +16,7 @@ sub run timer# retval.#  - start a thread listening for messages: timer,tick,ret
 pub cmd AccountBalance   - to send a command to OTMql4Pika,
                          the return will be a retval message on the listener
 sub hide timer           - stop seeing timer messages (just see the retval.#)
-orders list              - list your open order tickets
+order list              - list your open order tickets
 """
 
 sCHART__doc__ = """
@@ -67,7 +67,8 @@ sORD__doc__ = """
   ord info iTicket  - list the current order information about iTicket.
   ord trades        - list the details of current orders.
   ord history       - list the details of closed orders.
-  ord close         - close the order with arguments: iTicket fPrice iSlippage
+  ord close iTicket [fPrice iSlippage]            - close an order;
+                    Without the fPrice and iSlippage it will be a market order.
   ord buy|sell sSymbol fVolume [fPrice iSlippage] - send an order to open;
                     Without the fPrice and iSlippage it will be a market order.
   ord stoploss
@@ -121,43 +122,6 @@ _dCHARTS = {}
 
 class MqlError(Exception):
     pass
-
-def gRetvalToPython(lElts):
-    # raises MqlError
-    global dPENDING
-
-    sType = lElts[4]
-    sVal = lElts[5]
-    if sVal == "":
-        return ""
-    if sType == 'string':
-        gRetval = sVal
-    elif sType == 'error':
-        #? should I raise an error?
-        raise MqlError(sVal)
-    elif sType == 'datetime':
-        #? how do I convert this
-        # I think it's epoch seconds as an int
-        # but what TZ? TZ of the server?
-        # I'll treat it as a float like time.time()
-        # but probably better to convert it to datetime
-        gRetval = float(sVal)
-    elif sType == 'bool':
-        gRetval = bool(sVal)
-    elif sType == 'int':
-        gRetval = int(sVal)
-    elif sType == 'json':
-        gRetval = json.loads(sVal)
-    elif sType == 'double':
-        gRetval = float(sVal)
-    elif sType == 'none':
-        gRetval = None
-    elif sType == 'void':
-        gRetval = None
-    else:
-        sys.stdout.write("WARN: unknown type %s in %r\n" % (sType, lElts,))
-        gRetval = None
-    return gRetval
 
 # should do something better if there are multiple clients
 def sMakeMark():
@@ -477,7 +441,7 @@ class CmdLineApp(Cmd):
         
     do_publish = do_pub
     
-    ## orders
+    ## order
     @options([make_option("-c", "--chart",
                             dest="sChartId",
                             help="the target chart to order with (or: ANY ALL NONE)"),
@@ -558,12 +522,17 @@ class CmdLineApp(Cmd):
         
         if lArgs[0] == 'close':
             sMsgType = 'cmd' # Mt4 command
-            sCmd='iOTOrderCloseFull'
-            assert len(lArgs) == 4, "ERROR: order close iTicket fPrice iSlippage"
-            sArg1 = lArgs[1]
-            sArg2 = lArgs[2]
-            sArg3 = lArgs[3]
-            sMsg = sFormatMessage(sMsgType, sChartId, sCmd, sArg1, sArg2, sArg3)
+            assert len(lArgs) >= 2, "ERROR: order close iTicket [fPrice iSlippage}"
+            sTicket = lArgs[1]
+            if len(lArgs) >= 3:
+                sPrice = lArgs[2]
+                sSlippage = lArgs[3]
+                sCmd='iOTOrderCloseFull'
+                sMsg = sFormatMessage(sMsgType, sChartId, sCmd, sTicket, sPrice, sSlippage)
+            else:
+                sCmd='iOTOrderCloseMarket'
+                sMsg = sFormatMessage(sMsgType, sChartId, sCmd, sTicket)
+                
             self.vDebug("Ordering: " +sMsg)
             self.eSendOnSpeaker(sChartId, sMsgType, sMsg)
             # FixMe: Tag with sMark
@@ -601,7 +570,6 @@ class CmdLineApp(Cmd):
         self.vError("Unrecognized order command: " + str(oArgs) +'\n' +__doc__)
         
     do_order = do_ord
-    do_orders = do_ord
     
     # backtest
     @options([make_option("-b", "--backtester",

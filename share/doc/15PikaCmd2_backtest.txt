@@ -1,0 +1,33 @@
+### PikaCmd2 backtest
+
+back feed dir
+back feed dir dirname
+
+back feed read_mt4_csv SYMBOL TIMEFRAME [YEAR]
+back feed read_yahoo_csv SYMBOL [STARTYEAR]
+back feed info
+back feed plot
+
+back recipe list
+back recipe set
+back recipe show
+
+back results signals
+back results trades
+back results positions
+back results equity
+back results summary
+back results display
+
+back plot show
+back plot set
+back plot trades
+back plot equity
+
+Usage: back [options] command
+
+Options:
+  -h, --help            show this help message and exit
+  -b SBACKTESTER, --backtester=SBACKTESTER
+                        the backtest package (one of: pybacktest)
+

@@ -1,0 +1,18 @@
+### PikaCmd2 publish
+
+Publish a message via RabbitMQ to a given chart on a OTMql4Py enabled terminal:
+  pub cmd  COMMAND ARG1 ... - publish a Mql command to Mt4,
+      the command should be a single string, with a space seperating arguments.
+  pub eval COMMAND ARG1 ... - publish a Python command to the OTMql4Py,
+      the command should be a single string, with a space seperating arguments.
+
+You wont see the return value unless you have already done a:
+  sub run retval.#
+
+Usage: pub [options] command
+
+Options:
+  -h, --help            show this help message and exit
+  -c SCHARTID, --chart=SCHARTID
+                        the target chart to publish to (or: ANY ALL NONE)
+

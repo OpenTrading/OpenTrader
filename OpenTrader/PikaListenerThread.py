@@ -22,6 +22,7 @@ class PikaListenerThread(threading.Thread, PikaListener.PikaMixin):
         self.lCharts = []
         self.jLastRetval = []
         self.jLastTick = []
+        self.jLastBar = []
         self.gLastTimer = []
         self._running = threading.Event()
         if not lTopics:
@@ -41,7 +42,8 @@ class PikaListenerThread(threading.Thread, PikaListener.PikaMixin):
             except exceptions.ConnectionClosed, e:
                 #? are these spurious
                 #? should we look at self.oListenerChannel.connection
-                sys.stdout.write("DEBUG: ignoring exception on listener " +str(e) +"\n")
+                sys.stdout.write("DEBUG: stopping due to exception " +str(e) +"\n")
+                self.stop()
             except (exceptions.ConsumerCancelled, KeyboardInterrupt,), e:
                 sys.stdout.write("DEBUG: stopping listener thread " +str(e) +"\n")
                 self.stop()
@@ -103,6 +105,13 @@ class PikaListenerThread(threading.Thread, PikaListener.PikaMixin):
             if sMsgType == 'retval':
                 gPayload = gRetvalToPython(lArgs)
                 self.jLastRetval = gPayload
+            elif sMsgType == 'bar':
+                assert sPayloadType == 'json', \
+                    sMsgType +" sPayloadType expected 'json' not " \
+                    +sPayloadType +"\n" +sBody
+                # can use this to find the current bid and ask
+                gPayload =json.loads(lArgs[5])
+                self.jLastBar = gPayload
             elif sMsgType == 'tick':
                 assert sPayloadType == 'json', \
                     sMsgType +" sPayloadType expected 'json' not " \
@@ -123,6 +132,44 @@ class PikaListenerThread(threading.Thread, PikaListener.PikaMixin):
             self.vPprint(sMsgType, gPayload)
         except Exception, e:
             sys.stderr.write(traceback.format_exc(10) +"\n")
+
+def gRetvalToPython(lElts):
+    # raises MqlError
+    global dPENDING
+
+    sType = lElts[4]
+    sVal = lElts[5]
+    if sVal == "":
+        return ""
+    if sType == 'string':
+        gRetval = sVal
+    elif sType == 'error':
+        #? should I raise an error?
+        raise MqlError(sVal)
+    elif sType == 'datetime':
+        #? how do I convert this
+        # I think it's epoch seconds as an int
+        # but what TZ? TZ of the server?
+        # I'll treat it as a float like time.time()
+        # but probably better to convert it to datetime
+        gRetval = float(sVal)
+    elif sType == 'bool':
+        gRetval = bool(sVal)
+    elif sType == 'int':
+        gRetval = int(sVal)
+    elif sType == 'json':
+        gRetval = json.loads(sVal)
+    elif sType == 'double':
+        gRetval = float(sVal)
+    elif sType == 'none':
+        gRetval = None
+    elif sType == 'void':
+        gRetval = None
+    else:
+        sys.stdout.write("WARN: unknown type %s in %r\n" % (sType, lElts,))
+        gRetval = None
+    return gRetval
+
 
 if __name__ == '__main__':
     o = None
