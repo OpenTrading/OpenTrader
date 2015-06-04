@@ -1,0 +1,30 @@
+commit 595f3ff2f3348c7b3bc5a14844b9bf128487ed67
+Date:   Thu Jun 4 23:52:40 2015 +0300
+
+    Fixed formatting a little more.
+
+commit 4c7abed70d25840cc879c7f29fa53fc62e7260c1
+Date:   Thu Jun 4 23:44:43 2015 +0300
+
+    Fixed some of the documentation formatting.
+
+commit 1dd8b4d1cc0065e6189da70274976c321aef07b0
+Date:   Thu Jun 4 23:27:35 2015 +0300
+
+    Restructure as a package and add generated help.
+
+commit 640928e2cdac2529e72a455d0134abcdf104a446
+Date:   Thu Jun 4 16:56:13 2015 +0300
+
+    Checkin OpenTrader/PikaListenerThread.py to get the command interaction
+    with OTMql4Py over RabbitMQ.
+
+commit 48fa42ab6c26d6455236abd5a14de1b40591a0c7
+Date:   Thu Jun 4 16:50:59 2015 +0300
+
+    Initial commit with files moved over from OTMql4Py and OTMql4AMQP.
+
+commit ace5de11eeb82ad69cc767be5ad4d162f081b157
+Date:   Wed Jun 3 12:23:55 2015 +0000
+
+    Initial commit

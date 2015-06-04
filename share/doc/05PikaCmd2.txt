@@ -1,0 +1,62 @@
+## PikaCmd2.py
+
+This script can be run from the command line to send commands
+to a OTMql4AMQP enabled Metatrader. It will start a command loop to
+listen, send commands, or query the RabbitMQ management interface, based 
+on the cmd2 REPL: see cmd2plus.py in `OpenTrader`
+
+Type help at the command prompt to get more help.
+
+Call the script with `--help` to see the script options.
+
+The normal usage is:
+```
+sub run timer# retval.#  - start a thread listening for messages: timer,tick,retval
+pub cmd AccountBalance   - to send a command to OTMql4Pika,
+                         the return will be a retval message on the listener
+sub hide timer           - stop seeing timer messages (just see the retval.#)
+orders list              - list your open order tickets
+```
+
+Use the `chart` command to
+set and query the chart used for messages to and from RabbitMQ.
+The chart ID will look something like: oChart_EURGBP_240_93ACD6A2_1
+
+Use the `subscribe` command to suscribe to RabbitMQ topics from the
+`OTPyTestPikaEA.mq4` expert advisor.
+Common RabbitMQ topic patterns are: # for all messages, tick.# for ticks,
+timer.# for timer events, retval.# for return values.
+You can choose as specific chart with syntax like:
+```
+    tick.oChart.EURGBP.240.93ACD6A2.#
+```
+
+Use the `publish` command to publish a message via RabbitMQ to a given chart
+on a OTMql4Py enabled terminal running the `OTPyTestPikaEA.mq4` expert advisor.
+See the library files `MQL4/Libraries/OTMql4OTLibProcessCmd.mq4`
+and `OTLibMt4ProcessCmd.mq4` in the OTMql4Py package for the commands
+that are supported.
+
+Use the `orders` to list, query, open and close orders in Mt4.
+
+If you have `pyrabbit` installed, and iff the rabbitmq_management plugin
+has been installed in your server, you can introspect some useful
+information if the HTTP interface is enabled with the `rabbit` command.
+
+### Messaging Format
+
+The messaging to and from OTMql4Py is still being done with a
+very simple format:
+```
+      sMsgType|sChartId|sIgnored|sMark|sPayload
+```
+where
+```
+      sMsgType is one of: cmd eval (outgoing), timer tick retval (incoming);
+      sChartId is the Mt4 chart sChartId the message is to or from;
+      sMark is a simple floating point timestamp, with milliseconds;
+and   sPayload is command|arg1|arg2... (outgoing) or type|value (incoming),
+      where type is one of: bool int double string json.
+```
+This breaks if the sPayload args or value contain a | -
+we will probably replace this with json or pickled serialization, or kombu.
