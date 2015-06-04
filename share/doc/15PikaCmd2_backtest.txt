@@ -24,6 +24,7 @@ back plot set
 back plot trades
 back plot equity
 
+```
 Usage: back [options] command
 
 Options:
@@ -31,3 +32,4 @@ Options:
   -b SBACKTESTER, --backtester=SBACKTESTER
                         the backtest package (one of: pybacktest)
 
+```

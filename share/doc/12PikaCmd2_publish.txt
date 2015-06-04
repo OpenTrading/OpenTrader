@@ -9,6 +9,7 @@ Publish a message via RabbitMQ to a given chart on a OTMql4Py enabled terminal:
 You wont see the return value unless you have already done a:
   sub run retval.#
 
+```
 Usage: pub [options] command
 
 Options:
@@ -16,3 +17,4 @@ Options:
   -c SCHARTID, --chart=SCHARTID
                         the target chart to publish to (or: ANY ALL NONE)
 
+```

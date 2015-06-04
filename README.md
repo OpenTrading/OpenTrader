@@ -62,20 +62,6 @@ the important pages back into the documentation in the share/doc directory.
 You will need to be signed into github.com to see or edit in the wiki.
 
 
-## PikaCmd2
-
-Documented commands (type help <topic>):
-========================================
-_load           chart           history  ord     publish  save       sub      
-_relative_load  cmdenvironment  l        order   py       set        subscribe
-bac             ed              li       orders  r        shell    
-back            edit            list     pause   rabbit   shortcuts
-backtest        hi              load     pub     run      show     
-
-Undocumented commands:
-======================
-EOF  eof  exit  help  q  quit
-
 ### PikaCmd2 subscribe
 
 Subscribe to messages from RabbitMQ on a given topic:
@@ -95,6 +81,7 @@ timer.# for timer events, retval.# for return values.
 You can choose as specific chart with syntax like:
     tick.oChart.EURGBP.240.93ACD6A2.#
 
+```
 Usage: sub [options] command
 
 Options:
@@ -102,6 +89,7 @@ Options:
   -c SCHARTID, --chart=SCHARTID
                         the target chart to subscribe to
 
+```
 ### PikaCmd2 publish
 
 Publish a message via RabbitMQ to a given chart on a OTMql4Py enabled terminal:
@@ -113,6 +101,7 @@ Publish a message via RabbitMQ to a given chart on a OTMql4Py enabled terminal:
 You wont see the return value unless you have already done a:
   sub run retval.#
 
+```
 Usage: pub [options] command
 
 Options:
@@ -120,6 +109,7 @@ Options:
   -c SCHARTID, --chart=SCHARTID
                         the target chart to publish to (or: ANY ALL NONE)
 
+```
 ### PikaCmd2 chart
 
 Set and query the chart used for messages to and from RabbitMQ:
@@ -132,11 +122,13 @@ Set and query the chart used for messages to and from RabbitMQ:
 
 The chart ID will look something like: oChart_EURGBP_240_93ACD6A2_1
 
+```
 Usage: chart [options] command
 
 Options:
   -h, --help  show this help message and exit
 
+```
 ### PikaCmd2 order
 
   ord list          - list the ticket numbers of current orders.
@@ -152,6 +144,7 @@ Options:
   ord exposure      - total exposure of all orders, worst case scenario
   
 
+```
 Usage: ord [options] command
 
 Options:
@@ -159,6 +152,7 @@ Options:
   -c SCHARTID, --chart=SCHARTID
                         the target chart to order with (or: ANY ALL NONE)
 
+```
 ### PikaCmd2 backtest
 
 back feed dir
@@ -185,6 +179,7 @@ back plot set
 back plot trades
 back plot equity
 
+```
 Usage: back [options] command
 
 Options:
@@ -192,6 +187,7 @@ Options:
   -b SBACKTESTER, --backtester=SBACKTESTER
                         the backtest package (one of: pybacktest)
 
+```
 ### PikaCmd2 rabbit
 
 If we have pyrabbit installed, and iff the rabbitmq_management plugin
@@ -199,6 +195,7 @@ has been installed in your server, we can introspect some useful
 information if the HTTP interface is enabled. Commands include:
     get vhost_names|channels|connections|queues
 
+```
 Usage: rabbit [options] command
 
 Options:
@@ -210,3 +207,4 @@ Options:
                         the TCP port of the HTTP rabbitmq_management plugin
                         (default 15672)
 
+```

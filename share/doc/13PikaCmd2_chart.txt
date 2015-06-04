@@ -10,8 +10,10 @@ Set and query the chart used for messages to and from RabbitMQ:
 
 The chart ID will look something like: oChart_EURGBP_240_93ACD6A2_1
 
+```
 Usage: chart [options] command
 
 Options:
   -h, --help  show this help message and exit
 
+```

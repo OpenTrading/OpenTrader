@@ -5,6 +5,7 @@ has been installed in your server, we can introspect some useful
 information if the HTTP interface is enabled. Commands include:
     get vhost_names|channels|connections|queues
 
+```
 Usage: rabbit [options] command
 
 Options:
@@ -16,3 +17,4 @@ Options:
                         the TCP port of the HTTP rabbitmq_management plugin
                         (default 15672)
 
+```

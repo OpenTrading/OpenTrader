@@ -13,6 +13,7 @@
   ord exposure      - total exposure of all orders, worst case scenario
   
 
+```
 Usage: ord [options] command
 
 Options:
@@ -20,3 +21,4 @@ Options:
   -c SCHARTID, --chart=SCHARTID
                         the target chart to order with (or: ANY ALL NONE)
 
+```
