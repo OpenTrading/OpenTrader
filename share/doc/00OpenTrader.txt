@@ -1,7 +1,4 @@
 # OpenTrader
-## Open Trader
-
-# OpenTrader
 
 OpenTrader
 
