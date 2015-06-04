@@ -1,11 +1,11 @@
 ### PikaCmd2 rabbit
+```
 
 If we have pyrabbit installed, and iff the rabbitmq_management plugin
 has been installed in your server, we can introspect some useful
 information if the HTTP interface is enabled. Commands include:
     get vhost_names|channels|connections|queues
 
-```
 Usage: rabbit [options] command
 
 Options:

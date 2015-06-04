@@ -1,4 +1,5 @@
 ### PikaCmd2 publish
+```
 
 Publish a message via RabbitMQ to a given chart on a OTMql4Py enabled terminal:
   pub cmd  COMMAND ARG1 ... - publish a Mql command to Mt4,
@@ -9,7 +10,6 @@ Publish a message via RabbitMQ to a given chart on a OTMql4Py enabled terminal:
 You wont see the return value unless you have already done a:
   sub run retval.#
 
-```
 Usage: pub [options] command
 
 Options:

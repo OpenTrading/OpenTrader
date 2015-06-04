@@ -1,4 +1,5 @@
 ### PikaCmd2 order
+```
 
   ord list          - list the ticket numbers of current orders.
   ord info iTicket  - list the current order information about iTicket.
@@ -13,7 +14,6 @@
   ord exposure      - total exposure of all orders, worst case scenario
   
 
-```
 Usage: ord [options] command
 
 Options:

@@ -1,14 +1,1 @@
 ## PikaCmd2
-
-Documented commands (type help <topic>):
-========================================
-_load           chart           history  ord     publish  save       sub      
-_relative_load  cmdenvironment  l        order   py       set        subscribe
-bac             ed              li       orders  r        shell    
-back            edit            list     pause   rabbit   shortcuts
-backtest        hi              load     pub     run      show     
-
-Undocumented commands:
-======================
-EOF  eof  exit  help  q  quit
-

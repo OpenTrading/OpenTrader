@@ -62,7 +62,9 @@ the important pages back into the documentation in the share/doc directory.
 You will need to be signed into github.com to see or edit in the wiki.
 
 
+## PikaCmd2
 ### PikaCmd2 subscribe
+```
 
 Subscribe to messages from RabbitMQ on a given topic:
   sub topics            - shows topics subscribed to.
@@ -81,7 +83,6 @@ timer.# for timer events, retval.# for return values.
 You can choose as specific chart with syntax like:
     tick.oChart.EURGBP.240.93ACD6A2.#
 
-```
 Usage: sub [options] command
 
 Options:
@@ -91,6 +92,7 @@ Options:
 
 ```
 ### PikaCmd2 publish
+```
 
 Publish a message via RabbitMQ to a given chart on a OTMql4Py enabled terminal:
   pub cmd  COMMAND ARG1 ... - publish a Mql command to Mt4,
@@ -101,7 +103,6 @@ Publish a message via RabbitMQ to a given chart on a OTMql4Py enabled terminal:
 You wont see the return value unless you have already done a:
   sub run retval.#
 
-```
 Usage: pub [options] command
 
 Options:
@@ -111,6 +112,7 @@ Options:
 
 ```
 ### PikaCmd2 chart
+```
 
 Set and query the chart used for messages to and from RabbitMQ:
   list   - all the charts the listener has heard of,
@@ -122,7 +124,6 @@ Set and query the chart used for messages to and from RabbitMQ:
 
 The chart ID will look something like: oChart_EURGBP_240_93ACD6A2_1
 
-```
 Usage: chart [options] command
 
 Options:
@@ -130,6 +131,7 @@ Options:
 
 ```
 ### PikaCmd2 order
+```
 
   ord list          - list the ticket numbers of current orders.
   ord info iTicket  - list the current order information about iTicket.
@@ -144,7 +146,6 @@ Options:
   ord exposure      - total exposure of all orders, worst case scenario
   
 
-```
 Usage: ord [options] command
 
 Options:
@@ -153,49 +154,15 @@ Options:
                         the target chart to order with (or: ANY ALL NONE)
 
 ```
-### PikaCmd2 backtest
-
-back feed dir
-back feed dir dirname
-
-back feed read_mt4_csv SYMBOL TIMEFRAME [YEAR]
-back feed read_yahoo_csv SYMBOL [STARTYEAR]
-back feed info
-back feed plot
-
-back recipe list
-back recipe set
-back recipe show
-
-back results signals
-back results trades
-back results positions
-back results equity
-back results summary
-back results display
-
-back plot show
-back plot set
-back plot trades
-back plot equity
-
-```
-Usage: back [options] command
-
-Options:
-  -h, --help            show this help message and exit
-  -b SBACKTESTER, --backtester=SBACKTESTER
-                        the backtest package (one of: pybacktest)
-
 ```
 ### PikaCmd2 rabbit
+```
 
 If we have pyrabbit installed, and iff the rabbitmq_management plugin
 has been installed in your server, we can introspect some useful
 information if the HTTP interface is enabled. Commands include:
     get vhost_names|channels|connections|queues
 
-```
 Usage: rabbit [options] command
 
 Options:

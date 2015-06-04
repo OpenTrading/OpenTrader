@@ -1,4 +1,5 @@
 ### PikaCmd2 subscribe
+```
 
 Subscribe to messages from RabbitMQ on a given topic:
   sub topics            - shows topics subscribed to.
@@ -17,7 +18,6 @@ timer.# for timer events, retval.# for return values.
 You can choose as specific chart with syntax like:
     tick.oChart.EURGBP.240.93ACD6A2.#
 
-```
 Usage: sub [options] command
 
 Options:
