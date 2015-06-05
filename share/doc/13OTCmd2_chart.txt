@@ -1,4 +1,4 @@
-### PikaCmd2 chart
+### OTCmd2 chart
 ```
 
 Set and query the chart used for messages to and from RabbitMQ:

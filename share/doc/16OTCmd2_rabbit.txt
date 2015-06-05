@@ -1,4 +1,4 @@
-### PikaCmd2 rabbit
+### OTCmd2 rabbit
 ```
 
 If we have pyrabbit installed, and iff the rabbitmq_management plugin

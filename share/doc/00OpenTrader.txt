@@ -20,7 +20,7 @@ Metatrader Python as a pre-requisite, if you want to do live trading.
 In your Python, you also must have installed Pika:
 https://pypi.python.org/pypi/pika/, which must be accessible to your
 OTMql4Py (https://github.com/OpenTrading/OTMql4Py/).
-You will have to call PikaCmd2 with the `-P` option with the
+You will have to call OTCmd2 with the `-P` option with the
 path of your installed Metatrader (e.g. `c:\Program Files\Metatrader`),
 or add your installed OTMql4Py Python directory to the `PYTHONPATH`
 environment variable (e.g. `c:\Program Files\Metatrader\MQL4\Python`).
@@ -39,7 +39,7 @@ bridges Metatrader to RabbitMQ under Linux.
 ```
 python setup.py
 ```
-to create the PikaCmd2 script. Run `PikaCmd2 help` (see below).
+to create the OTCmd2 script. Run `OTCmd2 help` (see below).
 
 In your Metatrader Python, you also must have installed Pika:
 https://pypi.python.org/pypi/pika/ as well as

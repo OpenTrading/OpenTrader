@@ -1,4 +1,4 @@
-## PikaCmd2.py
+## OTCmd2.py
 
 This script can be run from the command line to send commands
 to a OTMql4AMQP enabled Metatrader. It will start a command loop to

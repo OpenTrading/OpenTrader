@@ -698,8 +698,8 @@ def oParseOptions(sUsage):
                             dest='bUseTalib', action='store_true', default=False,
                             help='Use Ta-lib for chart operations')
     oArgParser.add_argument('-C', '--config',
-                            dest='sConfigFile', default="PikaCmd2.ini",
-                            help='Config file for PikaCmd2 options')
+                            dest='sConfigFile', default="OTCmd2.ini",
+                            help='Config file for OTCmd2 options')
     oArgParser.add_argument("-c", "--chart",
                             dest="sDefaultChartId", action='store_true', default='oANY_0_FFFF_0',
                             help="the default target chart to sub or pub")
@@ -720,7 +720,7 @@ def oParseConfig(sConfigFile):
     else:
         sConfigFile = os.path.expanduser(os.path.expandvars(sConfigFile))
         assert os.path.isfile(sConfigFile), "Configuration file not found: " + sConfigFile
-    return ConfigObj(sConfigFile)
+    return ConfigObj(sConfigFile, unrepr=True)
         
 def iMain():
 #    from PikaArguments import oParseOptions
@@ -768,4 +768,4 @@ def iMain():
 if __name__ == '__main__':
     iMain()
 
-# grep '//0' ../../Libraries/OTMql4/OTLibMt4ProcessCmd.mq4 |sed -e 's/.*== "/pub /' -e 's/".*//' > PikaCmd2-0.test
+# grep '//0' ../../Libraries/OTMql4/OTLibMt4ProcessCmd.mq4 |sed -e 's/.*== "/pub /' -e 's/".*//' > OTCmd2-0.test

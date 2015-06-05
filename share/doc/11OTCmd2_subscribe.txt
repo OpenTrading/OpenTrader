@@ -1,4 +1,4 @@
-### PikaCmd2 subscribe
+### OTCmd2 subscribe
 ```
 
 Subscribe to messages from RabbitMQ on a given topic:

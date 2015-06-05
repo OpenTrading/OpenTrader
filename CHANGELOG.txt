@@ -1,3 +1,8 @@
+commit 23e3bdd8b91987931c2d75ded980dea5f5241b52
+Date:   Fri Jun 5 00:10:21 2015 +0300
+
+    Added share/doc/05PikaCmd2.txt
+
 commit 595f3ff2f3348c7b3bc5a14844b9bf128487ed67
 Date:   Thu Jun 4 23:52:40 2015 +0300
 

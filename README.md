@@ -23,7 +23,7 @@ Metatrader Python as a pre-requisite, if you want to do live trading.
 In your Python, you also must have installed Pika:
 https://pypi.python.org/pypi/pika/, which must be accessible to your
 OTMql4Py (https://github.com/OpenTrading/OTMql4Py/).
-You will have to call PikaCmd2 with the `-P` option with the
+You will have to call OTCmd2 with the `-P` option with the
 path of your installed Metatrader (e.g. `c:\Program Files\Metatrader`),
 or add your installed OTMql4Py Python directory to the `PYTHONPATH`
 environment variable (e.g. `c:\Program Files\Metatrader\MQL4\Python`).
@@ -42,7 +42,7 @@ bridges Metatrader to RabbitMQ under Linux.
 ```
 python setup.py
 ```
-to create the PikaCmd2 script. Run `PikaCmd2 help` (see below).
+to create the OTCmd2 script. Run `OTCmd2 help` (see below).
 
 In your Metatrader Python, you also must have installed Pika:
 https://pypi.python.org/pypi/pika/ as well as
@@ -62,7 +62,7 @@ the important pages back into the documentation in the share/doc directory.
 You will need to be signed into github.com to see or edit in the wiki.
 
 
-## PikaCmd2.py
+## OTCmd2.py
 
 This script can be run from the command line to send commands
 to a OTMql4AMQP enabled Metatrader. It will start a command loop to
@@ -124,8 +124,26 @@ and   sPayload is command|arg1|arg2... (outgoing) or type|value (incoming),
 ```
 This breaks if the sPayload args or value contain a | -
 we will probably replace this with json or pickled serialization, or kombu.
-## PikaCmd2
-### PikaCmd2 subscribe
+usage: OTBackTest.py [-h] [-T] [-P] [-R SRECIPE] [-C SCHEF] [-H SHDFSTORE]
+                     [lArgs [lArgs ...]]
+
+give the Symbol Timeframe and Year to backtest The Timeframe is the period in
+minutes: e.g. 1 60 240 1440
+
+positional arguments:
+  lArgs                 the Symbol Timeframe and Year to backtest (required)
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -T, --use_talib       Use Ta-lib for chart operations
+  -P, --plot_equity     plot the equity curves of the servings
+  -R SRECIPE, --recipe SRECIPE
+                        recipe to backtest
+  -C SCHEF, --chef SCHEF
+                        recipe to backtest
+  -H SHDFSTORE, --hdf SHDFSTORE
+                        store the recipe and servings in an hdf5 store
+### OTCmd2 subscribe
 ```
 
 Subscribe to messages from RabbitMQ on a given topic:
@@ -153,7 +171,7 @@ Options:
                         the target chart to subscribe to
 
 ```
-### PikaCmd2 publish
+### OTCmd2 publish
 ```
 
 Publish a message via RabbitMQ to a given chart on a OTMql4Py enabled terminal:
@@ -173,7 +191,7 @@ Options:
                         the target chart to publish to (or: ANY ALL NONE)
 
 ```
-### PikaCmd2 chart
+### OTCmd2 chart
 ```
 
 Set and query the chart used for messages to and from RabbitMQ:
@@ -192,7 +210,7 @@ Options:
   -h, --help  show this help message and exit
 
 ```
-### PikaCmd2 order
+### OTCmd2 order
 ```
 
   ord list          - list the ticket numbers of current orders.
@@ -216,8 +234,7 @@ Options:
                         the target chart to order with (or: ANY ALL NONE)
 
 ```
-```
-### PikaCmd2 rabbit
+### OTCmd2 rabbit
 ```
 
 If we have pyrabbit installed, and iff the rabbitmq_management plugin

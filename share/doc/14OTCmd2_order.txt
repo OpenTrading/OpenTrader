@@ -1,4 +1,4 @@
-### PikaCmd2 order
+### OTCmd2 order
 ```
 
   ord list          - list the ticket numbers of current orders.

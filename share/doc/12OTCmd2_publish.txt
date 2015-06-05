@@ -1,4 +1,4 @@
-### PikaCmd2 publish
+### OTCmd2 publish
 ```
 
 Publish a message via RabbitMQ to a given chart on a OTMql4Py enabled terminal:

@@ -1,0 +1,19 @@
+usage: OTBackTest.py [-h] [-T] [-P] [-R SRECIPE] [-C SCHEF] [-H SHDFSTORE]
+                     [lArgs [lArgs ...]]
+
+give the Symbol Timeframe and Year to backtest The Timeframe is the period in
+minutes: e.g. 1 60 240 1440
+
+positional arguments:
+  lArgs                 the Symbol Timeframe and Year to backtest (required)
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -T, --use_talib       Use Ta-lib for chart operations
+  -P, --plot_equity     plot the equity curves of the servings
+  -R SRECIPE, --recipe SRECIPE
+                        recipe to backtest
+  -C SCHEF, --chef SCHEF
+                        recipe to backtest
+  -H SHDFSTORE, --hdf SHDFSTORE
+                        store the recipe and servings in an hdf5 store
