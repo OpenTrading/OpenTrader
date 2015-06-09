@@ -2,16 +2,18 @@
 
 This script can be run from the command line to send commands
 to a OTMql4AMQP enabled Metatrader. It will start a command loop to
-listen, send commands, or query the RabbitMQ management interface, based 
-on the cmd2 REPL: see cmd2plus.py in `OpenTrader`
+listen, send commands, or query the RabbitMQ management interface.
+It is based on the cmd2 REPL: see cmd2plus.py in `OpenTrader` -
+you must have `cmd2` installed the Python that runs this script:
+see https://bitbucket.org/catherinedevlin/cmd2
 
-Type help at the command prompt to get more help.
+Call the script with `--help` to see the script options,
+and Type help at the command prompt to get more help.
 
-Call the script with `--help` to see the script options.
 
 The normal usage is:
 ```
-sub run timer# retval.#  - start a thread listening for messages: timer,tick,retval
+sub run timer# retval.#  - start a thread listening for messages: timer,retval
 pub cmd AccountBalance   - to send a command to OTMql4Pika,
                          the return will be a retval message on the listener
 sub hide timer           - stop seeing timer messages (just see the retval.#)
@@ -54,9 +56,12 @@ where
 ```
       sMsgType is one of: cmd eval (outgoing), timer tick retval (incoming);
       sChartId is the Mt4 chart sChartId the message is to or from;
+      sIgnored is ignored for now, but may become a checksum on the payload;
       sMark is a simple floating point timestamp, with milliseconds;
-and   sPayload is command|arg1|arg2... (outgoing) or type|value (incoming),
-      where type is one of: bool int double string json.
+and   sPayload is command|json... (outgoing) or type|json (incoming),
+      where incoming type is one of: bool int double string json.
 ```
-This breaks if the sPayload args or value contain a | -
+This may breaks if the sPayload args or value contain a | -
 we will probably replace this with json or pickled serialization, or kombu.
+
+

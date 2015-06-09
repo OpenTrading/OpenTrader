@@ -39,16 +39,30 @@ bridges Metatrader to RabbitMQ under Linux.
 
 ### Installation
 
+You must have `cmd2` installed the Python that runs this script:
+see https://bitbucket.org/catherinedevlin/cmd2
+
+You must have `configobj` installed the Python that runs this script:
+The up-to-date one is at https://github.com/DiffSK/configobj/
+
+In your Metatrader Python, you also must have installed Pika:
+https://pypi.python.org/pypi/pika/
+
+Firstly, install the OTMql4AMQP, OTMql4Py and OTMql4Lib projects from
+https://github.com/OpenTrading/ into the Python called by your Metatrader:
+* OTMql4AMQP (https://github.com/OpenTrading/OTMql4AMQP/),
+* OTMql4Py (https://github.com/OpenTrading/OTMql4Py/), and
+* OTMql4Lib (https://github.com/OpenTrading/OTMql4Lib/)
+
+Attach the OTPyTestPikaEA.mq4 to a chart and make sure it's working:
+https://github.com/OpenTrading/OTMql4AMQP/MQL4/Experts/OTMql4/OTPyTestPikaEA.mq4
+
+Then (when it gets checked in :-) run 
 ```
 python setup.py
 ```
 to create the OTCmd2 script. Run `OTCmd2 help` (see below).
 
-In your Metatrader Python, you also must have installed Pika:
-https://pypi.python.org/pypi/pika/ as well as
-OTMql4AMQP (https://github.com/OpenTrading/OTMql4AMQP/),
-OTMql4Py (https://github.com/OpenTrading/OTMql4Py/), and
-OTMql4Lib (https://github.com/OpenTrading/OTMql4Lib/).
 
 ### Project
 
@@ -66,16 +80,18 @@ You will need to be signed into github.com to see or edit in the wiki.
 
 This script can be run from the command line to send commands
 to a OTMql4AMQP enabled Metatrader. It will start a command loop to
-listen, send commands, or query the RabbitMQ management interface, based 
-on the cmd2 REPL: see cmd2plus.py in `OpenTrader`
+listen, send commands, or query the RabbitMQ management interface.
+It is based on the cmd2 REPL: see cmd2plus.py in `OpenTrader` -
+you must have `cmd2` installed the Python that runs this script:
+see https://bitbucket.org/catherinedevlin/cmd2
 
-Type help at the command prompt to get more help.
+Call the script with `--help` to see the script options,
+and Type help at the command prompt to get more help.
 
-Call the script with `--help` to see the script options.
 
 The normal usage is:
 ```
-sub run timer# retval.#  - start a thread listening for messages: timer,tick,retval
+sub run timer# retval.#  - start a thread listening for messages: timer,retval
 pub cmd AccountBalance   - to send a command to OTMql4Pika,
                          the return will be a retval message on the listener
 sub hide timer           - stop seeing timer messages (just see the retval.#)
@@ -118,12 +134,36 @@ where
 ```
       sMsgType is one of: cmd eval (outgoing), timer tick retval (incoming);
       sChartId is the Mt4 chart sChartId the message is to or from;
+      sIgnored is ignored for now, but may become a checksum on the payload;
       sMark is a simple floating point timestamp, with milliseconds;
-and   sPayload is command|arg1|arg2... (outgoing) or type|value (incoming),
-      where type is one of: bool int double string json.
+and   sPayload is command|json... (outgoing) or type|json (incoming),
+      where incoming type is one of: bool int double string json.
 ```
-This breaks if the sPayload args or value contain a | -
+This may breaks if the sPayload args or value contain a | -
 we will probably replace this with json or pickled serialization, or kombu.
+
+
+
+## Pandas love Omlettes!
+
+### (And you thought pandas were vegans :-)
+
+There are many steps to making a good Omlette:
+
+1. Get a feed to make ingredients out of.
+
+2. Get a Recipe to make the Omlette.
+
+3. Make the Ingredients from the Recipe and the Feed(s).
+
+4. Find a Chef to give the Recipe and Ingredients to.
+
+5. Have the Chef cook the Recipe and Ingredients in the Oven(Backtester).
+
+6. Enjoy the Servings that come out of the the Oven(Backtester).
+
+
+
 usage: OTBackTest.py [-h] [-T] [-P] [-R SRECIPE] [-C SCHEF] [-H SHDFSTORE]
                      [lArgs [lArgs ...]]
 

@@ -1,0 +1,26 @@
+using talib.sma on .O.values gives:
+
+File "OTBackTest.py", line 118, in vPrintResults
+oFd.write('>  bt.trades\n%s\n' % oBt.trades.any())
+File "pandas/src/properties.pyx", line 34, in pandas.lib.cache_readonly.__get__ (pandas/lib.c:40766)
+File "/mnt/n/data/Trading/Program Files/HotForex MetaTrader/MQL4/Python/OTMql427/backtest.py", line 168, in trades
+self.signals.index).ffill().shift().fillna(value=0)
+File "/usr/lib/python2.7/site-packages/pandas/core/series.py", line 2149, in reindex
+return super(Series, self).reindex(index=index, **kwargs)
+File "/usr/lib/python2.7/site-packages/pandas/core/generic.py", line 1731, in reindex
+method, fill_value, copy).__finalize__(self)
+File "/usr/lib/python2.7/site-packages/pandas/core/generic.py", line 1749, in _reindex_axes
+allow_dups=False)
+File "/usr/lib/python2.7/site-packages/pandas/core/generic.py", line 1834, in _reindex_with_indexers
+copy=copy)
+File "/usr/lib/python2.7/site-packages/pandas/core/internals.py", line 3150, in reindex_indexer
+raise ValueError("cannot reindex from a duplicate axis")
+ValueError: cannot reindex from a duplicate axis
+
+using abstract.SMA(oOhlc.O gives,
+with github.com/quantopian/ta-lib or mrjbq7/ta-lib:
+
+File "func.pyx", line 9178, in talib.func.SMA (talib/func.c:85548)
+File "/usr/lib/python2.7/site-packages/pandas/core/series.py", line 73, in wrapper
+"cannot convert the series to {0}".format(str(converter)))
+TypeError: cannot convert the series to <type 'int'>

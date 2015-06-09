@@ -1,3 +1,8 @@
+commit ed7dc647ff037f52f5d50adf8cbcccc249f7916d
+Date:   Fri Jun 5 22:17:41 2015 +0300
+
+    Renamed PikaCmd2 to OTCmd2 and added OpenTrader/OTBackTest.py
+
 commit 23e3bdd8b91987931c2d75ded980dea5f5241b52
 Date:   Fri Jun 5 00:10:21 2015 +0300
 

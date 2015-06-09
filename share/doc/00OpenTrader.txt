@@ -36,16 +36,30 @@ bridges Metatrader to RabbitMQ under Linux.
 
 ### Installation
 
+You must have `cmd2` installed the Python that runs this script:
+see https://bitbucket.org/catherinedevlin/cmd2
+
+You must have `configobj` installed the Python that runs this script:
+The up-to-date one is at https://github.com/DiffSK/configobj/
+
+In your Metatrader Python, you also must have installed Pika:
+https://pypi.python.org/pypi/pika/
+
+Firstly, install the OTMql4AMQP, OTMql4Py and OTMql4Lib projects from
+https://github.com/OpenTrading/ into the Python called by your Metatrader:
+* OTMql4AMQP (https://github.com/OpenTrading/OTMql4AMQP/),
+* OTMql4Py (https://github.com/OpenTrading/OTMql4Py/), and
+* OTMql4Lib (https://github.com/OpenTrading/OTMql4Lib/)
+
+Attach the OTPyTestPikaEA.mq4 to a chart and make sure it's working:
+https://github.com/OpenTrading/OTMql4AMQP/MQL4/Experts/OTMql4/OTPyTestPikaEA.mq4
+
+Then (when it gets checked in :-) run 
 ```
 python setup.py
 ```
 to create the OTCmd2 script. Run `OTCmd2 help` (see below).
 
-In your Metatrader Python, you also must have installed Pika:
-https://pypi.python.org/pypi/pika/ as well as
-OTMql4AMQP (https://github.com/OpenTrading/OTMql4AMQP/),
-OTMql4Py (https://github.com/OpenTrading/OTMql4Py/), and
-OTMql4Lib (https://github.com/OpenTrading/OTMql4Lib/).
 
 ### Project
 
