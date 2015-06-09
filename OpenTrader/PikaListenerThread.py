@@ -25,6 +25,7 @@ class PikaListenerThread(threading.Thread, PikaListener.PikaMixin):
         self.jLastBar = []
         self.gLastTimer = []
         self._running = threading.Event()
+        self.dRetvals = {}
         if not lTopics:
             self.lTopics = ['#']
         else:
@@ -56,7 +57,7 @@ class PikaListenerThread(threading.Thread, PikaListener.PikaMixin):
         self._running.clear()
         #? self.oListenerChannel.stop_consuming()
         
-    def vPprint(self, sMsgType, sMsg=None):
+    def vPprint(self, sMsgType, sMsg=None, sPrefix="INFO: "):
         if sMsgType == 'get':
             sys.stdout.write("INFO: bPprint" +repr(self.bPprint) + "\n")
         elif sMsgType == 'set':
@@ -65,9 +66,9 @@ class PikaListenerThread(threading.Thread, PikaListener.PikaMixin):
             pass
         elif self.bPprint and sMsg:
             # may need more info here - chart and sMark
-            sys.stdout.write("INFO: " +sMsgType +" = " +pformat(sMsg) +"\n")
+            sys.stdout.write(sPrefix +sMsgType +" = " +pformat(sMsg) +"\n")
         else:
-            sys.stdout.write("INFO: " +sMsgType +" = " +repr(sMsg) +"\n")
+            sys.stdout.write(sPrefix +sMsgType +" = " +repr(sMsg) +"\n")
         
     def vHide(self, sMsgType=None):
         if not sMsgType:
@@ -98,13 +99,20 @@ class PikaListenerThread(threading.Thread, PikaListener.PikaMixin):
         try:
             # sys.stdout.write("INFO: sChart: " +repr(sChart) +'\n')
 
-            # keep a list of charts that we have seen for "chart list"
             if sChart not in self.lCharts:
+                # keep a list of charts that we have seen for "chart list"
                 self.lCharts.append(sChart)
 
             if sMsgType == 'retval':
-                gPayload = gRetvalToPython(lArgs)
+                try:
+                    gPayload = gRetvalToPython(lArgs)
+                except Exception, e:
+                    sys.stdout.write("WARN: vPyCallbackOnListener error decoding to Python: %s\n%r" % (str(e), sBody, ))
+                    return
+                    
                 self.jLastRetval = gPayload
+                self.dRetvals[sMark] = gPayload
+
             elif sMsgType == 'bar':
                 assert sPayloadType == 'json', \
                     sMsgType +" sPayloadType expected 'json' not " \
@@ -112,6 +120,7 @@ class PikaListenerThread(threading.Thread, PikaListener.PikaMixin):
                 # can use this to find the current bid and ask
                 gPayload =json.loads(lArgs[5])
                 self.jLastBar = gPayload
+                
             elif sMsgType == 'tick':
                 assert sPayloadType == 'json', \
                     sMsgType +" sPayloadType expected 'json' not " \
@@ -119,6 +128,7 @@ class PikaListenerThread(threading.Thread, PikaListener.PikaMixin):
                 # can use this to find the current bid and ask
                 gPayload =json.loads(lArgs[5])
                 self.jLastTick = gPayload
+                
             elif sMsgType == 'timer':
                 assert sPayloadType == 'json', \
                     sMsgType +" sPayloadType expected 'json'" +"\n" +sBody
@@ -129,7 +139,12 @@ class PikaListenerThread(threading.Thread, PikaListener.PikaMixin):
                 sys.stdout.write("WARN: vPyCallbackOnListener unrecognized sMsgType: %r\n" % (sBody, ))
                 return
                 
-            self.vPprint(sMsgType, gPayload)
+            # may need more info here - chart and sMark
+            if sMsgType == 'retval':
+                # you really need sMark for retval
+                self.vPprint(sMsgType, gPayload, "INFO: [" +sMark +"] ")
+            else:
+                self.vPprint(sMsgType, gPayload)
         except Exception, e:
             sys.stderr.write(traceback.format_exc(10) +"\n")
 

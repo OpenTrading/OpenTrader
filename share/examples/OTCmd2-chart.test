@@ -1,0 +1,7 @@
+set echo True
+sub run retval.# timer.#
+py import time
+py time.sleep(15)
+chart list
+chart set
+

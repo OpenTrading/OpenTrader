@@ -54,6 +54,8 @@ sPUB__doc__ = """
 Publish a message via RabbitMQ to a given chart on a OTMql4Py enabled terminal:
   pub cmd  COMMAND ARG1 ... - publish a Mql command to Mt4,
       the command should be a single string, with a space seperating arguments.
+  pub wait COMMAND ARG1 ... - publish a Mql command to Mt4 and wait for the result,
+      the command should be a single string, with a space seperating arguments.
   pub eval COMMAND ARG1 ... - publish a Python command to the OTMql4Py,
       the command should be a single string, with a space seperating arguments.
 
@@ -119,6 +121,7 @@ except ImportError:
 from OpenTrader.cmd2plus import Cmd, options, make_option, Cmd2TestCase
 
 _dCHARTS = {}
+iRETVALS_WAIT_TIMEOUT = 60 # sed
 
 class MqlError(Exception):
     pass
@@ -138,15 +141,13 @@ def sMakeMark():
 #       where type is one of: bool int double string json.
 # This breaks if the sPayload args or value contain a | -
 # we will probably replace this with json or pickled serialization, or kombu.
-def sFormatMessage(sMsgType, sChartId, *lArgs):
+def sFormatMessage(sMsgType, sMark, sChartId, *lArgs):
     """
     Just a very simple message format for now:
     We are moving over to JSON so *lArgs will be replaced by sJson,
     a single JSON list of [command, arg1, arg2,...]
     """
     
-    # sMark is a simple timestamp: unix time with msec.
-    sMark = sMakeMark()
     # iIgnore is reserved for being a hash on the payload
     iIgnore = 0
     # We are moving over to JSON - for now a command is separated by |
@@ -162,12 +163,6 @@ def lUnFormatMessage(sBody):
     sMark = lArgs[3]
     return lArgs
 
-
-_G = None
-def G(gRetval=None):
-    global _G
-    _G = gRetval
-    return gRetval
 
 class CmdLineApp(Cmd):
     multilineCommands = []
@@ -194,7 +189,8 @@ class CmdLineApp(Cmd):
         self.dLastEval = {}
         self.dLastJson = {}
         self.oBt = None
-
+        self._G = None
+        
         # we may need to add to import PikaChart
         if self.oOptions.sMt4Dir:
             sMt4Dir = os.path.expanduser(os.path.expandvars(self.oOptions.sMt4Dir))
@@ -207,9 +203,28 @@ class CmdLineApp(Cmd):
                 elif sMt4Dir not in sys.path:
                     sys.path.insert(0, sMt4Dir)
         
-    def G(self):
-        global _G
-        return _G
+    def G(self, gVal=None):
+        if gVal is not None:
+            self._G = gVal
+        return self._G
+    
+    def gWaitForMessage(self, sMsgType, sMark, sChartId, *lArgs):
+        sMsg = sFormatMessage(sMsgType, sMark, sChartId, *lArgs)
+        self.vInfo("Publishing: " +sMsg)
+        self.eSendOnSpeaker(sChartId, sMsgType, sMsg)
+        self.dLastCmd[sChartId] = sMsg
+        i = 0
+        while i < iRETVALS_WAIT_TIMEOUT:
+            # do I need a thread lock?
+            if sMark in self.oListenerThread.dRetvals.keys():
+                gRetval = self.oListenerThread.dRetvals[sMark]
+                del self.oListenerThread.dRetvals[sMark]
+                return self.G(gRetval)
+            i += 5
+            self.vDebug("Waiting: " +repr(i))
+            time.sleep(5.0)
+        self._G = None
+        return None
     
     def eSendOnSpeaker(self, sChartId, sMsgType, sMsg):
         from OTMql427 import PikaListener
@@ -233,23 +248,23 @@ class CmdLineApp(Cmd):
             return
         lArgs = oArgs.split()
         if lArgs[0] == 'get':
-            self.poutput(G(self.sDefaultChart))
+            self.poutput(self.G(self.sDefaultChart))
             return
         
         if lArgs[0] == 'set':
             if len(lArgs) > 1:
-                self.sDefaultChart = G(lArgs[1])
+                self.sDefaultChart = self.G(lArgs[1])
             elif self.oListenerThread.lCharts:
-                self.sDefaultChart = G(self.oListenerThread.lCharts[-1])
+                self.sDefaultChart = self.G(self.oListenerThread.lCharts[-1])
             else:
                 self.vWarn("No default charts available; try 'sub run'")
             return
         
         if lArgs[0] == 'list':
             if self.oListenerThread is None:
-                self.poutput(repr(G([])))
+                self.poutput(repr(self.G([])))
             else:
-                self.poutput(repr(G(self.oListenerThread.lCharts)))
+                self.poutput(repr(self.G(self.oListenerThread.lCharts)))
             return
         self.vError("Unrecognized chart command: " + str(oArgs) +'\n' +__doc__)
         
@@ -283,7 +298,7 @@ class CmdLineApp(Cmd):
             # what if self.oListenerThread is not None:
             assert len(lArgs) > 1, "ERROR: sub topics TOPIC1..."
             self.lTopics = lArgs[1:]
-            self.vInfo("Set topics to: " + repr(G(self.lTopics)))
+            self.vInfo("Set topics to: " + repr(self.G(self.lTopics)))
             return
 
         if lArgs[0] == 'clear':
@@ -294,9 +309,9 @@ class CmdLineApp(Cmd):
 
         if lArgs[0] == 'topics':
             if self.oListenerThread:
-                self.poutput("oListenerThread.lTopics: " + repr(G(self.oListenerThread.lTopics)))
+                self.poutput("oListenerThread.lTopics: " + repr(self.G(self.oListenerThread.lTopics)))
             else:
-                self.poutput("Default lTopics: " + repr(G(self.lTopics)))
+                self.poutput("Default lTopics: " + repr(self.G(self.lTopics)))
             return
 
         if lArgs[0] == 'run':
@@ -404,15 +419,28 @@ class CmdLineApp(Cmd):
             sChartId = self.sDefaultChart
         if self.oListenerThread is None:
             self.vWarn("PikaListenerThread not started; do 'sub run retval.#'")
+        # sMark is a simple timestamp: unix time with msec.
+        sMark = sMakeMark()
 
         lArgs = oArgs.split()
-        if lArgs[0] == 'cmd':
+        if lArgs[0] == 'wait' or lArgs[0] == 'sync':
             sMsgType = 'cmd' # Mt4 command
             assert len(lArgs) > 1, "ERROR: pub cmd COMMAND ARG1..."
-            sMsg = sFormatMessage(sMsgType, sChartId, *lArgs[1:])
+            gRetval = self.gWaitForMessage(sMsgType, sMark, sChartId, *lArgs[1:])
+            if gRetval is not None:
+                # 
+                self.vInfo("Returned: " +repr(self.G(gRetval)))
+            else:
+                self.vWarn("No retval returned in " +str(iRETVALS_WAIT_TIMEOUT) +" seconds")
+            return 
+        
+        if lArgs[0] == 'cmd' or lArgs[0] == 'async':
+            sMsgType = 'cmd' # Mt4 command
+            assert len(lArgs) > 1, "ERROR: pub cmd COMMAND ARG1..."
+            sMsg = sFormatMessage(sMsgType, sMark, sChartId, *lArgs[1:])
             self.vInfo("Publishing: " +sMsg)
             self.eSendOnSpeaker(sChartId, sMsgType, sMsg)
-            self.dLastCmd[sChartId] = G(sMsg)
+            self.dLastCmd[sChartId] = self.G(sMsg)
             return
         
         if lArgs[0] == 'eval':
@@ -421,10 +449,10 @@ class CmdLineApp(Cmd):
             sInfo = str(lArgs[1]) # FixMe: how do we distinguish variable or thunk?
             if len(lArgs) > 2:
                 sInfo += '(' +str(','.join(lArgs[2:])) +')'
-            sMsg = sFormatMessage(sMsgType, sChartId, sInfo,)
+            sMsg = sFormatMessage(sMsgType, sMark, sChartId, sInfo,)
             self.vInfo("Publishing: " +sMsg)
             self.eSendOnSpeaker(sChartId, sMsgType, sMsg)
-            self.dLastEval[sChartId] = G(sMsg)
+            self.dLastEval[sChartId] = self.G(sMsg)
             return
         
         if lArgs[0] == 'json':
@@ -432,10 +460,10 @@ class CmdLineApp(Cmd):
             assert len(lArgs) > 1, "ERROR: pub eval COMMAND ARG1..."
             # FixMe: broken but unused
             sInfo = json.dumps(str(' '.join(lArgs[1:])))
-            sMsg = sFormatMessage(sMsgType, sChartId, sInfo,)
+            sMsg = sFormatMessage(sMsgType, sMark, sChartId, sInfo,)
             self.vInfo("Publishing: " +sMsg)
             self.eSendOnSpeaker(sChartId, sMsgType, sMsg)
-            self.dLastJson[sChartId] = G(sMsg)
+            self.dLastJson[sChartId] = self.G(sMsg)
             return
         self.vError("Unrecognized publish command: " + str(oArgs) +'\n' +__doc__)
         
@@ -462,62 +490,44 @@ class CmdLineApp(Cmd):
             sChartId = oOpts.sChartId
         else:
             sChartId = self.sDefaultChart
+        # sMark is a simple timestamp: unix time with msec.
+        sMark = sMakeMark()
 
         lArgs = oArgs.split()
         if lArgs[0] == 'list' or lArgs[0] == 'tickets':
             sMsgType = 'cmd' # Mt4 command
             # FixMe: trailing |
             sInfo='jOTOrdersTickets'
-            sMsg = sFormatMessage(sMsgType, sChartId, sInfo)
-            self.vDebug("Ordering: " +sMsg)
-            self.eSendOnSpeaker(sChartId, sMsgType, sMsg)
-            # FixMe: Tag with sMark
-            self.dLastCmd[sChartId] = G(sMsg)
+            self.gWaitForMessage(sMsgType, sMark, sChartId, sInfo)
             return
         
         if lArgs[0] == 'trades':
             sMsgType = 'cmd' # Mt4 command
             # FixMe: trailing |
             sInfo='jOTOrdersTrades'
-            sMsg = sFormatMessage(sMsgType, sChartId, sInfo)
-            self.vDebug("Ordering: " +sMsg)
-            self.eSendOnSpeaker(sChartId, sMsgType, sMsg)
-            # FixMe: Tag with sMark
-            self.dLastCmd[sChartId] = G(sMsg)
+            self.gWaitForMessage(sMsgType, sMark, sChartId, sInfo)
             return
         
         if lArgs[0] == 'history':
             sMsgType = 'cmd' # Mt4 command
             # FixMe: trailing |
             sInfo='jOTOrdersHistory'
-            sMsg = sFormatMessage(sMsgType, sChartId, sInfo)
-            self.vDebug("Ordering: " +sMsg)
-            self.eSendOnSpeaker(sChartId, sMsgType, sMsg)
-            # FixMe: Tag with sMark
-            self.dLastCmd[sChartId] = G(sMsg)
+            self.gWaitForMessage(sMsgType, sMark, sChartId, sInfo)
             return
         
         if lArgs[0] == 'info':
             sMsgType = 'cmd' # Mt4 command
             sCmd='jOTOrderInformationByTicket'
             assert len(lArgs) > 1, "ERROR: orders info iTicket"
-            sArg1 = str(lArgs[1])
-            sMsg = sFormatMessage(sMsgType, sChartId, sCmd, sArg1)
-            self.vDebug("Ordering: " +sMsg)
-            self.eSendOnSpeaker(sChartId, sMsgType, sMsg)
-            # FixMe: Tag with sMark
-            self.dLastCmd[sChartId] = G(sMsg)
+            sInfo = str(lArgs[1])
+            self.gWaitForMessage(sMsgType, sMark, sChartId, sCmd, sInfo)
             return
         
         if lArgs[0] == 'exposure':
             sMsgType = 'cmd' # Mt4 command
             sCmd='fOTExposedEcuInMarket'
-            sArg1 = str(0)
-            sMsg = sFormatMessage(sMsgType, sChartId, sCmd, sArg1)
-            self.vDebug("Ordering: " +sMsg)
-            self.eSendOnSpeaker(sChartId, sMsgType, sMsg)
-            # FixMe: Tag with sMark
-            self.dLastCmd[sChartId] = G(sMsg)
+            sInfo = str(0)
+            self.gWaitForMessage(sMsgType, sMark, sChartId, sCmd, sInfo)
             return
         
         if lArgs[0] == 'close':
@@ -528,15 +538,11 @@ class CmdLineApp(Cmd):
                 sPrice = lArgs[2]
                 sSlippage = lArgs[3]
                 sCmd='iOTOrderCloseFull'
-                sMsg = sFormatMessage(sMsgType, sChartId, sCmd, sTicket, sPrice, sSlippage)
+                self.gWaitForMessage(sMsgType, sMark, sChartId, sCmd, sTicket, sPrice, sSlippage)
             else:
                 sCmd='iOTOrderCloseMarket'
-                sMsg = sFormatMessage(sMsgType, sChartId, sCmd, sTicket)
+                self.gWaitForMessage(sMsgType, sMark, sChartId, sCmd, sTicket)
                 
-            self.vDebug("Ordering: " +sMsg)
-            self.eSendOnSpeaker(sChartId, sMsgType, sMsg)
-            # FixMe: Tag with sMark
-            self.dLastCmd[sChartId] = G(sMsg)
             return
 
         if lArgs[0] == 'buy' or lArgs[0] == 'sell':
@@ -555,15 +561,10 @@ class CmdLineApp(Cmd):
                 sPrice = lArgs[3]
                 sSlippage = lArgs[4]
                 sCmd='iOTOrderSend'
-                sMsg = sFormatMessage(sMsgType, sChartId, sCmd, sSymbol, sArg1, sVolume, sPrice, sSlippage)
+                self.gWaitForMessage(sMsgType, sMark, sChartId, sCmd, sSymbol, sArg1, sVolume, sPrice, sSlippage)
             else:
                 sCmd='iOTOrderSendMarket'
-                sMsg = sFormatMessage(sMsgType, sChartId, sCmd, sSymbol, sArg1, sVolume)
-                
-            self.vDebug("Ordering: " +sMsg)
-            self.eSendOnSpeaker(sChartId, sMsgType, sMsg)
-            # FixMe: Tag with sMark
-            self.dLastCmd[sChartId] = G(sMsg)
+                self.gWaitForMessage(sMsgType, sMark, sChartId, sCmd, sSymbol, sArg1, sVolume)
             return
 
         # (int iTicket, double fPrice, int iSlippage, color cColor=CLR_NONE)
@@ -633,10 +634,10 @@ class CmdLineApp(Cmd):
                 lRetval = oFun()
                 # do we need a sub-command here?
                 lRetval = [x['name'] for x in lRetval]
-                self.poutput(repr(G(lRetval)))
+                self.poutput(repr(self.G(lRetval)))
             elif lArgs[1] in lRABBIT_GET_THUNKS:
                 lRetval = oFun()
-                self.poutput(repr(G(lRetval)))
+                self.poutput(repr(self.G(lRetval)))
             else:
                 self.vError("Choose one of: get " +",".join(lRABBIT_GET_THUNKS))
             return

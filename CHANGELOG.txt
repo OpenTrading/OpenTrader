@@ -1,3 +1,9 @@
+commit 29a4659b3d2163c3b3a0e8376203f6ff7956680e
+Date:   Tue Jun 9 11:28:16 2015 +0300
+
+    Added share/doc/06Omlettes.txt - the API is still changing and
+    the documentation and tests aren't done yet.
+
 commit ed7dc647ff037f52f5d50adf8cbcccc249f7916d
 Date:   Fri Jun 5 22:17:41 2015 +0300
 

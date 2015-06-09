@@ -1,0 +1,9 @@
+# These are some simple examples of commands that dont need any
+# arguments, and return their results in JSON
+#
+set echo True
+sub run retval.# timer.#
+pub wait jOTAccountInformation
+pub wait jOTOrdersTickets
+pub wait jOTOrdersHistory
+pub wait jOTOrdersTrades

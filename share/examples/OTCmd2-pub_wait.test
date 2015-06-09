@@ -1,0 +1,24 @@
+set echo True
+sub run retval.# timer.#
+pub wait OrdersTotal
+py assert type(self._G) == int and self._G >= 0
+pub wait Period
+py assert type(self._G) == int and self._G > 0
+pub wait RefreshRates
+py assert self._G == True
+pub wait Symbol
+py assert type(self._G) == str and len(self._G) >= 3
+pub wait TerminalCompany
+py assert type(self._G) == str and len(self._G) > 3
+pub wait TerminalName
+py assert type(self._G) == str and len(self._G) > 3
+pub wait TerminalPath
+py assert type(self._G) == str and len(self._G) > 3
+pub wait WindowBarsPerChart
+py assert type(self._G) == int and type(self._G) > 0
+pub wait WindowFind
+pub wait WindowFirstVisibleBar
+py assert type(self._G) == int and type(self._G) > 0
+pub wait WindowRedraw
+pub wait WindowsTotal
+py assert type(self._G) == int and type(self._G) > 0
