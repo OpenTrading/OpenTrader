@@ -23,6 +23,9 @@ class Recipe(object):
         self.oOm = oOm
         self.oFd = oFd
         self.oConfigObj = None
+        self.sName = ""
+        self.sFile = ""
+        self.oOm = None
         
     def zReadIniFile(self):
         if self.sIniFile == "":

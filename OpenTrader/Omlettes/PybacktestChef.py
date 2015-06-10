@@ -77,7 +77,7 @@ class ChefsOven(object):
     _lSignalFieldsInt = ('Buy', 'Sell', 'Short', 'Cover')
     _lPriceFieldsInt = ('BuyPrice', 'SellPrice', 'ShortPrice', 'CoverPrice')
     # these are the results you can get back from this Chef
-    lProducedServings = ['signals', 'trades', 'positions', 'equity']
+    lProducedServings = ['signals', 'trades', 'positions', 'equity', 'summary']
     
     def __init__(self, mOhlc, dDataDict, name='Unknown',
                  signal_fields=None,

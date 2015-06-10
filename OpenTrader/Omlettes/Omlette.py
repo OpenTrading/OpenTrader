@@ -28,7 +28,7 @@ class Omlette(object):
 
         self.oFd = oFd
         self.oRecipe = None
-        self.ChefModule = None
+        self.oChefModule = None
 
     def oRestore(self, sHdfStore):
         assert os.path.exists(sHdfStore)
@@ -58,18 +58,19 @@ class Omlette(object):
         RecipeModule = getattr(OmlettesPkg, sRecipe)
         RecipeKlass = getattr(RecipeModule, sRecipe)
         self.oRecipe = RecipeKlass()
-        if not self.oRecipe.sName:
+        if True or not self.oRecipe.sName:
             self.oRecipe.sName = sRecipe
-        if not self.oRecipe.sFile:
+        if True or not self.oRecipe.sFile:
             self.oRecipe.sFile = RecipeModule.__file__
         self.oRecipe.oOm = self
         return self.oRecipe
     
     def oAddChef(self, sChef):
         OmlettesPkg = __import__('Omlettes.'+sChef)
-        self.ChefModule = getattr(OmlettesPkg, sChef)
-        self.sChef = sChef
-        return self.ChefModule
+        self.oChefModule = getattr(OmlettesPkg, sChef)
+        # self.sChef = sChef
+        self.oChefModule.sChef = sChef
+        return self.oChefModule
     
     def dMakeChefsParams(self, **dKw):
         self.dChefsParams = OrderedDict(**dKw)

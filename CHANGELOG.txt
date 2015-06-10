@@ -1,3 +1,8 @@
+commit 117518ae0ea8ea13590c49ac998b85547c962320
+Date:   Wed Jun 10 00:05:14 2015 +0300
+
+    Added some examples to start testing in share/examples.
+
 commit 29a4659b3d2163c3b3a0e8376203f6ff7956680e
 Date:   Tue Jun 9 11:28:16 2015 +0300
 

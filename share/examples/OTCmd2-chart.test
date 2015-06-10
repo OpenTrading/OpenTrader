@@ -1,7 +1,12 @@
+# Set and query the chart used for messages to and from RabbitMQ:
 set echo True
 sub run retval.# timer.#
 py import time
 py time.sleep(15)
+# all the charts the listener has heard of
 chart list
+# set the default chart to be the last chart the listener has heard of
 chart set
+# get the default chart to be published or subscribed to
+chart get
 

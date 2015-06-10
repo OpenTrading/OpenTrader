@@ -1,7 +1,7 @@
 # -*-mode: python; py-indent-offset: 4; indent-tabs-mode: nil; encoding: utf-8-dos; coding: utf-8 -*-
 
 """
-give the Symbol Timeframe and Year to backtest
+Give the Symbol Timeframe and Year to backtest
 The Timeframe is the period in minutes: e.g. 1 60 240 1440
 """
 
@@ -32,7 +32,7 @@ from Omlettes import Omlette
 #? I think it belongs as a method to a class instance in PybacktestChef
 # replace ChefModule with the instance and make cook a method in it.
 # Thing is, I think dApplyRecipe is Chef dependent.
-def oPyBacktestCook(dFeeds, oRecipe, ChefModule, oOm, oFd=sys.stdout):
+def oPyBacktestCook(dFeeds, oRecipe, oChefModule, oOm, oFd=sys.stdout):
     """
     Returns an error message string on failure; a Cooker instance on success.
     """
@@ -60,7 +60,7 @@ def oPyBacktestCook(dFeeds, oRecipe, ChefModule, oOm, oFd=sys.stdout):
     #? I think it belongs in Omlette and happens to work in PybacktestChef
     dDataObj = oOm.dMakeChefsParams(buy=rBuy, sell=rSell, short=rShort, cover=rCover,
                                     ohlc=mOhlc)
-    #? should we test the dDataObj in ChefModule for validity?
+    #? should we test the dDataObj in oChefModule for validity?
     # *dataobj* should be dict-like structure containing signal series.
     # *signal_fields* specifies names of signal Series that backtester will
     # attempt to extract from dataobj.
@@ -71,7 +71,7 @@ def oPyBacktestCook(dFeeds, oRecipe, ChefModule, oOm, oFd=sys.stdout):
         open_label='O',
         close_label='C',
         )
-    oBt = ChefModule.ChefsOven(mOhlc, dDataObj, name=oOm.oRecipe.sName,
+    oBt = oChefModule.ChefsOven(mOhlc, dDataObj, name=oOm.oRecipe.sName,
                                **dChefParams)
     #? mOhlc
     oOm.vAppendHdf('recipe/dishes/rBuy', rBuy)
@@ -80,18 +80,18 @@ def oPyBacktestCook(dFeeds, oRecipe, ChefModule, oOm, oFd=sys.stdout):
     oOm.vAppendHdf('recipe/dishes/rCover', rCover)
     # FixMe:
     dChefParams['sName'] = oOm.sChef,
-    dChefParams['sUrl'] = 'file://' +ChefModule.__file__
+    dChefParams['sUrl'] = 'file://' +oChefModule.__file__
     oOm.vSetMetadataHdf('recipe/dishes', dChefParams)
     
     return oBt
 
-def vPlotEquityCurves(oBt, mOhlc, ChefModule,
+def vPlotEquityCurves(oBt, mOhlc, oChefModule,
                       sPeriod='W',
                       close_label='C',):
     matplotlib.rcParams['figure.figsize'] = (10, 5)
     
     # FixMe: derive the period from the sTimeFrame
-    ChefModule.vPlotEquity(oBt.equity, mOhlc, sTitle="%s\nEquity" % repr(oBt),
+    oChefModule.vPlotEquity(oBt.equity, mOhlc, sTitle="%s\nEquity" % repr(oBt),
                            sPeriod=sPeriod,
                            close_label=close_label,
                            )
@@ -107,11 +107,26 @@ def vPlotEquityCurves(oBt, mOhlc, ChefModule,
     
 def oParseOptions(sUsage):
     """
+    usage: OTBackTest.py [-h] [-P] [-R SRECIPE] [-C SCHEF] [-O SOMELETTE]
+                         [lArgs [lArgs ...]]
+
+    give the Symbol Timeframe and Year to backtest The Timeframe is the period in
+    minutes: e.g. 1 60 240 1440
+
+    positional arguments:
+      lArgs                 the Symbol Timeframe and Year to backtest (required)
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      -P, --plot_equity     plot the equity curves of the servings
+      -R SRECIPE, --recipe SRECIPE
+                            recipe to backtest
+      -C SCHEF, --chef SCHEF
+                            recipe to backtest
+      -O SOMELETTE, --omelette SOMELETTE
+                            store the recipe and servings in an hdf5 store
     """
     oArgParser = ArgumentParser(description=sUsage)
-    oArgParser.add_argument('-T', '--use_talib',
-                            dest='bUseTalib', action='store_true', default=False,
-                            help='Use Ta-lib for chart operations')
     oArgParser.add_argument('-P', '--plot_equity',
                             dest='bPlotEquity', action='store_true', default=False,
                             help='plot the equity curves of the servings')
@@ -119,10 +134,11 @@ def oParseOptions(sUsage):
                             dest="sRecipe", default="SMARecipe",
                             help="recipe to backtest")
     oArgParser.add_argument("-C", "--chef", action="store",
-                            dest="sChef", default="PybacktestChef",
+                            dest="sChef",
+                            default="PybacktestChef",
                             help="recipe to backtest")
-    oArgParser.add_argument("-H", "--hdf", action="store",
-                            dest="sHdfStore", default="",
+    oArgParser.add_argument("-O", "--omelette", action="store",
+                            dest="sOmelette", default="",
                             help="store the recipe and servings in an hdf5 store")
     return oArgParser
 
@@ -151,10 +167,10 @@ def iMain():
         
     oOm = None
     try:
-        oOm = Omlette.Omlette(sHdfStore=oOptions.sHdfStore, oFd=sys.stdout)
+        oOm = Omlette.Omlette(sHdfStore=oOptions.sOmelette, oFd=sys.stdout)
 
         oRecipe = oOm.oAddRecipe(oOptions.sRecipe)
-        ChefModule = oOm.oAddChef(oOptions.sChef)
+        oChefModule = oOm.oAddChef(oOptions.sChef)
         
         dRecipeParams = oRecipe.dRecipeParams()
 
@@ -166,11 +182,12 @@ def iMain():
         oFd.write('INFO:  Data Open length: %d\n' % len(mFeedOhlc))
         
         dFeeds = dict(mFeedOhlc=mFeedOhlc, dFeedParams=dFeedParams)
-        dIngredientsParams = dict(bUseTalib=oOptions.bUseTalib,
-                                  dRecipeParams=dRecipeParams)
+        # this now comes from the recipe ini file: bUseTalib=oOptions.bUseTalib
+        dIngredientsParams = dict(dRecipeParams=dRecipeParams)
         oRecipe.dMakeIngredients(dFeeds, dIngredientsParams)
-    
-        oBt = oPyBacktestCook(dFeeds, oRecipe, ChefModule, oOm)
+        assert oRecipe.dIngredients
+        
+        oBt = oPyBacktestCook(dFeeds, oRecipe, oChefModule, oOm)
         assert oBt is not None
         if type(oBt) == str:
             raise RuntimeError(oBt)

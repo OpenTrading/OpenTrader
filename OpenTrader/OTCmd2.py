@@ -121,9 +121,11 @@ except ImportError:
 from OpenTrader.cmd2plus import Cmd, options, make_option, Cmd2TestCase
 
 _dCHARTS = {}
-iRETVALS_WAIT_TIMEOUT = 60 # sed
 
 class MqlError(Exception):
+    pass
+
+class Mt4Timeout(RuntimeError):
     pass
 
 # should do something better if there are multiple clients
@@ -209,12 +211,21 @@ class CmdLineApp(Cmd):
         return self._G
     
     def gWaitForMessage(self, sMsgType, sMark, sChartId, *lArgs):
+        """
+        Raises a Mt4Timeout error if there is no answer in
+        oOptions['OTCmd2']['iRetvalTimeout'] seconds.
+        
+        Raising an error lets us return None as a return value.
+        The protocol talking to Mt4 has the void return type,
+        which gRetvalToPython in PikaListenerThread.py returns as None.
+        """
         sMsg = sFormatMessage(sMsgType, sMark, sChartId, *lArgs)
         self.vInfo("Publishing: " +sMsg)
         self.eSendOnSpeaker(sChartId, sMsgType, sMsg)
         self.dLastCmd[sChartId] = sMsg
         i = 0
-        while i < iRETVALS_WAIT_TIMEOUT:
+        iTimeout = self.oOptions['OTCmd2']['iRetvalTimeout']
+        while i < int(iTimeout):
             # do I need a thread lock?
             if sMark in self.oListenerThread.dRetvals.keys():
                 gRetval = self.oListenerThread.dRetvals[sMark]
@@ -224,7 +235,7 @@ class CmdLineApp(Cmd):
             self.vDebug("Waiting: " +repr(i))
             time.sleep(5.0)
         self._G = None
-        return None
+        raise Mt4Timeout("No retval returned in " +str(iTimeout) +" seconds")
     
     def eSendOnSpeaker(self, sChartId, sMsgType, sMsg):
         from OTMql427 import PikaListener
@@ -426,21 +437,17 @@ class CmdLineApp(Cmd):
         if lArgs[0] == 'wait' or lArgs[0] == 'sync':
             sMsgType = 'cmd' # Mt4 command
             assert len(lArgs) > 1, "ERROR: pub cmd COMMAND ARG1..."
+            # Raises a Mt4Timeout error if there is no answer in 60 seconds
             gRetval = self.gWaitForMessage(sMsgType, sMark, sChartId, *lArgs[1:])
-            if gRetval is not None:
-                # 
-                self.vInfo("Returned: " +repr(self.G(gRetval)))
-            else:
-                self.vWarn("No retval returned in " +str(iRETVALS_WAIT_TIMEOUT) +" seconds")
+
+            self.vInfo("Returned: " +repr(self.G(gRetval)))
             return 
         
         if lArgs[0] == 'cmd' or lArgs[0] == 'async':
             sMsgType = 'cmd' # Mt4 command
             assert len(lArgs) > 1, "ERROR: pub cmd COMMAND ARG1..."
-            sMsg = sFormatMessage(sMsgType, sMark, sChartId, *lArgs[1:])
-            self.vInfo("Publishing: " +sMsg)
-            self.eSendOnSpeaker(sChartId, sMsgType, sMsg)
-            self.dLastCmd[sChartId] = self.G(sMsg)
+            gRetval = self.gWaitForMessage(sMsgType, sMark, sChartId, *lArgs[1:])
+            self.vInfo("Returned: " +repr(self.G(gRetval)))
             return
         
         if lArgs[0] == 'eval':
@@ -449,10 +456,8 @@ class CmdLineApp(Cmd):
             sInfo = str(lArgs[1]) # FixMe: how do we distinguish variable or thunk?
             if len(lArgs) > 2:
                 sInfo += '(' +str(','.join(lArgs[2:])) +')'
-            sMsg = sFormatMessage(sMsgType, sMark, sChartId, sInfo,)
-            self.vInfo("Publishing: " +sMsg)
-            self.eSendOnSpeaker(sChartId, sMsgType, sMsg)
-            self.dLastEval[sChartId] = self.G(sMsg)
+            gRetval = self.gWaitForMessage(sMsgType, sMark, sChartId, sInfo)
+            self.vInfo("Returned: " +repr(self.G(gRetval)))
             return
         
         if lArgs[0] == 'json':
@@ -460,11 +465,10 @@ class CmdLineApp(Cmd):
             assert len(lArgs) > 1, "ERROR: pub eval COMMAND ARG1..."
             # FixMe: broken but unused
             sInfo = json.dumps(str(' '.join(lArgs[1:])))
-            sMsg = sFormatMessage(sMsgType, sMark, sChartId, sInfo,)
-            self.vInfo("Publishing: " +sMsg)
-            self.eSendOnSpeaker(sChartId, sMsgType, sMsg)
-            self.dLastJson[sChartId] = self.G(sMsg)
+            gRetval = self.gWaitForMessage(sMsgType, sMark, sChartId, sInfo)
+            self.vInfo("Returned: " +repr(self.G(gRetval)))
             return
+        
         self.vError("Unrecognized publish command: " + str(oArgs) +'\n' +__doc__)
         
     do_publish = do_pub
@@ -573,12 +577,20 @@ class CmdLineApp(Cmd):
     do_order = do_ord
     
     # backtest
-    @options([make_option("-b", "--backtester",
-                            dest="sBackTester",
-                            help="the backtest package (one of: pybacktest)"),
-    ],
-               arg_desc="command",
-               usage=sBAC__doc__
+    @options([make_option("-C", "--chef",
+                          dest="sChef",
+                          # no default here - we want it to come from the ini
+                          default="",
+                          help="the backtest package (one of: PybacktestChef)"),
+              make_option("-R", "--recipe",
+                          dest="sRecipe",
+                          # no default here - we want it to come from the ini
+                          default="",
+                          help="recipe to backtest (one of SMARecipe")
+
+              ],
+             arg_desc="command",
+             usage=sBAC__doc__
              )
     def do_back(self, oArgs, oOpts=None):
         __doc__ = sBAC__doc__
@@ -594,7 +606,21 @@ class CmdLineApp(Cmd):
         if not oArgs:
             self.poutput("Commands to backtest (and arguments) are required\n" + __doc__)
             return
-        vDoBacktestCmd(self, oArgs, oOpts=None)
+        try:
+            if oOpts.sRecipe:
+                self.sRecipe = oOpts.sRecipe
+            elif not hasattr(self, 'sRecipe') or not self.sRecipe:
+                self.sRecipe = self.oConfig['backtest']['sRecipe']
+            if oOpts.sChef:
+                self.sChef = oOpts.sChef
+            elif not hasattr(self, 'sChef') or not self.sChef:
+                self.sChef = self.oConfig['backtest']['sChef']
+            vDoBacktestCmd(self, oArgs, oOpts)
+        except KeyboardInterrupt:
+            pass
+        except Exception, e:
+            # This is still in the process of getting wired up and tested
+            print(traceback.format_exc(10))
         
     do_bac = do_back
     do_backtest = do_back
@@ -621,8 +647,8 @@ class CmdLineApp(Cmd):
 
         if self.oRabbit is None:
             sTo = oOpts.sHttpAddress +':' +str(oOpts.iHttpPort)
-            sUser = self.oConfig['RabbitMQ'].sUsername
-            sPass = self.oConfig['RabbitMQ'].sPassword
+            sUser = self.oConfig['RabbitMQ']['sUsername']
+            sPass = self.oConfig['RabbitMQ']['sPassword']
             self.oRabbit = pyrabbit.api.Client(sTo, sUser, sPass)
             vNullifyLocalhostProxy(oOpts.sHttpAddress)
 
@@ -695,9 +721,6 @@ def oParseOptions(sUsage):
     oArgParser.add_argument('-t', '--test',
                             dest='bUnittests', action='store_true', default=False,
                             help='Run unit test suite')
-    oArgParser.add_argument('-T', '--use_talib',
-                            dest='bUseTalib', action='store_true', default=False,
-                            help='Use Ta-lib for chart operations')
     oArgParser.add_argument('-C', '--config',
                             dest='sConfigFile', default="OTCmd2.ini",
                             help='Config file for OTCmd2 options')
@@ -729,8 +752,6 @@ def iMain():
     sUsage = __doc__.strip()
     oArgParser = oParseOptions(sUsage)
     oOptions = oArgParser.parse_args()
-    # FixMe: handle command line args?
-    # is this default?
     lArgs = oOptions.lArgs
 
     if oOptions.bUnittests:
@@ -738,6 +759,7 @@ def iMain():
         unittest.main()
         return 0
 
+    # FixMe: merge the arguments into the [OTCmd2] section of the configFile
     sConfigFile = oOptions.sConfigFile
     
     oApp = None
@@ -759,8 +781,8 @@ def iMain():
     if oApp and hasattr(oApp, 'oChart') and oApp.oChart:
         # failsafe
         try:
-            print "DEBUG: Waiting for message queues to flush..."
-            oApp.oChart.bCloseConnectionSockets(oConfig['RabbitMQ'])
+            sys.stdout.write("DEBUG: Waiting for message queues to flush...\n")
+            oApp.oChart.bCloseConnectionSockets()
             time.sleep(1.0)
         except (KeyboardInterrupt, exceptions.ConnectionClosed):
             # impatient

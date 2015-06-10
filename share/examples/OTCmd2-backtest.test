@@ -1,0 +1,13 @@
+# These tests will only work if you have pybacktest installed:
+#     https://github.com/ematvey/pybacktest
+set echo True
+# You dont need to have a listener thread running
+back recipe list
+back recipe set
+back recipe set SMARecipe
+back chef list
+back chef set
+back chef set PybacktestChef
+# WIP - unfinished
+back chef cook
+

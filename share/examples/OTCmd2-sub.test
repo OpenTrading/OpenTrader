@@ -1,0 +1,23 @@
+# Subscribe to messages from RabbitMQ on a given topic:
+set echo True
+sub run retval.# timer.#
+# list the message topics that are being hidden
+sub show
+py import time
+# you should see some timer messages in JSON format
+py time.sleep(15)
+# stop seeing TOPIC messages (e.g. tick - not a pattern)
+sub hide timer
+# now you should see no timer messages
+py time.sleep(15)
+# start seeing timer messages again
+sub show timer
+py time.sleep(15)
+# pprint ?0|1       - seeing TOPIC messages with pretty-printing,
+#        with 0 - off, 1 - on, no argument - current value
+sub pprint
+sub pprint 0
+sub pprint 1
+# info on the thread listening for messages.
+sub thread info
+
