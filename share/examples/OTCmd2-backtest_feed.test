@@ -1,0 +1,7 @@
+# These tests will only work if you have pybacktest installed:
+#     https://github.com/ematvey/pybacktest
+set echo True
+# You dont need to have a listener thread running
+back feed read_mt4_csv EURUSD60-2014.csv EURUSD 60 2014
+back feed info
+back feed plot

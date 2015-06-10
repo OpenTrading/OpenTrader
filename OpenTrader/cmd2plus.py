@@ -400,7 +400,7 @@ class Cmd(cmd.Cmd):
         continuation_prompt   On 2nd+ line of input
         debug                 Show full error stack on error
         default_file_name     for ``save``, ``load``, etc.
-        editor                Program used by ``edit``  
+        editor                Program used by ``edit``
         case_insensitive      upper- and lower-case both OK
         feedback_to_output    include nonessentials in `|`, `>` results
         quiet                 Don't print nonessential feedback

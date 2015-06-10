@@ -42,6 +42,7 @@ class Recipe(object):
                 self.oConfigObj = oConfigObj
                 for sKey, gValue in oConfigObj[self.sName].items():
                     setattr(self, sKey, gValue)
+ 
                 self.lRequiredFeeds = [oConfigObj[s] for s in
                                        self.lRequiredFeedParams]
                 self.lRequiredDishes = [oConfigObj[s] for s in

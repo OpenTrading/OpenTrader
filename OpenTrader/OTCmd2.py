@@ -3,7 +3,7 @@
 """
 This script can be run from the command line to send commands
 to a OTMql4Pika enabled Metatrader. It will start a command loop to
-listen, send commands, or query the RabbitMQ management interface, based 
+listen, send commands, or query the RabbitMQ management interface, based
 on the cmd2 REPL: see cmd2plus.py in https://github.com/OpenTrading/OTMql4Lib
 
 Type help at the command prompt to get more help.
@@ -43,7 +43,7 @@ Subscribe to messages from RabbitMQ on a given topic:
                           with 0 - off, 1 - on, no argument - current value
   sub thread info       - info on the thread listening for messages.
   sub thread stop       - stop a thread listening for messages.
-  
+
 Common RabbitMQ topic patterns are: # for all messages, tick.# for ticks,
 timer.# for timer events, retval.# for return values.
 You can choose as specific chart with syntax like:
@@ -76,7 +76,7 @@ sORD__doc__ = """
   ord stoploss
   ord trail
   ord exposure      - total exposure of all orders, worst case scenario
-  
+
 """
 
 lRABBIT_GET_THUNKS = ['vhost_names', 'channels',
@@ -100,14 +100,20 @@ from argparse import ArgumentParser
 from configobj import ConfigObj
 from pika import exceptions
 
-pybacktest = None
-sBAC__doc__ = ""
 try:
     import OpenTrader
-    sDir = os.path.dirname(OpenTrader.__file__)
+except ImportError:
+    # support running from source
+    sDir = os.path.dirname(os.path.dirname(__file__))
     if sDir not in sys.path:
         sys.path.insert(0, sDir)
     del sDir
+import OpenTrader
+from OpenTrader.cmd2plus import Cmd, options, make_option, Cmd2TestCase
+
+pybacktest = None
+sBAC__doc__ = ""
+try:
     import OpenTrader.OTBackTest as pybacktest
     from OpenTrader.BacktestCmd import sBAC__doc__
 except ImportError, e:
@@ -118,19 +124,11 @@ except ImportError:
     # sys.stdout.write("pyrabbit not installed: pip install pyrabbit\n")
     pyrabbit = None
 
-from OpenTrader.cmd2plus import Cmd, options, make_option, Cmd2TestCase
-
-_dCHARTS = {}
-
 class MqlError(Exception):
     pass
 
 class Mt4Timeout(RuntimeError):
     pass
-
-# should do something better if there are multiple clients
-def sMakeMark():
-    return "%15.5f" % time.time()
 
 # FixMe:
 # The messaging to and from OTMql4Py is still being done with a
@@ -149,7 +147,7 @@ def sFormatMessage(sMsgType, sMark, sChartId, *lArgs):
     We are moving over to JSON so *lArgs will be replaced by sJson,
     a single JSON list of [command, arg1, arg2,...]
     """
-    
+
     # iIgnore is reserved for being a hash on the payload
     iIgnore = 0
     # We are moving over to JSON - for now a command is separated by |
@@ -165,6 +163,9 @@ def lUnFormatMessage(sBody):
     sMark = lArgs[3]
     return lArgs
 
+# should do something better if there are multiple clients
+def sMakeMark():
+    return "%15.5f" % time.time()
 
 class CmdLineApp(Cmd):
     multilineCommands = []
@@ -174,7 +175,7 @@ class CmdLineApp(Cmd):
     oListenerThread = None
     oRabbit = None
     prompt = 'OTPy> '
-    
+
     def __init__(self, oConfig, oOptions, lArgs):
         Cmd.__init__(self)
         self.oConfig = oConfig
@@ -192,7 +193,7 @@ class CmdLineApp(Cmd):
         self.dLastJson = {}
         self.oBt = None
         self._G = None
-        
+
         # we may need to add to import PikaChart
         if self.oOptions.sMt4Dir:
             sMt4Dir = os.path.expanduser(os.path.expandvars(self.oOptions.sMt4Dir))
@@ -204,17 +205,17 @@ class CmdLineApp(Cmd):
                     self.vWarn("sMt4Dir/MQL4/Python/OTMql427 not found: " + sMt4Dir)
                 elif sMt4Dir not in sys.path:
                     sys.path.insert(0, sMt4Dir)
-        
+
     def G(self, gVal=None):
         if gVal is not None:
             self._G = gVal
         return self._G
-    
+
     def gWaitForMessage(self, sMsgType, sMark, sChartId, *lArgs):
         """
         Raises a Mt4Timeout error if there is no answer in
         oOptions['OTCmd2']['iRetvalTimeout'] seconds.
-        
+
         Raising an error lets us return None as a return value.
         The protocol talking to Mt4 has the void return type,
         which gRetvalToPython in PikaListenerThread.py returns as None.
@@ -236,7 +237,7 @@ class CmdLineApp(Cmd):
             time.sleep(5.0)
         self._G = None
         raise Mt4Timeout("No retval returned in " +str(iTimeout) +" seconds")
-    
+
     def eSendOnSpeaker(self, sChartId, sMsgType, sMsg):
         from OTMql427 import PikaListener
         if self.oListenerThread is None:
@@ -246,7 +247,7 @@ class CmdLineApp(Cmd):
             self.oChart = PikaListener.PikaMixin(sChartId, **self.oConfig['RabbitMQ'])
         # if sMsgType == 'cmd': warn if not Mt4 connected?
         return(self.oChart.eSendOnSpeaker(sMsgType, sMsg))
-    
+
     ## charts
     @options([],
              arg_desc="command",
@@ -261,7 +262,7 @@ class CmdLineApp(Cmd):
         if lArgs[0] == 'get':
             self.poutput(self.G(self.sDefaultChart))
             return
-        
+
         if lArgs[0] == 'set':
             if len(lArgs) > 1:
                 self.sDefaultChart = self.G(lArgs[1])
@@ -270,7 +271,7 @@ class CmdLineApp(Cmd):
             else:
                 self.vWarn("No default charts available; try 'sub run'")
             return
-        
+
         if lArgs[0] == 'list':
             if self.oListenerThread is None:
                 self.poutput(repr(self.G([])))
@@ -278,7 +279,7 @@ class CmdLineApp(Cmd):
                 self.poutput(repr(self.G(self.oListenerThread.lCharts)))
             return
         self.vError("Unrecognized chart command: " + str(oArgs) +'\n' +__doc__)
-        
+
     ## subscribe
     @options([make_option("-c", "--chart",
                             dest="sChartId",
@@ -299,7 +300,7 @@ class CmdLineApp(Cmd):
         except Exception, e:
             self.vError(traceback.format_exc(10))
             raise
-        
+
         if oOpts and oOpts.sChartId:
             sChartId = oOpts.sChartId
         else:
@@ -346,11 +347,11 @@ class CmdLineApp(Cmd):
             assert len(lArgs) > 1, "ERROR: sub thread " +str(lCmds)
             assert lArgs[1] in _lCmds, "ERROR: " +lArgs[0] +" " +str(_lCmds)
             sSubCmd = lArgs[1]
-            
+
             oT = self.oListenerThread
             if sSubCmd == 'enumerate':
                 self.vInfo("Threads %r" % (threading.enumerate(),))
-                return                
+                return
             if sSubCmd == 'info':
                 if not oT:
                     self.vInfo("Listener Thread not started")
@@ -385,7 +386,7 @@ class CmdLineApp(Cmd):
                 for sElt in lArgs[1:]:
                     self.oListenerThread.vHide(sElt)
             return
-        
+
         if lArgs[0] == 'show':
             if not self.oListenerThread:
                 self.vWarn("PikaListenerThread not already started")
@@ -396,7 +397,7 @@ class CmdLineApp(Cmd):
                 for sElt in lArgs[1:]:
                     self.oListenerThread.vShow(sElt)
             return
-        
+
         if lArgs[0] == 'pprint':
             if not self.oListenerThread:
                 self.vWarn("PikaListenerThread not already started")
@@ -406,11 +407,11 @@ class CmdLineApp(Cmd):
             else:
                 self.oListenerThread.vPprint('set', bool(lArgs[1]))
             return
-        
+
         self.vError("Unrecognized subscribe command: " + str(oArgs) +'\n' +__doc__)
-        
+
     do_subscribe = do_sub
-    
+
     ## publish
     @options([make_option("-c", "--chart",
                             dest="sChartId",
@@ -441,15 +442,15 @@ class CmdLineApp(Cmd):
             gRetval = self.gWaitForMessage(sMsgType, sMark, sChartId, *lArgs[1:])
 
             self.vInfo("Returned: " +repr(self.G(gRetval)))
-            return 
-        
+            return
+
         if lArgs[0] == 'cmd' or lArgs[0] == 'async':
             sMsgType = 'cmd' # Mt4 command
             assert len(lArgs) > 1, "ERROR: pub cmd COMMAND ARG1..."
             gRetval = self.gWaitForMessage(sMsgType, sMark, sChartId, *lArgs[1:])
             self.vInfo("Returned: " +repr(self.G(gRetval)))
             return
-        
+
         if lArgs[0] == 'eval':
             sMsgType = 'eval'
             assert len(lArgs) > 1, "ERROR: pub eval COMMAND ARG1..."
@@ -459,7 +460,7 @@ class CmdLineApp(Cmd):
             gRetval = self.gWaitForMessage(sMsgType, sMark, sChartId, sInfo)
             self.vInfo("Returned: " +repr(self.G(gRetval)))
             return
-        
+
         if lArgs[0] == 'json':
             sMsgType = 'json'
             assert len(lArgs) > 1, "ERROR: pub eval COMMAND ARG1..."
@@ -468,11 +469,11 @@ class CmdLineApp(Cmd):
             gRetval = self.gWaitForMessage(sMsgType, sMark, sChartId, sInfo)
             self.vInfo("Returned: " +repr(self.G(gRetval)))
             return
-        
+
         self.vError("Unrecognized publish command: " + str(oArgs) +'\n' +__doc__)
-        
+
     do_publish = do_pub
-    
+
     ## order
     @options([make_option("-c", "--chart",
                             dest="sChartId",
@@ -489,7 +490,7 @@ class CmdLineApp(Cmd):
         if self.oListenerThread is None:
             self.vError("PikaListenerThread not started; use 'sub run ...'")
             return
-        
+
         if oOpts and oOpts.sChartId:
             sChartId = oOpts.sChartId
         else:
@@ -504,21 +505,21 @@ class CmdLineApp(Cmd):
             sInfo='jOTOrdersTickets'
             self.gWaitForMessage(sMsgType, sMark, sChartId, sInfo)
             return
-        
+
         if lArgs[0] == 'trades':
             sMsgType = 'cmd' # Mt4 command
             # FixMe: trailing |
             sInfo='jOTOrdersTrades'
             self.gWaitForMessage(sMsgType, sMark, sChartId, sInfo)
             return
-        
+
         if lArgs[0] == 'history':
             sMsgType = 'cmd' # Mt4 command
             # FixMe: trailing |
             sInfo='jOTOrdersHistory'
             self.gWaitForMessage(sMsgType, sMark, sChartId, sInfo)
             return
-        
+
         if lArgs[0] == 'info':
             sMsgType = 'cmd' # Mt4 command
             sCmd='jOTOrderInformationByTicket'
@@ -526,14 +527,14 @@ class CmdLineApp(Cmd):
             sInfo = str(lArgs[1])
             self.gWaitForMessage(sMsgType, sMark, sChartId, sCmd, sInfo)
             return
-        
+
         if lArgs[0] == 'exposure':
             sMsgType = 'cmd' # Mt4 command
             sCmd='fOTExposedEcuInMarket'
             sInfo = str(0)
             self.gWaitForMessage(sMsgType, sMark, sChartId, sCmd, sInfo)
             return
-        
+
         if lArgs[0] == 'close':
             sMsgType = 'cmd' # Mt4 command
             assert len(lArgs) >= 2, "ERROR: order close iTicket [fPrice iSlippage}"
@@ -546,7 +547,7 @@ class CmdLineApp(Cmd):
             else:
                 sCmd='iOTOrderCloseMarket'
                 self.gWaitForMessage(sMsgType, sMark, sChartId, sCmd, sTicket)
-                
+
             return
 
         if lArgs[0] == 'buy' or lArgs[0] == 'sell':
@@ -573,9 +574,9 @@ class CmdLineApp(Cmd):
 
         # (int iTicket, double fPrice, int iSlippage, color cColor=CLR_NONE)
         self.vError("Unrecognized order command: " + str(oArgs) +'\n' +__doc__)
-        
+
     do_order = do_ord
-    
+
     # backtest
     @options([make_option("-C", "--chef",
                           dest="sChef",
@@ -602,7 +603,7 @@ class CmdLineApp(Cmd):
         except ImportError, e:
             self.vError("backtest unfinished at the moment: " +str(e))
             return
-        
+
         if not oArgs:
             self.poutput("Commands to backtest (and arguments) are required\n" + __doc__)
             return
@@ -621,10 +622,10 @@ class CmdLineApp(Cmd):
         except Exception, e:
             # This is still in the process of getting wired up and tested
             print(traceback.format_exc(10))
-        
+
     do_bac = do_back
     do_backtest = do_back
-    
+
     ## rabbit
     @options([make_option("-a", "--address",
                             dest="sHttpAddress",
@@ -685,13 +686,13 @@ class CmdLineApp(Cmd):
 
     def vError(self, sMsg):
         self.poutput("ERROR: " +sMsg)
-        
+
     def vWarn(self, sMsg):
         self.poutput("WARN: " +sMsg)
-        
+
     def vInfo(self, sMsg):
         self.pfeedback("INFO: " +sMsg)
-        
+
     def vDebug(self, sMsg):
         self.pfeedback("DEBUG: " +sMsg)
 
@@ -745,10 +746,10 @@ def oParseConfig(sConfigFile):
         sConfigFile = os.path.expanduser(os.path.expandvars(sConfigFile))
         assert os.path.isfile(sConfigFile), "Configuration file not found: " + sConfigFile
     return ConfigObj(sConfigFile, unrepr=True)
-        
+
 def iMain():
 #    from PikaArguments import oParseOptions
-    
+
     sUsage = __doc__.strip()
     oArgParser = oParseOptions(sUsage)
     oOptions = oArgParser.parse_args()
@@ -761,7 +762,7 @@ def iMain():
 
     # FixMe: merge the arguments into the [OTCmd2] section of the configFile
     sConfigFile = oOptions.sConfigFile
-    
+
     oApp = None
     try:
         oConfig = oParseConfig(sConfigFile)

@@ -11,7 +11,7 @@ def vCookFiles(sSymbol, sDir):
     for sYear in ['2010', '2011', '2012', '2013', '2014', '2015']:
         sRaw1 = os.path.join(sDir, sSymbol + '1-' +sYear +'.csv')
         assert os.path.exists(sRaw1), "File not found: " +sRaw1
-    
+
         for sTimeFrame in ['60', '240', '1440']:
             sCooked = os.path.join(sDir, sSymbol + sTimeFrame +'-' +sYear +'.csv')
             if not os.path.exists(sCooked):
@@ -32,7 +32,7 @@ def vCookFile(sRaw1, sCooked, sTimeFrame, sSymbol, sYear):
                                              dtype='float64')
         print "INFO: raw data length: %d" % len(dDF_Raw1Df[sKey])
         # 2015 INFO: raw data length: 633920
-        
+
     oDfOpen1 = dDF_Raw1Df[sKey].iloc[:, [0]]
     print "INFO: %s %s %s raw open length: %d" % (sTimeFrame, sSymbol, sYear, len(oDfOpen1),)
     dDF_OHLC[sTimeFrame] = oDfOpen1.resample(sTimeFrame+'T', how='ohlc',

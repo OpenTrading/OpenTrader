@@ -85,7 +85,7 @@ def lPullYahooToTxtfile(sSymbol):
     try:
         print 'Currently Pulling',sSymbol
         print str(datetime.datetime.fromtimestamp(int(time.time())).strftime('%Y-%m-%d %H:%M:%S'))
-        #Keep in mind this is close high low open, lol. 
+        #Keep in mind this is close high low open, lol.
         urlToVisit = 'http://chartapi.finance.yahoo.com/instrument/1.0/'+sSymbol+'/chartdata;type=quote;range=10y/csv'
         lStockLines = []
         try:
@@ -111,7 +111,7 @@ def vGraphData(sSymbol, date, closep, highp, lowp, openp, volume,
                ):
     if bUseTalib:
         import talib
-        
+
     x = 0
     y = len(date)
     newAr = []
@@ -157,13 +157,13 @@ def vGraphData(sSymbol, date, closep, highp, lowp, openp, volume,
     maLeg = plt.legend(loc=9, ncol=2, prop={'size': 7},
                        fancybox=True, borderaxespad=0.0)
     maLeg.get_frame().set_alpha(0.4)
-    
+
     oLegend = pylab.gca().get_legend()
     if oLegend:
         # AttributeError: 'NoneType' object has no attribute 'get_texts'
         textEd = oLegend.get_texts()
         pylab.setp(textEd[0:5], color = 'white')
-        
+
     volumeMin = 0
 
     ax0 = plt.subplot2grid((6,4), (0,0), sharex=ax1, rowspan=1, colspan=4, axisbg='#07000d')
@@ -200,7 +200,7 @@ def vGraphData(sSymbol, date, closep, highp, lowp, openp, volume,
     ax1v.spines['right'].set_color(uSpinesFg)
     ax1v.tick_params(axis='x', colors='white')
     ax1v.tick_params(axis='y', colors='white')
-    
+
     ax2 = plt.subplot2grid((6,4), (5,0), sharex=ax1, rowspan=1, colspan=4, axisbg='#07000d')
     uMacdFill = '#00ffe8'
     emaslow, emafast, macd = computeMACD(closep, slow=iMacdSlow, fast=iMacdFast)
@@ -262,7 +262,7 @@ def iOldMain():
 #               iMacdSlow, iMacdFast, iMacdEma,
 #               bUseTalib
                )
-    
+
 def oParseOptions(sUsage):
     """
     """
@@ -288,9 +288,9 @@ def iMain():
     sYear = lArgs[2] # '2014'
     # FixMe:
     pDir = '/t/Program Files/HotForex MetaTrader/history/tools.fxdd.com'
-    
+
     pCooked = os.path.join(pDir, sSymbol + sTimeFrame +'-' +sYear +'.csv')
-    
+
     oOhlc = oReadMt4Csv(pCooked, sTimeFrame, sSymbol, sYear)
     oOhlc = oPreprocessOhlc(oOhlc)
     # (Pdb) pandas.tseries.converter._dt_to_float_ordinal(oOhlc.index)[0]
@@ -306,16 +306,16 @@ def iMain():
     iMacdSlow = 26
     iMacdFast = 12
     iMacdEma = 9
-    
+
     vGraphData(sSymbol, dates,
-               oOhlc.C.values, oOhlc.H.values, oOhlc.L.values, oOhlc.O.values,   
+               oOhlc.C.values, oOhlc.H.values, oOhlc.L.values, oOhlc.O.values,
                volume,
                iShortSMA, iLongSMA,
                iRsiUpper, iRsiLower,
                iMacdSlow, iMacdFast, iMacdEma,
                bUseTalib=oOptions.bUseTalib,
                )
-    
+
 if __name__ == '__main__':
     iMain()
-    
+

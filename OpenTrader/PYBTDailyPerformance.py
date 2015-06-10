@@ -19,7 +19,7 @@ def end(rEquity):
 def days(rEquity):
     return (rEquity.index[-1] - rEquity.index[0]).days
 def trades_per_month(rEquity):
-    return rEquity.groupby(lambda x: (x.year, x.month) 
+    return rEquity.groupby(lambda x: (x.year, x.month)
                        ).apply(lambda x: x[x != 0].count()).mean()
 def profit(rEquity):
     return rEquity.sum()

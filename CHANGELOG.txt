@@ -1,3 +1,8 @@
+commit bff957d55e403abae66613140895fa260de559e5
+Date:   Wed Jun 10 15:52:26 2015 +0300
+
+    Added more examples as tests in share/examples.
+
 commit 117518ae0ea8ea13590c49ac998b85547c962320
 Date:   Wed Jun 10 00:05:14 2015 +0300
 

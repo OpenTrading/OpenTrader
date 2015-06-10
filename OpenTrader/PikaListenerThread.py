@@ -13,7 +13,7 @@ from OTMql427 import PikaListener
 from OTMql427 import SimpleFormat
 
 class PikaListenerThread(threading.Thread, PikaListener.PikaMixin):
-    
+
     def __init__(self, sChartId, lTopics, **dArgs):
         dThreadArgs = {'name': sChartId, 'target': self.run}
         PikaListener.PikaMixin.__init__(self, sChartId, **dArgs)
@@ -56,7 +56,7 @@ class PikaListenerThread(threading.Thread, PikaListener.PikaMixin):
     def stop(self):
         self._running.clear()
         #? self.oListenerChannel.stop_consuming()
-        
+
     def vPprint(self, sMsgType, sMsg=None, sPrefix="INFO: "):
         if sMsgType == 'get':
             sys.stdout.write("INFO: bPprint" +repr(self.bPprint) + "\n")
@@ -69,24 +69,24 @@ class PikaListenerThread(threading.Thread, PikaListener.PikaMixin):
             sys.stdout.write(sPrefix +sMsgType +" = " +pformat(sMsg) +"\n")
         else:
             sys.stdout.write(sPrefix +sMsgType +" = " +repr(sMsg) +"\n")
-        
+
     def vHide(self, sMsgType=None):
         if not sMsgType:
             sys.stdout.write("INFO: hiding " +repr(self.lHide) + "\n")
             return
         if sMsgType not in self.lHide:
             self.lHide.append(sMsgType)
-            
+
     def vShow(self, sMsgType=None):
         if not sMsgType:
             sys.stdout.write("INFO: hiding " +repr(self.lHide) + "\n")
             return
         if sMsgType in self.lHide:
             self.lHide.remove(sMsgType)
-            
+
     def vPyCallbackOnListener(self, oChannel, oMethod, oProperties, sBody):
         # dir(oProperties) = [app_id', 'cluster_id', 'content_encoding', 'content_type', 'correlation_id', 'decode', 'delivery_mode', 'encode', 'expiration', 'headers', 'message_id', 'priority', 'reply_to', 'timestamp', 'type', 'user_id']
-        
+
         oChannel.basic_ack(delivery_tag=oMethod.delivery_tag)
         lArgs = SimpleFormat.lUnFormatMessage(sBody)
         sMsgType = lArgs[0]
@@ -95,7 +95,7 @@ class PikaListenerThread(threading.Thread, PikaListener.PikaMixin):
         sMark = lArgs[3]
         sPayloadType = lArgs[4]
         gPayload = lArgs[4:] # overwritten below
-        
+
         try:
             # sys.stdout.write("INFO: sChart: " +repr(sChart) +'\n')
 
@@ -109,7 +109,7 @@ class PikaListenerThread(threading.Thread, PikaListener.PikaMixin):
                 except Exception, e:
                     sys.stdout.write("WARN: vPyCallbackOnListener error decoding to Python: %s\n%r" % (str(e), sBody, ))
                     return
-                    
+
                 self.jLastRetval = gPayload
                 self.dRetvals[sMark] = gPayload
 
@@ -120,7 +120,7 @@ class PikaListenerThread(threading.Thread, PikaListener.PikaMixin):
                 # can use this to find the current bid and ask
                 gPayload =json.loads(lArgs[5])
                 self.jLastBar = gPayload
-                
+
             elif sMsgType == 'tick':
                 assert sPayloadType == 'json', \
                     sMsgType +" sPayloadType expected 'json' not " \
@@ -128,7 +128,7 @@ class PikaListenerThread(threading.Thread, PikaListener.PikaMixin):
                 # can use this to find the current bid and ask
                 gPayload =json.loads(lArgs[5])
                 self.jLastTick = gPayload
-                
+
             elif sMsgType == 'timer':
                 assert sPayloadType == 'json', \
                     sMsgType +" sPayloadType expected 'json'" +"\n" +sBody
@@ -138,7 +138,7 @@ class PikaListenerThread(threading.Thread, PikaListener.PikaMixin):
             else:
                 sys.stdout.write("WARN: vPyCallbackOnListener unrecognized sMsgType: %r\n" % (sBody, ))
                 return
-                
+
             # may need more info here - chart and sMark
             if sMsgType == 'retval':
                 # you really need sMark for retval

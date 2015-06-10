@@ -12,7 +12,6 @@ from Recipe import Recipe
 
 class SMARecipe(Recipe):
     
-    sName = 'SMACross'
     # There will always be at least one Feed Dataframe that is required
     # but you could have more: multi-equity, multi-timeframe...
     lRequiredFeeds = [dict(mFeedOhlc=dict(lNames=['T', 'O', 'H', 'L', 'C'],
@@ -21,14 +20,17 @@ class SMARecipe(Recipe):
                                                sPandasType='Series',)),
                             dict(rLongMa=dict(iLongMa=200, bUseTalib=True,
                                               sPandasType='Series',))]
-    sIniFile = 'SMARecipe.ini'
     
-    __fVersion__ = 1.0
     #? should oOm be required?
     def __init__(self, oOm=None, oFd=sys.stdout):
         Recipe.__init__(self, oOm)
         self.sFile = __file__
         self.oFd = oFd
+        self.__fVersion__ = 1.0
+        self.sName = 'SMACross'
+        self.sIniFile = 'SMARecipe.ini'
+        self.sFile = __file__
+        # ugly - active
         self.zReadIniFile()
 
     def dMakeIngredients(self, dFeeds, dIngredientsParams):

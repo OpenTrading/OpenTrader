@@ -38,6 +38,7 @@ class Omlette(object):
     # is this an Omlette method? its generic and the use of self is tangential
     def dGetFeedFrame(self, sCsvFile, sTimeFrame, sSymbol, sYear):
         dFeedParams = OrderedDict(sTimeFrame=sTimeFrame, sSymbol=sSymbol, sYear=sYear)
+        # PandasMt4.dDF_OHLC[sKey = sSymbol + sTimeFrame + sYear]
         dFeedParams['mFeedOhlc'] = oReadMt4Csv(sCsvFile, **dFeedParams)
         dFeedParams['open_label'] = 'O'
         dFeedParams['close_label'] = 'C'

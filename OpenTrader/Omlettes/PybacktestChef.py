@@ -63,6 +63,8 @@ def mExtractFrame(dDataDict, ext_mask, int_mask):
         return pandas.DataFrame(df)
     return None
 
+# are these specific to the chef or generic to the process?
+lProducedServings = ['signals', 'trades', 'positions', 'equity', 'trade_price', 'summary']
 
 class ChefsOven(object):
     """
@@ -77,7 +79,6 @@ class ChefsOven(object):
     _lSignalFieldsInt = ('Buy', 'Sell', 'Short', 'Cover')
     _lPriceFieldsInt = ('BuyPrice', 'SellPrice', 'ShortPrice', 'CoverPrice')
     # these are the results you can get back from this Chef
-    lProducedServings = ['signals', 'trades', 'positions', 'equity', 'summary']
     
     def __init__(self, mOhlc, dDataDict, name='Unknown',
                  signal_fields=None,

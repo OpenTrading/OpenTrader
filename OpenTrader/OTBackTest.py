@@ -39,7 +39,7 @@ def oPyBacktestCook(dFeeds, oRecipe, oChefModule, oOm, oFd=sys.stdout):
     dDishes = oRecipe.dApplyRecipe(oRecipe.dIngredients)
     rBuy = rCover = dDishes['rBuy']
     rSell = rShort = dDishes['rSell']
-    
+
     if not len(rBuy[rBuy == True]):
         sMsg = "WARN: NO Buy/Cover signals; qutting!"
         sys.stderr.write(sMsg +'\n')
@@ -79,32 +79,32 @@ def oPyBacktestCook(dFeeds, oRecipe, oChefModule, oOm, oFd=sys.stdout):
     oOm.vAppendHdf('recipe/dishes/rShort', rShort)
     oOm.vAppendHdf('recipe/dishes/rCover', rCover)
     # FixMe:
-    dChefParams['sName'] = oOm.sChef,
+    dChefParams['sName'] = oOm.oChefModule.sChef
     dChefParams['sUrl'] = 'file://' +oChefModule.__file__
     oOm.vSetMetadataHdf('recipe/dishes', dChefParams)
-    
+
     return oBt
 
 def vPlotEquityCurves(oBt, mOhlc, oChefModule,
                       sPeriod='W',
                       close_label='C',):
     matplotlib.rcParams['figure.figsize'] = (10, 5)
-    
+
     # FixMe: derive the period from the sTimeFrame
     oChefModule.vPlotEquity(oBt.equity, mOhlc, sTitle="%s\nEquity" % repr(oBt),
                            sPeriod=sPeriod,
                            close_label=close_label,
                            )
     pylab.show()
-    
+
     oBt.vPlotTrades()
     pylab.legend(loc='lower left')
     pylab.show()
-    
+
     oBt.vPlotTrades(subset=slice(sYear+'-05-01', sYear+'-09-01'))
     pylab.legend(loc='lower left')
     pylab.show()
-    
+
 def oParseOptions(sUsage):
     """
     usage: OTBackTest.py [-h] [-P] [-R SRECIPE] [-C SCHEF] [-O SOMELETTE]
@@ -142,10 +142,10 @@ def oParseOptions(sUsage):
                             help="store the recipe and servings in an hdf5 store")
     return oArgParser
 
-    
+
 def iMain():
     oHdfStore = None
-    
+
     sUsage = __doc__.strip()
     oArgParser = oParseOptions(sUsage)
     oArgParser.add_argument('lArgs', action="store",
@@ -164,29 +164,28 @@ def iMain():
     sCsvFile = os.path.join(sDir, sSymbol + sTimeFrame +'-' +sYear +'.csv')
     if not os.path.isfile(sCsvFile):
         vCookFiles(sSymbol, sDir)
-        
+
     oOm = None
     try:
         oOm = Omlette.Omlette(sHdfStore=oOptions.sOmelette, oFd=sys.stdout)
 
         oRecipe = oOm.oAddRecipe(oOptions.sRecipe)
         oChefModule = oOm.oAddChef(oOptions.sChef)
-        
-        dRecipeParams = oRecipe.dRecipeParams()
 
         dFeedParams = dict(sTimeFrame=sTimeFrame, sSymbol=sSymbol, sYear=sYear)
         dFeed = oOm.dGetFeedFrame(sCsvFile, **dFeedParams)
         mFeedOhlc = dFeed['mFeedOhlc']
-        
+
         mFeedOhlc = oPreprocessOhlc(mFeedOhlc)
         oFd.write('INFO:  Data Open length: %d\n' % len(mFeedOhlc))
-        
+        # ugly - should be a list of different feed timeframes etc.
         dFeeds = dict(mFeedOhlc=mFeedOhlc, dFeedParams=dFeedParams)
+        dRecipeParams = oRecipe.dRecipeParams()
         # this now comes from the recipe ini file: bUseTalib=oOptions.bUseTalib
         dIngredientsParams = dict(dRecipeParams=dRecipeParams)
         oRecipe.dMakeIngredients(dFeeds, dIngredientsParams)
         assert oRecipe.dIngredients
-        
+
         oBt = oPyBacktestCook(dFeeds, oRecipe, oChefModule, oOm)
         assert oBt is not None
         if type(oBt) == str:
@@ -196,27 +195,27 @@ def iMain():
         oBt._mSignals = oRecipe.mSignals(oBt)
         oFd.write('INFO:  bt.signals found: %d\n' % len(oBt.signals))
         oOm.vAppendHdf('recipe/servings/mSignals', oBt.signals)
-        
+
         # this was the same as: oBt._mTrades =  oBt.mTrades() or oBt.trades
         oBt._mTrades = oRecipe.mTrades(oBt)
         oFd.write('INFO:  bt.trades found: %d\n' % len(oBt.trades))
         oOm.vAppendHdf('recipe/servings/mTrades', oBt.trades)
-        
+
         # this was the same as: oBt._rPositions = oBt.rPositions() or oBt.positions
-        oBt._rPositions = oRecipe.rPositions(oBt, init_pos=0)        
+        oBt._rPositions = oRecipe.rPositions(oBt, init_pos=0)
         oFd.write('INFO:  bt.positions found: %d\n' % len(oBt.positions))
         oOm.vAppendHdf('recipe/servings/rPositions', oBt.positions)
-        
+
         # this was the same as: oBt._rEquity = oBt.rEquity() or oBt.equity
-        oBt._rEquity = oRecipe.rEquity(oBt)        
+        oBt._rEquity = oRecipe.rEquity(oBt)
         oFd.write('INFO:  bt.equity found: %d\n' % len(oBt.equity))
         oOm.vAppendHdf('recipe/servings/rEquity', oBt.equity)
-        
+
         # oFd.write('INFO:  bt.rTradePrice() found: %d\n' % len(oBt.rTradePrice()))
         oFd.write('INFO:  bt.trade_price found: %d\n' % len(oBt.trade_price))
         oOm.vAppendHdf('recipe/servings/rTradePrice', oBt.trade_price)
 
-        oOm.vSetTitleHdf('recipe/servings', oOm.sChef)
+        oOm.vSetTitleHdf('recipe/servings', oOm.oChefModule.sChef)
         #? Leave this as derived or store it? reviews?
         oOm.vSetMetadataHdf('recipe/servings', oBt.dSummary())
         oFd.write(oBt.sSummary())
@@ -234,6 +233,6 @@ def iMain():
         sys.exc_clear()
     finally:
         if oOm: oOm.vClose()
-        
+
 if __name__ == '__main__':
     iMain()
