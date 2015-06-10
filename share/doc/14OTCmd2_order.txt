@@ -12,7 +12,7 @@
   ord stoploss
   ord trail
   ord exposure      - total exposure of all orders, worst case scenario
-  
+
 
 Usage: ord [options] command
 

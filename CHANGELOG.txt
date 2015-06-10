@@ -1,3 +1,8 @@
+commit b3ae7440c93d4ea3ea0a2f3a6aeb2ffd2f58c1c0
+Date:   Wed Jun 10 21:02:50 2015 +0300
+
+    Completed share/examples/OTCmd2-backtest.test test example.
+
 commit bff957d55e403abae66613140895fa260de559e5
 Date:   Wed Jun 10 15:52:26 2015 +0300
 

@@ -217,7 +217,7 @@ Subscribe to messages from RabbitMQ on a given topic:
                           with 0 - off, 1 - on, no argument - current value
   sub thread info       - info on the thread listening for messages.
   sub thread stop       - stop a thread listening for messages.
-  
+
 Common RabbitMQ topic patterns are: # for all messages, tick.# for ticks,
 timer.# for timer events, retval.# for return values.
 You can choose as specific chart with syntax like:
@@ -236,6 +236,8 @@ Options:
 
 Publish a message via RabbitMQ to a given chart on a OTMql4Py enabled terminal:
   pub cmd  COMMAND ARG1 ... - publish a Mql command to Mt4,
+      the command should be a single string, with a space seperating arguments.
+  pub wait COMMAND ARG1 ... - publish a Mql command to Mt4 and wait for the result,
       the command should be a single string, with a space seperating arguments.
   pub eval COMMAND ARG1 ... - publish a Python command to the OTMql4Py,
       the command should be a single string, with a space seperating arguments.
@@ -284,7 +286,7 @@ Options:
   ord stoploss
   ord trail
   ord exposure      - total exposure of all orders, worst case scenario
-  
+
 
 Usage: ord [options] command
 
@@ -292,6 +294,51 @@ Options:
   -h, --help            show this help message and exit
   -c SCHARTID, --chart=SCHARTID
                         the target chart to order with (or: ANY ALL NONE)
+
+```
+### OTCmd2 backtest
+```
+
+back feed dir
+back feed dir dirname
+
+back feed read_mt4_csv SYMBOL TIMEFRAME [YEAR] - read a CSV file from Mt4
+back feed read_yahoo_csv SYMBOL [STARTYEAR]
+back feed list                                 - list the feeds we have read
+back feed get                                  - get the key name of the current feed
+back feed info
+back feed plot
+
+back recipe list                                 - list the known recipes
+back recipe set                                  - show the current recipe
+back recipe set RECIPE                           - set the current recipe
+back recipe ingredients                          - make the ingredients
+
+back chef list                          - list the known chefs
+back chef set                           - show the current chef
+back chef set CHEF                      - set the current chef
+back chef cook                          - cook the recipe by the chef
+
+back servings list                               - list the servings
+back servings signals
+back servings trades
+back servings positions
+back servings equity
+back servings summary
+
+back plot show
+back plot set
+back plot trades
+back plot equity
+
+Usage: back [options] command
+
+Options:
+  -h, --help            show this help message and exit
+  -C SCHEF, --chef=SCHEF
+                        the backtest package (one of: PybacktestChef)
+  -R SRECIPE, --recipe=SRECIPE
+                        recipe to backtest (one of SMARecipe
 
 ```
 ### OTCmd2 rabbit
