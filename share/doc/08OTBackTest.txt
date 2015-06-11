@@ -1,3 +1,9 @@
+
+## OTBackTest.py
+
+OTBackTest.py can run as a stand-alone script for backtesting.
+
+```
 usage: OTBackTest.py [-h] [-T] [-P] [-R SRECIPE] [-C SCHEF] [-H SHDFSTORE]
                      [lArgs [lArgs ...]]
 
@@ -17,3 +23,4 @@ optional arguments:
                         recipe to backtest
   -H SHDFSTORE, --hdf SHDFSTORE
                         store the recipe and servings in an hdf5 store
+```

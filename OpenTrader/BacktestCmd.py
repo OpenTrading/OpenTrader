@@ -323,6 +323,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
                        mFeedOhlc.C.values, mFeedOhlc.H.values, mFeedOhlc.L.values, mFeedOhlc.O.values,
                        nVolume,
                        **_dPlotParams)
+            return
 
         self.vError("Unrecognized feed command: " + str(oArgs) +'\n' +__doc__)
         return

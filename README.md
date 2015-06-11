@@ -1,7 +1,5 @@
 # OpenTrader
-## Open Trader
 
-# OpenTrader
 
 OpenTrader
 
@@ -37,7 +35,6 @@ the Windows version, and the AMQP server version and version of the Pika.**
 This code in known to run under Linux Wine (1.7.x), so this project
 bridges Metatrader to RabbitMQ under Linux.
 
-### Installation
 
 You must have `cmd2` installed the Python that runs this script:
 see https://bitbucket.org/catherinedevlin/cmd2
@@ -64,7 +61,6 @@ python setup.py
 to create the OTCmd2 script. Run `OTCmd2 help` (see below).
 
 
-### Project
 
 Please file any bugs in the issue tracker:
 https://github.com/OpenTrading/OpenTrader/issues
@@ -76,7 +72,6 @@ the important pages back into the documentation in the share/doc directory.
 You will need to be signed into github.com to see or edit in the wiki.
 
 
-## OTCmd2.py
 
 This script can be run from the command line to send commands
 to a OTMql4AMQP enabled Metatrader. It will start a command loop to
@@ -123,7 +118,6 @@ If you have `pyrabbit` installed, and iff the rabbitmq_management plugin
 has been installed in your server, you can introspect some useful
 information if the HTTP interface is enabled with the `rabbit` command.
 
-### Messaging Format
 
 The messaging to and from OTMql4Py is still being done with a
 very simple format:
@@ -143,7 +137,6 @@ This may breaks if the sPayload args or value contain a | -
 we will probably replace this with json or pickled serialization, or kombu.
 
 
-### Examples
 
 There are some example OTCmd2 command scripts in the `share/examples`
 directory that you can run from the command line with the stdin
@@ -164,9 +157,7 @@ WARN: No retval returned in 60 seconds
 Note that you can use this scripting to open and close orders.
 
 
-## Pandas love Omlettes!
 
-### (And you thought pandas were vegans :-)
 
 There are many steps to making a good Omlette:
 
@@ -184,6 +175,27 @@ There are many steps to making a good Omlette:
 
 
 
+
+Tests are in the `tests/` directory and use `pytest-bdd`
+https://github.com/pytest-dev/pytest-bdd/
+
+The feature text file in the `tests/features/` directory
+provide a lot of documentation on the internals of `OTCmd2.py`.
+
+
+
+
+
+    Settings for OTCmd2 are in a configobj .ini file that by default is
+    found in the same place that the OTCmd2.py file is found, but you can
+    use the OTCmd2.py '-c' or '--config' command-line option to specify
+    an alternate location. It uses configobj with unrepr=True
+    so the values are Python, not just strings.
+
+
+OTBackTest.py can run as a stand-alone script for backtesting.
+
+```
 usage: OTBackTest.py [-h] [-T] [-P] [-R SRECIPE] [-C SCHEF] [-H SHDFSTORE]
                      [lArgs [lArgs ...]]
 
@@ -203,7 +215,7 @@ optional arguments:
                         recipe to backtest
   -H SHDFSTORE, --hdf SHDFSTORE
                         store the recipe and servings in an hdf5 store
-### OTCmd2 subscribe
+```
 ```
 
 Subscribe to messages from RabbitMQ on a given topic:
@@ -231,7 +243,6 @@ Options:
                         the target chart to subscribe to
 
 ```
-### OTCmd2 publish
 ```
 
 Publish a message via RabbitMQ to a given chart on a OTMql4Py enabled terminal:
@@ -253,7 +264,6 @@ Options:
                         the target chart to publish to (or: ANY ALL NONE)
 
 ```
-### OTCmd2 chart
 ```
 
 Set and query the chart used for messages to and from RabbitMQ:
@@ -272,7 +282,6 @@ Options:
   -h, --help  show this help message and exit
 
 ```
-### OTCmd2 order
 ```
 
   ord list          - list the ticket numbers of current orders.
@@ -296,7 +305,6 @@ Options:
                         the target chart to order with (or: ANY ALL NONE)
 
 ```
-### OTCmd2 backtest
 ```
 
 back feed dir
@@ -341,7 +349,6 @@ Options:
                         recipe to backtest (one of SMARecipe
 
 ```
-### OTCmd2 rabbit
 ```
 
 If we have pyrabbit installed, and iff the rabbitmq_management plugin

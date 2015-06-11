@@ -1,3 +1,9 @@
+commit 8167f6f849b4b41bdbbbb4cf254ae376477ba3d6
+Date:   Thu Jun 11 13:54:50 2015 +0300
+
+    Added pytest-bdd tests in tests/features/OTCmd2_ini.feature
+    Just a beginning for now.
+
 commit 163a83161ef0977e1386e043a2787292765401d6
 Date:   Wed Jun 10 21:55:58 2015 +0300
 

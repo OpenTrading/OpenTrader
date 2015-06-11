@@ -48,6 +48,9 @@ Common RabbitMQ topic patterns are: # for all messages, tick.# for ticks,
 timer.# for timer events, retval.# for return values.
 You can choose as specific chart with syntax like:
     tick.oChart.EURGBP.240.93ACD6A2.#
+
+The RabbitMQ host and login information is set in the `[RabbitMQ]`
+section of the `OTCmd2.ini` file; see the `-c/--config` command-line options.
 """
 
 sPUB__doc__ = """
@@ -61,6 +64,9 @@ Publish a message via RabbitMQ to a given chart on a OTMql4Py enabled terminal:
 
 You wont see the return value unless you have already done a:
   sub run retval.#
+
+The RabbitMQ host and login information is set in the `[RabbitMQ]`
+section of the `OTCmd2.ini` file; see the `-c/--config` command-line options.
 """
 
 # should these all be of chart ANY
@@ -86,6 +92,9 @@ If we have pyrabbit installed, and iff the rabbitmq_management plugin
 has been installed in your server, we can introspect some useful
 information if the HTTP interface is enabled. Commands include:
     get %s
+
+The RabbitMQ host and login information is set in the `[RabbitMQ]`
+section of the `OTCmd2.ini` file; see the `-c/--config` command-line options.
 """ % ("|".join(lRABBIT_GET_THUNKS),)
 
 import sys
@@ -224,7 +233,7 @@ class CmdLineApp(Cmd):
         self.eSendOnSpeaker(sChartId, sMsgType, sMsg)
         self.dLastCmd[sChartId] = sMsg
         i = 0
-        iTimeout = self.oOptions['OTCmd2']['iRetvalTimeout']
+        iTimeout = self.oConfig['OTCmd2']['iRetvalTimeout']
         while i < int(iTimeout):
             # do I need a thread lock?
             if sMark in self.oListenerThread.dRetvals.keys():
