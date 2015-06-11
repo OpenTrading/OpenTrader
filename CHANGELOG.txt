@@ -1,3 +1,8 @@
+commit 163a83161ef0977e1386e043a2787292765401d6
+Date:   Wed Jun 10 21:55:58 2015 +0300
+
+    Added share/doc/15OTCmd2_backtest.txt and updated documentation.
+
 commit b3ae7440c93d4ea3ea0a2f3a6aeb2ffd2f58c1c0
 Date:   Wed Jun 10 21:02:50 2015 +0300
 

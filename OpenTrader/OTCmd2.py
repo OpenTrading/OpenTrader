@@ -182,8 +182,7 @@ class CmdLineApp(Cmd):
         self.oOptions = oOptions
         self.lArgs = lArgs
         self.lTopics = ['#']
-        self.sDefaultChart = oOptions.sDefaultChartId
-        del oOptions.__dict__['sDefaultChartId']
+        self.sDefaultChart = ""
         # FixMe: refactor for multiple charts
         self.dCharts = {}
         # Keep a copy of what goes out;
@@ -722,12 +721,9 @@ def oParseOptions(sUsage):
     oArgParser.add_argument('-t', '--test',
                             dest='bUnittests', action='store_true', default=False,
                             help='Run unit test suite')
-    oArgParser.add_argument('-C', '--config',
+    oArgParser.add_argument('-c', '--config',
                             dest='sConfigFile', default="OTCmd2.ini",
                             help='Config file for OTCmd2 options')
-    oArgParser.add_argument("-c", "--chart",
-                            dest="sDefaultChartId", action='store_true', default='oANY_0_FFFF_0',
-                            help="the default target chart to sub or pub")
     oArgParser.add_argument("-P", "--mt4dir", action="store",
                             dest="sMt4Dir", default="",
                             help="directory for the installed Metatrader")

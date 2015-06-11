@@ -51,7 +51,7 @@ setup(
             "OTBackTest = OpenTrader.OTBackTest:iMain",
         ]
     },
-    tests_require=[],
+    tests_require=["pytest-bdd"],
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
