@@ -1,3 +1,8 @@
+commit e42c95363378bc6f473541b362ba5aea5deab955
+Date:   Thu Jun 11 19:13:21 2015 +0300
+
+    Added share/doc/07TestsFeatures.txt
+
 commit 8167f6f849b4b41bdbbbb4cf254ae376477ba3d6
 Date:   Thu Jun 11 13:54:50 2015 +0300
 

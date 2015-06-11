@@ -1,0 +1,10 @@
+## Tests
+
+Tests are in the `tests/` directory and use `pytest-bdd`
+https://github.com/pytest-dev/pytest-bdd/
+
+The feature text file in the `tests/features/` directory
+provide a lot of documentation on the internals of `OTCmd2.py`.
+
+
+

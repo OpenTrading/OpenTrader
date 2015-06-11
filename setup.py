@@ -49,6 +49,7 @@ setup(
         "console_scripts": [
             "OTCmd2 = OpenTrader.OTCmd2:iMain",
             "OTBackTest = OpenTrader.OTBackTest:iMain",
+            "OTPpnAmgc = OpenTrader.OTPpnAmgc:iMain",
         ]
     },
     tests_require=["pytest-bdd"],

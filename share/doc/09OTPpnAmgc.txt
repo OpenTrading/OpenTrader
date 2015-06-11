@@ -1,0 +1,22 @@
+## OTPpnAmgc
+
+OTPpnAmgc charts a CSV file of Open High Low Close Volume values, along with
+the MACD and RSI, using matplotlib. Give the CsvFile Symbol Timeframe and Year
+as arguments to the script. The Timeframe is the period in minutes: e.g. 1 60
+240 1440 YMMV: IT WILL NOT WORK for less than Daily: 1440
+
+```
+positional arguments:
+  lArgs                 the Symbol Timeframe and Year to backtest (required)
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -u, --use_talib       Use Ta-lib for chart operations
+  --iShortSMA ISHORTSMA
+  --iLongSMA ILONGSMA
+  --iRsiUpper IRSIUPPER
+  --iRsiLower IRSILOWER
+  --iMacdSlow IMACDSLOW
+  --iMacdFast IMACDFAST
+  --iMacdEma IMACDEMA
+```

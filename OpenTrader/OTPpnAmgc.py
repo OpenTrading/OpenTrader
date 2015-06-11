@@ -3,7 +3,11 @@
 # from http://pythonprogramming.net/advanced-matplotlib-graphing-charting-tutorial
 
 """
-give the Symbol Timeframe and Year to graph
+OTPpnAmgc charts a CSV file of Open High Low Close Volume values,
+along with the MACD and RSI, using matplotlib.
+
+Give the CsvFile Symbol Timeframe and Year as arguments to the script.
+
 The Timeframe is the period in minutes: e.g. 1 60 240 1440
 YMMV: IT WILL NOT WORK for less than Daily: 1440
 """
@@ -264,12 +268,26 @@ def iOldMain():
                )
 
 def oParseOptions(sUsage):
-    """
-    """
+    from argparse import ArgumentParser
     oArgParser = ArgumentParser(description=sUsage)
     oArgParser.add_argument('-u', '--use_talib',
                             dest='bUseTalib', action='store_true', default=False,
                             help='Use Ta-lib for chart operations')
+    oArgParser.add_argument("--iShortSMA", action="store",
+                            dest="iShortSMA", type=int, default=10)
+    oArgParser.add_argument("--iLongSMA", action="store",
+                            dest="iLongSMA", type=int, default=50)
+    oArgParser.add_argument("--iRsiUpper", action="store",
+                            dest="iRsiUpper", type=int, default=70)
+    oArgParser.add_argument("--iRsiLower", action="store",
+                            dest="iRsiLower", type=int, default=30)
+    oArgParser.add_argument("--iMacdSlow", action="store",
+                            dest="iMacdSlow", type=int, default=26)
+    oArgParser.add_argument("--iMacdFast", action="store",
+                            dest="iMacdFast", type=int, default=12)
+    oArgParser.add_argument("--iMacdEma", action="store",
+                            dest="iMacdEma", type=int, default=9)
+
     return oArgParser
 
 def iMain():
@@ -281,38 +299,28 @@ def iMain():
     oOptions = oArgParser.parse_args()
     lArgs = oOptions.lArgs
 
-    assert len(lArgs) == 3, "Give the Symbol Timeframe and Year as arguments to this script"
+    assert len(lArgs) == 4, "Give the CsvFile Symbol Timeframe and Year as arguments"
 
-    sSymbol = lArgs[0] # 'EURGBP'
-    sTimeFrame = lArgs[1] # '1440'
-    sYear = lArgs[2] # '2014'
-    # FixMe:
-    pDir = '/t/Program Files/HotForex MetaTrader/history/tools.fxdd.com'
+    # sDir = '/t/Program Files/HotForex MetaTrader/history/tools.fxdd.com'
+    # sCsvFile = os.path.join(sDir, sSymbol + sTimeFrame +'-' +sYear +'.csv')
+    sCsvFile = lArgs[0]
+    sSymbol = lArgs[1] # 'EURGBP'
+    sTimeFrame = lArgs[2] # '1440'
+    sYear = lArgs[3] # '2014'
 
-    pCooked = os.path.join(pDir, sSymbol + sTimeFrame +'-' +sYear +'.csv')
-
-    oOhlc = oReadMt4Csv(pCooked, sTimeFrame, sSymbol, sYear)
+    oOhlc = oReadMt4Csv(sCsvFile, sTimeFrame, sSymbol, sYear)
     oOhlc = oPreprocessOhlc(oOhlc)
     # (Pdb) pandas.tseries.converter._dt_to_float_ordinal(oOhlc.index)[0]
     # 735235.33333333337
     dates = matplotlib.dates.date2num(oOhlc.index.to_pydatetime())
     volume = 1000*np.random.normal(size=len(oOhlc))
 
-    # FixMe:
-    iShortSMA = 10
-    iLongSMA = 50
-    iRsiUpper = 70
-    iRsiLower = 30
-    iMacdSlow = 26
-    iMacdFast = 12
-    iMacdEma = 9
-
     vGraphData(sSymbol, dates,
                oOhlc.C.values, oOhlc.H.values, oOhlc.L.values, oOhlc.O.values,
                volume,
-               iShortSMA, iLongSMA,
-               iRsiUpper, iRsiLower,
-               iMacdSlow, iMacdFast, iMacdEma,
+               oOptions.iShortSMA, oOptions.iLongSMA,
+               oOptions.iRsiUpper, oOptions.iRsiLower,
+               oOptions.iMacdSlow, oOptions.iMacdFast, oOptions.iMacdEma,
                bUseTalib=oOptions.bUseTalib,
                )
 

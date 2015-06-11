@@ -306,7 +306,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
         if lArgs[1] == 'plot':
             import matplotlib
             import numpy as np
-            from PpnAmgcTut import vGraphData
+            from OTPpnAmgc import vGraphData
             if 'matplotlib.rcParams' in self.oConfig:
                 for sKey, gVal in self.oConfig['matplotlib.rcParams'].items():
                     matplotlib.rcParams[sKey] = gVal
