@@ -60,6 +60,7 @@ section of the `OTCmd2.ini` file; see the `-c/--config` command-line options.
 
 sPUB__doc__ = """
 Publish a message via RabbitMQ to a given chart on a OTMql4Py enabled terminal:
+
   pub cmd  COMMAND ARG1 ... - publish a Mql command to Mt4,
       the command should be a single string, with a space seperating arguments.
   pub wait COMMAND ARG1 ... - publish a Mql command to Mt4 and wait for the result,
@@ -76,6 +77,8 @@ section of the `OTCmd2.ini` file; see the `-c/--config` command-line options.
 
 # should these all be of chart ANY
 sORD__doc__ = """
+Manage orders in an OTMql4AQMp enabled Metatrader:
+
   ord list          - list the ticket numbers of current orders.
   ord info iTicket  - list the current order information about iTicket.
   ord trades        - list the details of current orders.
@@ -118,11 +121,10 @@ try:
     import OpenTrader
 except ImportError:
     # support running from source
-    sDir = os.path.dirname(os.path.dirname(__file__))
-    if sDir not in sys.path:
-        sys.path.insert(0, sDir)
-    del sDir
-import OpenTrader
+    sDIR = os.path.dirname(os.path.dirname(__file__))
+    if sDIR not in sys.path:
+        sys.path.insert(0, sDIR)
+    del sDIR
 from OpenTrader.cmd2plus import Cmd, options, make_option, Cmd2TestCase
 
 pybacktest = None
@@ -131,7 +133,7 @@ try:
     import OpenTrader.OTBackTest as pybacktest
     from OpenTrader.BacktestCmd import sBAC__doc__
 except ImportError, e:
-    sys.stdout.write("pybacktest not installed: " +str(e) +"\n" )
+    sys.stdout.write("pybacktest not installed: " +str(e) +"\n")
 try:
     import pyrabbit
 except ImportError:
@@ -265,7 +267,7 @@ class CmdLineApp(Cmd):
     @options([],
              arg_desc="command",
              usage=sCHART__doc__,
-    )
+             )
     def do_chart(self, oArgs, oOpts=None):
         __doc__ = sCHART__doc__
         if not oArgs:
@@ -297,10 +299,10 @@ class CmdLineApp(Cmd):
     @options([make_option("-c", "--chart",
                             dest="sChartId",
                             help="the target chart to subscribe to"),
-    ],
-               arg_desc="command",
-               usage=sSUB__doc__,
-    )
+              ],
+             arg_desc="command",
+             usage=sSUB__doc__,
+             )
     def do_sub(self, oArgs, oOpts=None):
         __doc__ = sSUB__doc__
         lArgs = oArgs.split()
@@ -348,7 +350,7 @@ class CmdLineApp(Cmd):
                     self.lTopics = lArgs[1:]
                 self.vInfo("Starting PikaListenerThread listening to: " + repr(self.lTopics))
                 self.oListenerThread = PikaListenerThread.PikaListenerThread(sChartId, self.lTopics,
-                                                          **self.oConfig['RabbitMQ'])
+                                                                             **self.oConfig['RabbitMQ'])
                 self.oListenerThread.start()
             except Exception, e:
                 self.vError(traceback.format_exc(10))
@@ -357,7 +359,7 @@ class CmdLineApp(Cmd):
 
         if lArgs[0] == 'thread':
             _lCmds = ['info', 'stop', 'enumerate']
-            assert len(lArgs) > 1, "ERROR: sub thread " +str(lCmds)
+            assert len(lArgs) > 1, "ERROR: sub thread " +str(_lCmds)
             assert lArgs[1] in _lCmds, "ERROR: " +lArgs[0] +" " +str(_lCmds)
             sSubCmd = lArgs[1]
 
@@ -427,12 +429,12 @@ class CmdLineApp(Cmd):
 
     ## publish
     @options([make_option("-c", "--chart",
-                            dest="sChartId",
-                            help="the target chart to publish to (or: ANY ALL NONE)"),
-    ],
-               arg_desc="command",
-               usage=sPUB__doc__,
-    )
+                          dest="sChartId",
+                          help="the target chart to publish to (or: ANY ALL NONE)"),
+              ],
+             arg_desc="command",
+             usage=sPUB__doc__,
+             )
     def do_pub(self, oArgs, oOpts=None):
         __doc__ = sPUB__doc__
         if not oArgs:
@@ -489,12 +491,12 @@ class CmdLineApp(Cmd):
 
     ## order
     @options([make_option("-c", "--chart",
-                            dest="sChartId",
-                            help="the target chart to order with (or: ANY ALL NONE)"),
-    ],
-               arg_desc="command",
-               usage=sORD__doc__,
-    )
+                          dest="sChartId",
+                          help="the target chart to order with (or: ANY ALL NONE)"),
+              ],
+             arg_desc="command",
+             usage=sORD__doc__,
+             )
     def do_ord(self, oArgs, oOpts=None):
         __doc__ = sORD__doc__
         if not oArgs:
@@ -515,27 +517,27 @@ class CmdLineApp(Cmd):
         if lArgs[0] == 'list' or lArgs[0] == 'tickets':
             sMsgType = 'cmd' # Mt4 command
             # FixMe: trailing |
-            sInfo='jOTOrdersTickets'
+            sInfo = 'jOTOrdersTickets'
             self.gWaitForMessage(sMsgType, sMark, sChartId, sInfo)
             return
 
         if lArgs[0] == 'trades':
             sMsgType = 'cmd' # Mt4 command
             # FixMe: trailing |
-            sInfo='jOTOrdersTrades'
+            sInfo = 'jOTOrdersTrades'
             self.gWaitForMessage(sMsgType, sMark, sChartId, sInfo)
             return
 
         if lArgs[0] == 'history':
             sMsgType = 'cmd' # Mt4 command
             # FixMe: trailing |
-            sInfo='jOTOrdersHistory'
+            sInfo = 'jOTOrdersHistory'
             self.gWaitForMessage(sMsgType, sMark, sChartId, sInfo)
             return
 
         if lArgs[0] == 'info':
             sMsgType = 'cmd' # Mt4 command
-            sCmd='jOTOrderInformationByTicket'
+            sCmd = 'jOTOrderInformationByTicket'
             assert len(lArgs) > 1, "ERROR: orders info iTicket"
             sInfo = str(lArgs[1])
             self.gWaitForMessage(sMsgType, sMark, sChartId, sCmd, sInfo)
@@ -543,7 +545,7 @@ class CmdLineApp(Cmd):
 
         if lArgs[0] == 'exposure':
             sMsgType = 'cmd' # Mt4 command
-            sCmd='fOTExposedEcuInMarket'
+            sCmd = 'fOTExposedEcuInMarket'
             sInfo = str(0)
             self.gWaitForMessage(sMsgType, sMark, sChartId, sCmd, sInfo)
             return
@@ -555,10 +557,10 @@ class CmdLineApp(Cmd):
             if len(lArgs) >= 3:
                 sPrice = lArgs[2]
                 sSlippage = lArgs[3]
-                sCmd='iOTOrderCloseFull'
+                sCmd = 'iOTOrderCloseFull'
                 self.gWaitForMessage(sMsgType, sMark, sChartId, sCmd, sTicket, sPrice, sSlippage)
             else:
-                sCmd='iOTOrderCloseMarket'
+                sCmd = 'iOTOrderCloseMarket'
                 self.gWaitForMessage(sMsgType, sMark, sChartId, sCmd, sTicket)
 
             return
@@ -578,10 +580,10 @@ class CmdLineApp(Cmd):
             if len(lArgs) >= 5:
                 sPrice = lArgs[3]
                 sSlippage = lArgs[4]
-                sCmd='iOTOrderSend'
+                sCmd = 'iOTOrderSend'
                 self.gWaitForMessage(sMsgType, sMark, sChartId, sCmd, sSymbol, sArg1, sVolume, sPrice, sSlippage)
             else:
-                sCmd='iOTOrderSendMarket'
+                sCmd = 'iOTOrderSendMarket'
                 self.gWaitForMessage(sMsgType, sMark, sChartId, sCmd, sSymbol, sArg1, sVolume)
             return
 
@@ -641,15 +643,15 @@ class CmdLineApp(Cmd):
 
     ## rabbit
     @options([make_option("-a", "--address",
-                            dest="sHttpAddress",
-                            default="127.0.0.1",
-                            help="the TCP address of the HTTP rabbitmq_management  (default 127.0.0.1)"),
-                make_option('-p', '--port', type="int",
-                            dest="iHttpPort", default=15672,
-                            help="the TCP port of the HTTP rabbitmq_management plugin (default 15672)"),],
-               arg_desc="command",
-               usage=sRABBIT__doc__
-    )
+                          dest="sHttpAddress",
+                          default="127.0.0.1",
+                          help="the TCP address of the HTTP rabbitmq_management  (default 127.0.0.1)"),
+              make_option('-p', '--port', type="int",
+                          dest="iHttpPort", default=15672,
+                          help="the TCP port of the HTTP rabbitmq_management plugin (default 15672)"),],
+             arg_desc="command",
+             usage=sRABBIT__doc__
+             )
     def do_rabbit(self, oArgs, oOpts=None):
         __doc__ = sRABBIT__doc__
         if not pyrabbit:

@@ -5,7 +5,6 @@
 
 import sys
 import os
-import collections
 from pybacktest.data import load_from_yahoo
 
 #? feed rename delete
@@ -30,8 +29,8 @@ omlettes, plotting the data or the results, and adding or editing comments.
 sBAC__doc__ += sBAComlette__doc__
 
 sBACfeed__doc__ = """
-back feed dir
-back feed dir dirname
+back feed dir                                  - NotImplemented
+back feed dir dirname                          - NotImplemented
 
 back feed read_mt4_csv SYMBOL TIMEFRAME [YEAR] - read a CSV file from Mt4 into pandas
 back feed read_yahoo_csv SYMBOL [STARTYEAR]    - read a Yahoo internet feed into pandas
@@ -60,28 +59,25 @@ back chef cook                          - cook the recipe by the chef
 sBAC__doc__ += sBACchef__doc__
 
 sBACservings__doc__ = """
-back servings list                               - list the servings
-back servings signals
-back servings trades
-back servings positions
-back servings equity
-back servings summary
+back servings list        - list the servings that result from the recipe and the chef
+back servings signals     - show the signals: when to buy or sell
+back servings trades      - show the trades: what was bought or sold
+back servings positions   - show how the trades effected the positions
+back servings equity      - show the results of the trades as equity differences
+back servings summary     - show the metrics and analyses of the trades
 """
 sBAC__doc__ += sBACservings__doc__
 
 sBACplot__doc__ = """
-back plot show
-back plot set
-back plot trades
-back plot equity
+back plot show      - show the current plot
+back plot trades    - plot the trades
+back plot equity    - plot the cumulative equity
 """
 sBAC__doc__ += sBACplot__doc__
 
 dRunCache = {}
 
-global dFEED_CACHE
 dFEED_CACHE = {}
-global sFEED_CACHE_KEY
 sFEED_CACHE_KEY = ""
 
 _sCurrentOmletteDir = ""
@@ -116,7 +112,7 @@ def oEnsureRecipe(self, oOpts, sNewRecipe=""):
     if sOldName and sOldName != sNewRecipe:        
         #? do we invalidate the current servings if the recipe changed?
         vClearOven(self, oOpts)
-    return oOm.oRecipe
+    return oRecipe
 
 def oEnsureChef(self, oOpts, sNewChef=""):
     oOm = oEnsureOmlette(self, oOpts)
@@ -220,7 +216,8 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
                     self.poutput("History directory not found: use \"feed dir dir\": " + \
                                  self.oConfig['feed']['sHistoryDir'])
                 else:
-                    self.poutput("Default history directory: " + self.oConfig['feed']['sHistoryDir'])
+                    self.poutput("Default history directory: " + \
+                                 self.oConfig['feed']['sHistoryDir'])
                 return
             
             sDir = lArgs[2]
@@ -244,7 +241,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
             assert os.path.isfile(sFile), \
                    "ERROR: " +sDo +" " +sCmd +" file not found " +sFile
             if len(lArgs) > 5:
-                sSymbol= lArgs[3]
+                sSymbol = lArgs[3]
                 sTimeFrame = lArgs[4]
                 sYear = lArgs[5]
             else:
@@ -455,7 +452,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
 
         if sCmd == 'set':
             assert len(lArgs) > 2, \
-                   "ERROR: %s %s %s one of: %s" % (
+                   "ERROR: %s %s needs one of: %s" % (
                 sDo, sCmd, '|'.join(lKnownChefs))
             sNewChef = str(lArgs[2])
             assert sNewChef in lKnownChefs, \
@@ -570,7 +567,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
 
     if sDo == 'plot':
         __doc__ = sBACplot__doc__
-        _lCmds = ['show', 'set', 'trades', 'equity']
+        _lCmds = ['show', 'trades', 'equity']
         
         assert len(lArgs) > 1, "ERROR: " +sDo +str(_lCmds)
         sCmd = lArgs[1]
@@ -578,10 +575,6 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
 
         import matplotlib.pylab as pylab
         if sCmd == 'show':
-            pylab.show()
-            return
-        if sCmd == 'set':
-            #?
             pylab.show()
             return
 

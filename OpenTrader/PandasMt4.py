@@ -1,11 +1,10 @@
 # -*-mode: python; py-indent-offset: 4; indent-tabs-mode: nil; encoding: utf-8-dos; coding: utf-8 -*-
 
 import sys, os
-import datetime
 import pandas
 
 dDF_OHLC = {}
-dDF_Raw1Df = {}
+dDF_RAW1MIN = {}
 
 def vCookFiles(sSymbol, sDir):
     for sYear in ['2010', '2011', '2012', '2013', '2014', '2015']:
@@ -20,20 +19,20 @@ def vCookFiles(sSymbol, sDir):
             assert os.path.exists(sCooked)
 
 def vCookFile(sRaw1, sCooked, sTimeFrame, sSymbol, sYear):
-    global dDF_Raw1Df
+    global dDF_RAW1MIN
 
     sKey = sSymbol + sTimeFrame + sYear
-    if sKey not in dDF_Raw1Df:
+    if sKey not in dDF_RAW1MIN:
         print "INFO: reading " + sRaw1
-        dDF_Raw1Df[sKey] = pandas.read_csv(sRaw1, header=None,
-                                             names=['D', 'T', 'O', 'H', 'L', 'C', 'V'],
-                                             parse_dates={'timestamp': ['D', 'T']},
-                                             index_col='timestamp',
-                                             dtype='float64')
-        print "INFO: raw data length: %d" % len(dDF_Raw1Df[sKey])
+        dDF_RAW1MIN[sKey] = pandas.read_csv(sRaw1, header=None,
+                                           names=['D', 'T', 'O', 'H', 'L', 'C', 'V'],
+                                           parse_dates={'timestamp': ['D', 'T']},
+                                           index_col='timestamp',
+                                           dtype='float64')
+        print "INFO: raw data length: %d" % len(dDF_RAW1MIN[sKey])
         # 2015 INFO: raw data length: 633920
 
-    oDfOpen1 = dDF_Raw1Df[sKey].iloc[:, [0]]
+    oDfOpen1 = dDF_RAW1MIN[sKey].iloc[:, [0]]
     print "INFO: %s %s %s raw open length: %d" % (sTimeFrame, sSymbol, sYear, len(oDfOpen1),)
     dDF_OHLC[sTimeFrame] = oDfOpen1.resample(sTimeFrame+'T', how='ohlc',
                                              closed='left',

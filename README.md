@@ -181,7 +181,11 @@ There are many steps to making a good Omlette:
 
 6. Enjoy the Servings that come out of the the Oven(Backtester).
 
+### HDF5
 
+An omlette is an HDF5 file that saves all the information from a backtest,
+including the metadata: all of parameter values that were used in the recipe,
+the parameters used by the cook, and the servings results.
 
 ## Tests
 
@@ -366,15 +370,16 @@ back omlette close               - close the HDF file saving the omlette
 Real Soon Now you will be able to enjoy them more by reloading previously saved
 omlettes, plotting the data or the results, and adding or editing comments.
 
-back feed dir
-back feed dir dirname
+back feed dir                                  - NotImplemented
+back feed dir dirname                          - NotImplemented
 
-back feed read_mt4_csv SYMBOL TIMEFRAME [YEAR] - read a CSV file from Mt4
-back feed read_yahoo_csv SYMBOL [STARTYEAR]
+back feed read_mt4_csv SYMBOL TIMEFRAME [YEAR] - read a CSV file from Mt4 into pandas
+back feed read_yahoo_csv SYMBOL [STARTYEAR]    - read a Yahoo internet feed into pandas
 back feed list                                 - list the feeds we have read
 back feed get                                  - get the key name of the current feed
-back feed info
-back feed plot
+back feed info                                 - concise summary of the DataFrame
+back feed plot                                 - plot the CSV data using OTPpnAmgc
+               This plots the feed, with SMA, RSIs and MACDs, using matplotlib.
 
 back recipe list                                 - list the known recipes
 back recipe set                                  - show the current recipe
@@ -386,17 +391,16 @@ back chef set                           - show the current chef
 back chef set CHEF                      - set the current chef
 back chef cook                          - cook the recipe by the chef
 
-back servings list                               - list the servings
-back servings signals
-back servings trades
-back servings positions
-back servings equity
-back servings summary
+back servings list        - list the servings that result from the recipe and the chef
+back servings signals     - show the signals: when to buy or sell
+back servings trades      - show the trades: what was bought or sold
+back servings positions   - show how the trades effected the positions
+back servings equity      - show the results of the trades as equity differences
+back servings summary     - show the metrics and analyses of the trades
 
-back plot show
-back plot set
-back plot trades
-back plot equity
+back plot show      - show the current plot
+back plot trades    - plot the trades
+back plot equity    - plot the cumulative equity
 
 Usage: back [options] command
 

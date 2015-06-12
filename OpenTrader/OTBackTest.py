@@ -8,17 +8,10 @@ The Timeframe is the period in minutes: e.g. 1 60 240 1440
 from __future__ import print_function
 import sys, os
 import traceback
-import datetime
 from collections import OrderedDict
 from argparse import ArgumentParser
 
-import pandas
-import talib
-from talib import abstract
-import matplotlib
-import matplotlib.pylab as pylab
-
-from PandasMt4 import oReadMt4Csv, oPreprocessOhlc, vCookFiles
+from PandasMt4 import oPreprocessOhlc
 
 from Omlettes import Omlette
 
@@ -72,7 +65,7 @@ def oPyBacktestCook(dFeeds, oRecipe, oChefModule, oOm, oFd=sys.stdout):
         close_label='C',
         )
     oBt = oChefModule.ChefsOven(mOhlc, dDataObj, name=oOm.oRecipe.sName,
-                               **dChefParams)
+                                **dChefParams)
     #? mOhlc
     oOm.vAppendHdf('recipe/dishes/rBuy', rBuy)
     oOm.vAppendHdf('recipe/dishes/rSell', rSell)
@@ -88,22 +81,25 @@ def oPyBacktestCook(dFeeds, oRecipe, oChefModule, oOm, oFd=sys.stdout):
 def vPlotEquityCurves(oBt, mOhlc, oChefModule,
                       sPeriod='W',
                       close_label='C',):
+    import matplotlib
+    import matplotlib.pylab as pylab
+    # FixMe:
     matplotlib.rcParams['figure.figsize'] = (10, 5)
 
     # FixMe: derive the period from the sTimeFrame
     oChefModule.vPlotEquity(oBt.equity, mOhlc, sTitle="%s\nEquity" % repr(oBt),
-                           sPeriod=sPeriod,
-                           close_label=close_label,
-                           )
+                            sPeriod=sPeriod,
+                            close_label=close_label,
+                            )
     pylab.show()
 
     oBt.vPlotTrades()
     pylab.legend(loc='lower left')
     pylab.show()
 
-    oBt.vPlotTrades(subset=slice(sYear+'-05-01', sYear+'-09-01'))
-    pylab.legend(loc='lower left')
-    pylab.show()
+    ## oBt.vPlotTrades(subset=slice(sYear+'-05-01', sYear+'-09-01'))
+    ## pylab.legend(loc='lower left')
+    ## pylab.show()
 
 def oParseOptions(sUsage):
     """
@@ -220,7 +216,8 @@ def oOmain(lArgv):
     oOm.vSetMetadataHdf('recipe', dRecipeParams)
 
     if oOptions.bPlotEquity:
-        vPlotEquityCurves(oBt, mOhlc)
+        mOhlc = oRecipe.dIngredients['mOhlc']
+        vPlotEquityCurves(oBt, mOhlc, oOm.oChefModule)
     return oOm
 
 def iMain():

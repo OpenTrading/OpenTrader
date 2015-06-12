@@ -17,5 +17,9 @@ There are many steps to making a good Omlette:
 
 6. Enjoy the Servings that come out of the the Oven(Backtester).
 
+### HDF5
 
+An omlette is an HDF5 file that saves all the information from a backtest,
+including the metadata: all of parameter values that were used in the recipe,
+the parameters used by the cook, and the servings results.
 

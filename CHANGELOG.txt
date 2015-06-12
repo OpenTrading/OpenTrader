@@ -1,3 +1,9 @@
+commit a8d79e246af89deb9474cbc83655b6c02dd6b463
+Date:   Fri Jun 12 10:35:19 2015 +0300
+
+    Added share/examples/OTCmd2-backtest_omlette.test and
+    wired up the omelette command in OTCmd2 to save backtests to HDF5.
+
 commit 7bb725517f3f8cbe8beb3ee86846236a111d4cb6
 Date:   Thu Jun 11 20:37:36 2015 +0300
 
