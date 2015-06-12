@@ -10,16 +10,36 @@ from pybacktest.data import load_from_yahoo
 
 #? feed rename delete
 sBAC__doc__ = ""
+
+sBAComlette__doc__ = """
+An omlette is an HDF5 file that saves all the information from a backtest,
+including the metadata: all of parameter values that were used in the recipe,
+the parameters used by the cook, and the servings results.
+
+You should open an omlette before you backtest giving it a filename,
+and close it after the 'chef cook' and 'servings'.
+
+back omlette open FILE           - open an HDF file to save all the backtest parts
+back omlette check               - show the current omlette filename
+back omlette display             - display the current omlette HDF sections
+back omlette close               - close the HDF file saving the omlette
+
+Real Soon Now you will be able to enjoy them more by reloading previously saved
+omlettes, plotting the data or the results, and adding or editing comments.
+"""
+sBAC__doc__ += sBAComlette__doc__
+
 sBACfeed__doc__ = """
 back feed dir
 back feed dir dirname
 
-back feed read_mt4_csv SYMBOL TIMEFRAME [YEAR] - read a CSV file from Mt4
-back feed read_yahoo_csv SYMBOL [STARTYEAR]
+back feed read_mt4_csv SYMBOL TIMEFRAME [YEAR] - read a CSV file from Mt4 into pandas
+back feed read_yahoo_csv SYMBOL [STARTYEAR]    - read a Yahoo internet feed into pandas
 back feed list                                 - list the feeds we have read
 back feed get                                  - get the key name of the current feed
-back feed info
-back feed plot
+back feed info                                 - concise summary of the DataFrame
+back feed plot                                 - plot the CSV data using OTPpnAmgc
+               This plots the feed, with SMA, RSIs and MACDs, using matplotlib.
 """
 sBAC__doc__ += sBACfeed__doc__
 
@@ -71,13 +91,13 @@ _oCurrentChef = None
 
 def oEnsureOmlette(self, oOpts, sNewOmlette=""):
     from Omlettes import Omlette
-    if not sNewOmlette and hasattr(self, 'oOm') and \
-       self.oOm:
+    if not sNewOmlette and hasattr(self, 'oOm') and self.oOm:
         return self.oOm
-    if not sNewOmlette:
+    oOm = Omlette.Omlette(oFd=sys.stdout)
+    if sNewOmlette:
         # The default is no HDF file - it's not in self.oOptions.sOmlette
-        pass
-    oOm = Omlette.Omlette(sHdfStore=sNewOmlette, oFd=sys.stdout)
+        oOm.oAddHdfStore(sNewOmlette)
+        
     self.oOm = oOm
     return oOm
 
@@ -124,65 +144,94 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
     global dFEED_CACHE
     global sFEED_CACHE_KEY
 
-    # begin end
-    _sCurrentFeedDir = '/t/Program Files/HotForex MetaTrader/history/tools.fxdd.com'
-
     lArgs = oArgs.split()
-    if lArgs[0] == 'omlette':
+    sDo = lArgs[0]
+    if sDo == 'omlette':
+        # is this a backtest command or should it move up
+        # leave it here for now, and move it up later
+        __doc__ = sBAComlette__doc__
+        
         global _sCurrentOmletteDir
         # ingredients recipe dish
-        _lCmds = ['load', 'check', 'save', 'display']
-        assert len(lArgs) > 1, "ERROR: " +lArgs[0] +" " +str(_lCmds)
-        assert lArgs[1] in _lCmds, "ERROR: " +lArgs[0] +" " +str(_lCmds)
-        if lArgs[1] == 'check':
+        # plot sSection
+        # 
+        _lCmds = ['load', 'open', 'check', 'save', 'close', 'display']
+        assert len(lArgs) > 1, "ERROR: " +sDo +" " +str(_lCmds)
+        sCmd = lArgs[1]
+        assert sCmd in _lCmds, "ERROR: " +sDo +" " +str(_lCmds)
+        
+        oOm = oEnsureOmlette(self, oOpts, sNewOmlette="")
+        if sCmd == 'check':
+            assert hasattr(oOm, 'oHdfStore')
+            assert oOm.oHdfStore is not None
+            # FixMe: something better than filename
+            self.poutput(sDo +" filename: " +oOm.oHdfStore.filename)
             return
-        if lArgs[1] == 'display':
+        
+        if sCmd == 'display':
+            # display gives a complete listing of the contents of the HDF file
+            assert hasattr(oOm, 'oHdfStore') and oOm.oHdfStore
+            self.poutput(repr(oOm.oHdfStore))
             return
+        
+        ## if sCmd == 'save':
+        ##     return
+        
+        if sCmd == 'close':
+            assert oOm.oHdfStore is not None, \
+                   "ERROR: " +sDo +" " +sCmd +"; not open: use '" +sDo +" open FILE'"
+            self.oOm.vClose()
+            return
+        
         assert len(lArgs) >= 3, \
-               "ERROR: " +lArgs[0] +" " +lArgs[1] +" " +" filename"
+               "ERROR: " +sDo +" " +sCmd +" " +" FILENAME"
         sFile = lArgs[2]
-        if not os.path.exists(os.path.dirname(sFile)) and \
-               os.path.exists(_sCurrentOmletteDir):
-            # FixxME: check relative
-            s = os.path.join(_sCurrentOmletteDir, sFile)
-            if os.path.exists(s): sFile = s
-        if lArgs[1] == 'load':
-            assert os.path.isfile(sFile), \
-                   "ERROR: " +lArgs[0] +" " +lArgs[1] +" file not found " +sFile
+        
+        if sCmd == 'open':
+            o = oOm.oAddHdfStore(sFile)
+            assert o is not None and oOm.oHdfStore is not None
             _sCurrentOmletteDir = os.path.dirname(sFile)
             return
-        if lArgs[1] == 'save':
+
+        if sCmd == 'load':
+            assert os.path.isfile(sFile), \
+                   "ERROR: " +sDo +" " +sCmd +" file not found " +sFile
             _sCurrentOmletteDir = os.path.dirname(sFile)
+            raise RuntimeError(NotImplemented)
             return
 
         self.vError("Unrecognized omlette command: " + str(oArgs) +'\n' +__doc__)
         return
 
-    if lArgs[0] == 'feed':
+    if sDo == 'feed':
         __doc__ = sBACfeed__doc__
         #? rename delete
         _lCmds = ['dir', 'list', 'get', 'set',
                   'read_mt4_csv', 'read_yahoo_csv', 'info', 'plot', 'to_hdf']
-        assert len(lArgs) > 1, "ERROR: " +lArgs[0] +" " +str(_lCmds)
-        assert lArgs[1] in _lCmds, "ERROR: " +lArgs[0] +" " +str(_lCmds)
-
+        assert len(lArgs) > 1, "ERROR: " +sDo +" " +str(_lCmds)
+        sCmd = lArgs[1]
+        assert lArgs[1] in _lCmds, "ERROR: " +sDo +" " +str(_lCmds)
         
-        if lArgs[1] == 'dir':
+        if sCmd == 'dir':
             if len(lArgs) == 2:
-                if not _sCurrentFeedDir:
+                if not self.oConfig['feed']['sHistoryDir']:
                     self.poutput("No default history directory set: use \"feed dir dir\"")
+                elif not os.path.isdir(self.oConfig['feed']['sHistoryDir']):
+                    self.poutput("History directory not found: use \"feed dir dir\": " + \
+                                 self.oConfig['feed']['sHistoryDir'])
                 else:
-                    self.poutput("Default history directory: " + _sCurrentFeedDir)
+                    self.poutput("Default history directory: " + self.oConfig['feed']['sHistoryDir'])
                 return
+            
             sDir = lArgs[2]
             assert os.path.isdir(sDir)
-            _sCurrentFeedDir = sDir
+            self.oConfig['feed']['sHistoryDir'] = sDir
             return
         
-        if lArgs[1] == 'read_mt4_csv':
+        if sCmd == 'read_mt4_csv':
             from OTBackTest import oReadMt4Csv
             assert len(lArgs) >= 3, \
-                   "ERROR: " +lArgs[0] +" " +lArgs[1] +" FILENAME [SYMBOL TIMEFRAME YEAR]"
+                   "ERROR: " +sDo +" " +sCmd +" FILENAME [SYMBOL TIMEFRAME YEAR]"
             sFile = lArgs[2]
             if not os.path.isfile(sFile):
                 sHistoryDir = os.path.join(self.oOptions.sMt4Dir, 'history')
@@ -193,7 +242,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
                     sFile = l[0]
                     self.vInfo("Found history file: " + sFile)
             assert os.path.isfile(sFile), \
-                   "ERROR: " +lArgs[0] +" " +lArgs[1] +" file not found " +sFile
+                   "ERROR: " +sDo +" " +sCmd +" file not found " +sFile
             if len(lArgs) > 5:
                 sSymbol= lArgs[3]
                 sTimeFrame = lArgs[4]
@@ -207,7 +256,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
                 sSymbol = lCooked[0][:6]
                 sTimeFrame = lCooked[0][6:]
 
-            self.vDebug(lArgs[0] +" " +lArgs[1] +" " + \
+            self.vDebug(sDo +" " +sCmd +" " + \
                        "sSymbol=" +sSymbol \
                        +", sYear=" +sYear \
                        +", sTimeFrame=" +sTimeFrame)
@@ -233,20 +282,20 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
             return
 
         _lFeedCacheKeys = dFEED_CACHE.keys()
-        if lArgs[1] == 'list':
+        if sCmd == 'list':
             self.poutput("Feed keys: %r" % (self.G(_lFeedCacheKeys,)))
             return
         
-        if lArgs[1] == 'get':
+        if sCmd == 'get':
             self.poutput("Current Feed key: %s" % (self.G(sFEED_CACHE_KEY,)))
             return
         
-        if lArgs[1] == 'set':
+        if sCmd == 'set':
             assert len(lArgs) >= 3, \
-                   "ERROR: " +lArgs[0] +" " +lArgs[1] +" " + '|'.join(_lFeedCacheKeys)
+                   "ERROR: " +sDo +" " +sCmd +" " + '|'.join(_lFeedCacheKeys)
             sKey = lArgs[2]
             assert sKey in _lFeedCacheKeys, \
-                   "ERROR: " +lArgs[0] +" " +lArgs[1] +" " + '|'.join(_lFeedCacheKeys)
+                   "ERROR: " +sDo +" " +sCmd +" " + '|'.join(_lFeedCacheKeys)
             sFEED_CACHE_KEY = sKey
             return
         
@@ -261,7 +310,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
         sTimeFrame = _dCurrentFeedFrame['sTimeFrame']
         mFeedOhlc = _dCurrentFeedFrame['mFeedOhlc']
 
-        if lArgs[1] in ['to_hdf']:
+        if sCmd in ['to_hdf']:
             """ DataFrame.to_hdf(path_or_buf, key, **kwargs)
             activate the HDFStore
             Parameters :
@@ -270,7 +319,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
               """
 
             assert len(lArgs) >= 3, \
-                   "ERROR: " +lArgs[0] +" " +lArgs[1] +" fixed|table filename"
+                   "ERROR: " +sDo +" " +sCmd +" fixed|table filename"
             sType = lArgs[2]
             assert sType in ['fixed', 'table']
             sFile = lArgs[3]
@@ -281,8 +330,8 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
 
         _dPlotParams = self.oConfig['feed.plot.params']
 
-        if lArgs[1] == 'info':
-            """ Concise summary of a DataFrame.
+        if sCmd == 'info':
+            """Concise summary of a DataFrame.
             Parameters :
             verbose : boolean, default True
                     If False, don’t print column count summary
@@ -303,7 +352,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
             return
 
         # 'download_hst_zip'
-        if lArgs[1] == 'plot':
+        if sCmd == 'plot':
             import matplotlib
             import numpy as np
             from OTPpnAmgc import vGraphData
@@ -328,7 +377,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
         self.vError("Unrecognized feed command: " + str(oArgs) +'\n' +__doc__)
         return
 
-    if lArgs[0] == 'recipe':
+    if sDo == 'recipe':
         __doc__ = sBACrecipe__doc__
         from .Omlettes import lKnownRecipes
         # self.vDebug("lKnownRecipes: " + repr(lKnownRecipes))
@@ -344,18 +393,18 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
             self.poutput("Current Recipe: %s" % (self.sRecipe,))
             return
 
-        assert len(lArgs) > 1, "ERROR: not enough args: " +lArgs[0] +str(_lCmds)
+        assert len(lArgs) > 1, "ERROR: not enough args: " +sDo +str(_lCmds)
         assert sCmd in _lCmds, "ERROR: %s %s not in: %r " % (
-            lArgs[0], sCmd, _lCmds)
+            sDo, sCmd, _lCmds)
 
         if sCmd == 'set':
             assert len(lArgs) > 2, \
                    "ERROR: %s %s requires one of: %s" % (
-                lArgs[0], sCmd, '|'.join(lKnownRecipes))
+                sDo, sCmd, '|'.join(lKnownRecipes))
             sNewRecipe = str(lArgs[2])
             assert sNewRecipe in lKnownRecipes, \
                    "ERROR: %s %s %s not in: %s" % (
-                lArgs[0], sCmd, sNewRecipe, '|'.join(lKnownRecipes))
+                sDo, sCmd, sNewRecipe, '|'.join(lKnownRecipes))
             if self.sRecipe != sNewRecipe:
                 self.sRecipe = sNewRecipe
                 oRecipe = oEnsureRecipe(self, oOpts, sNewRecipe=sNewRecipe)
@@ -385,13 +434,13 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
         self.vError("Unrecognized recipe command: " + str(oArgs) +'\n' +__doc__)
         return
 
-    if lArgs[0] == 'chef':
+    if sDo == 'chef':
         __doc__ = sBACchef__doc__
         from .Omlettes import lKnownChefs
         # self.vDebug("lKnownChefs: " + repr(lKnownChefs))
 
         _lCmds = ['get', 'set', 'list', 'cook']
-        assert len(lArgs) > 1, "ERROR: not enough args: " +lArgs[0] +str(_lCmds)
+        assert len(lArgs) > 1, "ERROR: not enough args: " +sDo +str(_lCmds)
         sCmd = lArgs[1]
         
         if sCmd == 'list':
@@ -402,16 +451,16 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
             self.poutput("Current Chef: %s" % (self.sChef,))
             return
 
-        assert sCmd in _lCmds, "ERROR: not in: " +lArgs[0] +str(_lCmds)
+        assert sCmd in _lCmds, "ERROR: not in: " +sDo +str(_lCmds)
 
         if sCmd == 'set':
             assert len(lArgs) > 2, \
                    "ERROR: %s %s %s one of: %s" % (
-                lArgs[0], sCmd, '|'.join(lKnownChefs))
+                sDo, sCmd, '|'.join(lKnownChefs))
             sNewChef = str(lArgs[2])
             assert sNewChef in lKnownChefs, \
                    "ERROR: %s %s %s not in: %s" % (
-                lArgs[0], sCmd, sNewChef, '|'.join(lKnownChefs))
+                sDo, sCmd, sNewChef, '|'.join(lKnownChefs))
             if self.sChef != sNewChef:
                 self.sChef = sNewChef
                 oChef = oEnsureChef(self, oOpts, sNewChef=sNewChef)
@@ -447,7 +496,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
         self.vError("Unrecognized chef command: " + str(oArgs) +'\n' +__doc__)
         return
 
-    if lArgs[0] == 'servings':
+    if sDo == 'servings':
         __doc__ = sBACservings__doc__
         oOm = oEnsureOmlette(self, oOpts)
         oRecipe = oEnsureRecipe(self, oOpts)
@@ -461,7 +510,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
         # ['signals', 'trades', 'positions', 'equity', 'summary', 'trade_price']
         _lCmds = oChefModule.lProducedServings
         
-        assert len(lArgs) > 1, "ERROR: argument required" +lArgs[0] +str(_lCmds)
+        assert len(lArgs) > 1, "ERROR: argument required" +sDo +str(_lCmds)
         sCmd = lArgs[1]
         
         if sCmd == 'list':
@@ -470,7 +519,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
 
         # self.vDebug("lProducedServings: " + repr(_lCmds))
         assert sCmd in _lCmds, "ERROR: %s %s not in %r" % (
-            lArgs[0], sCmd, _lCmds)
+            sDo, sCmd, _lCmds)
 
         oFd = sys.stdout
         ## oFun = getattr(self.oBt, sCmd)
@@ -519,13 +568,13 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
         self.vError("Unrecognized servings command: " + str(oArgs) +'\n' +__doc__)
         return
 
-    if lArgs[0] == 'plot':
+    if sDo == 'plot':
         __doc__ = sBACplot__doc__
         _lCmds = ['show', 'set', 'trades', 'equity']
         
-        assert len(lArgs) > 1, "ERROR: " +lArgs[0] +str(_lCmds)
+        assert len(lArgs) > 1, "ERROR: " +sDo +str(_lCmds)
         sCmd = lArgs[1]
-        assert sCmd in _lCmds, "ERROR: " +lArgs[0] +str(_lCmds)
+        assert sCmd in _lCmds, "ERROR: " +sDo +str(_lCmds)
 
         import matplotlib.pylab as pylab
         if sCmd == 'show':
@@ -536,9 +585,9 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
             pylab.show()
             return
 
-        assert len(lArgs) > 2, "ERROR: " +lArgs[0] +str(_lCmds)
+        assert len(lArgs) > 2, "ERROR: " +sDo +str(_lCmds)
         sCmd = lArgs[2]
-        assert sCmd in _lCmds, "ERROR: " +lArgs[0] +str(_lCmds)
+        assert sCmd in _lCmds, "ERROR: " +sDo +str(_lCmds)
         oFun = getattr(self.oBt, 'plot_' + sCmd)
         oFun()
         pylab.show()

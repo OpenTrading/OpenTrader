@@ -16,7 +16,12 @@ sub run timer# retval.#  - start a thread listening for messages: timer,tick,ret
 pub cmd AccountBalance   - to send a command to OTMql4Pika,
                          the return will be a retval message on the listener
 sub hide timer           - stop seeing timer messages (just see the retval.#)
-order list              - list your open order tickets
+order list               - list your open order tickets
+"""
+
+sCSV__doc__ = """
+Download, resample and convert CSV files into pandas:
+
 """
 
 sCHART__doc__ = """

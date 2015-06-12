@@ -1,6 +1,21 @@
 ### OTCmd2 backtest
 ```
 
+An omlette is an HDF5 file that saves all the information from a backtest,
+including the metadata: all of parameter values that were used in the recipe,
+the parameters used by the cook, and the servings results.
+
+You should open an omlette before you backtest giving it a filename,
+and close it after the 'chef cook' and 'servings'.
+
+back omlette open FILE           - open an HDF file to save all the backtest parts
+back omlette check               - show the current omlette filename
+back omlette display             - display the current omlette HDF sections
+back omlette close               - close the HDF file saving the omlette
+
+Real Soon Now you will be able to enjoy them more by reloading previously saved
+omlettes, plotting the data or the results, and adding or editing comments.
+
 back feed dir
 back feed dir dirname
 

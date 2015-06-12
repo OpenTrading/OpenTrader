@@ -1,3 +1,9 @@
+commit 7bb725517f3f8cbe8beb3ee86846236a111d4cb6
+Date:   Thu Jun 11 20:37:36 2015 +0300
+
+    Added share/doc/09OTPpnAmgc.txt to document the charting,
+    and made OpenTrader/OTPpnAmgc.py install as script.
+
 commit e42c95363378bc6f473541b362ba5aea5deab955
 Date:   Thu Jun 11 19:13:21 2015 +0300
 

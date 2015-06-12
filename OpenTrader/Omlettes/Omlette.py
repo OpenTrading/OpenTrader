@@ -22,20 +22,31 @@ class Omlette(object):
     
     def __init__(self, sHdfStore="", oFd=sys.stdout):
         self.oHdfStore = None
-        if sHdfStore:
-            self.oHdfStore = pandas.HDFStore(sHdfStore, mode='w')
-            oFd.write("INFO: hdf store" +self.oHdfStore.filename +'\n')
-
         self.oFd = oFd
+        if sHdfStore:
+            # ugly - active
+            self.oHdfStore = pandas.HDFStore(sHdfStore, mode='w')
+            self.oFd.write("INFO: hdf store" +self.oHdfStore.filename +'\n')
+
         self.oRecipe = None
         self.oChefModule = None
 
+    def oAddHdfStore(self, sHdfStore):
+        if os.path.isabs(sHdfStore):
+            assert os.path.isdir(os.path.dirname(sHdfStore)), \
+                   "ERROR: directory not found: " +sHdfStore
+        self.oHdfStore = pandas.HDFStore(sHdfStore, mode='w')
+        self.oFd.write("INFO: hdf store: " +self.oHdfStore.filename +'\n')
+        return self.oHdfStore
+            
     def oRestore(self, sHdfStore):
         assert os.path.exists(sHdfStore)
+        # FixMe:
         self.oHdfStore = None
         return self.oHdfStore
         
-    # is this an Omlette method? its generic and the use of self is tangential
+    # Is this an Omlette method? its generic and the use of self is tangential
+    # It is because it adds components to the HDF fuke, which is the omlette.
     def dGetFeedFrame(self, sCsvFile, sTimeFrame, sSymbol, sYear):
         dFeedParams = OrderedDict(sTimeFrame=sTimeFrame, sSymbol=sSymbol, sYear=sYear)
         # PandasMt4.dDF_OHLC[sKey = sSymbol + sTimeFrame + sYear]
@@ -117,7 +128,8 @@ class Omlette(object):
 
     def vClose(self):
         if self.oHdfStore is None: return
-        self.oFd.write("INFO: closing hdf " +repr(self.oHdfStore) +'\n')
+        if False:
+            self.oFd.write("INFO: closing hdf " +repr(self.oHdfStore) +'\n')
         self.oHdfStore.close()
         self.oHdfStore = None
 

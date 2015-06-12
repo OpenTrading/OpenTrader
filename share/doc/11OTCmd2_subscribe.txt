@@ -18,6 +18,9 @@ timer.# for timer events, retval.# for return values.
 You can choose as specific chart with syntax like:
     tick.oChart.EURGBP.240.93ACD6A2.#
 
+The RabbitMQ host and login information is set in the `[RabbitMQ]`
+section of the `OTCmd2.ini` file; see the `-c/--config` command-line options.
+
 Usage: sub [options] command
 
 Options:

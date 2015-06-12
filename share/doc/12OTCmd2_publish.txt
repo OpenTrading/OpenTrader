@@ -12,6 +12,9 @@ Publish a message via RabbitMQ to a given chart on a OTMql4Py enabled terminal:
 You wont see the return value unless you have already done a:
   sub run retval.#
 
+The RabbitMQ host and login information is set in the `[RabbitMQ]`
+section of the `OTCmd2.ini` file; see the `-c/--config` command-line options.
+
 Usage: pub [options] command
 
 Options:

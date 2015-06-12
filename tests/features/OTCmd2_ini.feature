@@ -19,4 +19,6 @@
                           backtest
                           feed.plot.params
                           matplotlib.rcParams
+      And The configobj Section "OTCmd2" has keys:
+                          iRetvalTimeout
       Then Life is Good!

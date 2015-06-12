@@ -269,6 +269,9 @@ timer.# for timer events, retval.# for return values.
 You can choose as specific chart with syntax like:
     tick.oChart.EURGBP.240.93ACD6A2.#
 
+The RabbitMQ host and login information is set in the `[RabbitMQ]`
+section of the `OTCmd2.ini` file; see the `-c/--config` command-line options.
+
 Usage: sub [options] command
 
 Options:
@@ -290,6 +293,9 @@ Publish a message via RabbitMQ to a given chart on a OTMql4Py enabled terminal:
 
 You wont see the return value unless you have already done a:
   sub run retval.#
+
+The RabbitMQ host and login information is set in the `[RabbitMQ]`
+section of the `OTCmd2.ini` file; see the `-c/--config` command-line options.
 
 Usage: pub [options] command
 
@@ -345,6 +351,21 @@ Options:
 ### OTCmd2 backtest
 ```
 
+An omlette is an HDF5 file that saves all the information from a backtest,
+including the metadata: all of parameter values that were used in the recipe,
+the parameters used by the cook, and the servings results.
+
+You should open an omlette before you backtest giving it a filename,
+and close it after the 'chef cook' and 'servings'.
+
+back omlette open FILE           - open an HDF file to save all the backtest parts
+back omlette check               - show the current omlette filename
+back omlette display             - display the current omlette HDF sections
+back omlette close               - close the HDF file saving the omlette
+
+Real Soon Now you will be able to enjoy them more by reloading previously saved
+omlettes, plotting the data or the results, and adding or editing comments.
+
 back feed dir
 back feed dir dirname
 
@@ -394,6 +415,9 @@ If we have pyrabbit installed, and iff the rabbitmq_management plugin
 has been installed in your server, we can introspect some useful
 information if the HTTP interface is enabled. Commands include:
     get vhost_names|channels|connections|queues
+
+The RabbitMQ host and login information is set in the `[RabbitMQ]`
+section of the `OTCmd2.ini` file; see the `-c/--config` command-line options.
 
 Usage: rabbit [options] command
 

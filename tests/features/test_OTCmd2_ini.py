@@ -32,6 +32,11 @@ def vIniHasKey(sKeys):
     for sKey in sKeys.split():
         assert sKey in oConfig.keys()
 
+@given(p('The configobj Section "{sSection}" has keys:\n{sKeys}'))
+def vSectionHasKey(sSection, sKeys):
+    for sKey in sKeys.split():
+        assert sKey in oConfig[sSection].keys()
+
 @then('Life is Good!')
 def vLifeIsGood():
     pass

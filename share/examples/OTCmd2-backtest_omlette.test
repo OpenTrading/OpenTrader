@@ -2,16 +2,16 @@
 #     https://github.com/ematvey/pybacktest
 # You dont need to have a listener thread running
 set echo True
+back omlette open /tmp/EURUSD60-2014.hdf
+back omlette check
 # read a CSV file from Mt4
 back feed read_mt4_csv EURUSD60-2014.csv EURUSD 60 2014
 # list the feeds we have read
 back feed list
-py assert len(self._G) > 0
 # get the key name of the current feed
 back feed get
 # list the known recipes
 back recipe list
-py assert len(self._G) > 0
 # show the current recipe
 back recipe set
 # set the current recipe
@@ -34,4 +34,8 @@ back servings positions
 back servings equity
 back servings trade_price
 back servings summary
-
+# display gives a complete listing of the contents of the HDF file
+back omlette display
+# close ans save the HDF file
+back omlette close
+py assert os.path.isfile('/tmp/EURUSD60-2014.hdf')

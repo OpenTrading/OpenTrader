@@ -6,6 +6,9 @@ has been installed in your server, we can introspect some useful
 information if the HTTP interface is enabled. Commands include:
     get vhost_names|channels|connections|queues
 
+The RabbitMQ host and login information is set in the `[RabbitMQ]`
+section of the `OTCmd2.ini` file; see the `-c/--config` command-line options.
+
 Usage: rabbit [options] command
 
 Options:
