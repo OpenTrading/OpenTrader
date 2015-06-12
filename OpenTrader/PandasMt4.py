@@ -6,22 +6,22 @@ import pandas
 dDF_OHLC = {}
 dDF_RAW1MIN = {}
 
-def vCookFiles(sSymbol, sDir):
+def vResampleFiles(sSymbol, sDir):
     for sYear in ['2010', '2011', '2012', '2013', '2014', '2015']:
         sRaw1 = os.path.join(sDir, sSymbol + '1-' +sYear +'.csv')
         assert os.path.exists(sRaw1), "File not found: " +sRaw1
 
         for sTimeFrame in ['60', '240', '1440']:
-            sCooked = os.path.join(sDir, sSymbol + sTimeFrame +'-' +sYear +'.csv')
-            if not os.path.exists(sCooked):
+            sResampledCsv = os.path.join(sDir, sSymbol + sTimeFrame +'-' +sYear +'.csv')
+            if not os.path.exists(sResampledCsv):
                 print "INFO: cooking %s %s %s" % (sTimeFrame, sSymbol, sYear, )
-                vCookFile(sRaw1, sCooked, sTimeFrame, sSymbol, sYear)
-            assert os.path.exists(sCooked)
+                vResample1Min(sRaw1, sResampledCsv, sTimeFrame)
+            assert os.path.exists(sResampledCsv)
 
-def vCookFile(sRaw1, sCooked, sTimeFrame, sSymbol, sYear):
+def vResample1Min(sRaw1, sResampledCsv, sTimeFrame, oFd=sys.stdout):
     global dDF_RAW1MIN
 
-    sKey = sSymbol + sTimeFrame + sYear
+    sKey = sSymbol
     if sKey not in dDF_RAW1MIN:
         print "INFO: reading " + sRaw1
         dDF_RAW1MIN[sKey] = pandas.read_csv(sRaw1, header=None,
@@ -30,27 +30,26 @@ def vCookFile(sRaw1, sCooked, sTimeFrame, sSymbol, sYear):
                                            index_col='timestamp',
                                            dtype='float64')
         print "INFO: raw data length: %d" % len(dDF_RAW1MIN[sKey])
-        # 2015 INFO: raw data length: 633920
 
     oDfOpen1 = dDF_RAW1MIN[sKey].iloc[:, [0]]
-    print "INFO: %s %s %s raw open length: %d" % (sTimeFrame, sSymbol, sYear, len(oDfOpen1),)
+    print "INFO: %s raw open length: %d" % (sTimeFrame, len(oDfOpen1),)
     dDF_OHLC[sTimeFrame] = oDfOpen1.resample(sTimeFrame+'T', how='ohlc',
                                              closed='left',
                                              # kind='timestamp'
                                              )
-    print "INFO: sampled length from %d to %d raw/%s = %.2f" % (len(oDfOpen1),
-                                                                len(dDF_OHLC[sTimeFrame]),
-                                                                sTimeFrame,
-                                                                len(oDfOpen1)/float(sTimeFrame))
-    dDF_OHLC[sTimeFrame].to_csv(sCooked, header=False)
-    print "INFO: wrote "+sCooked
+    oFd.write("INFO: sampled length from %d to %d raw/%s = %.2f\n" % (len(oDfOpen1),
+                                                                      len(dDF_OHLC[sTimeFrame]),
+                                                                      sTimeFrame,
+                                                                      len(oDfOpen1)/float(sTimeFrame)))
+    dDF_OHLC[sTimeFrame].to_csv(sResampledCsv, header=False)
+    print "INFO: wrote "+sResampledCsv
 
-def oReadMt4Csv(pCooked, sTimeFrame, sSymbol, sYear=""):
+def oReadMt4Csv(sResampledCsv, sTimeFrame, sSymbol, sYear=""):
     global dDF_OHLC
     sKey = sSymbol + sTimeFrame + sYear
     if sKey not in dDF_OHLC:
-        print "INFO: reading " + pCooked
-        dDF_OHLC[sKey] = pandas.read_csv(pCooked,
+        print "INFO: reading " + sResampledCsv
+        dDF_OHLC[sKey] = pandas.read_csv(sResampledCsv,
                                          names=['T', 'O', 'H', 'L', 'C'],
                                          parse_dates={'timestamp': ['T']},
                                          index_col='timestamp',

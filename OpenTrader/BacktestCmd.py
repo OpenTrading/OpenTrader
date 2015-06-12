@@ -269,7 +269,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
                                                    sTimeFrame,
                                                    sSymbol,
                                                    sYear)
-            from PandasMt4 import oReadMt4Csv, oPreprocessOhlc, vCookFiles
+            from PandasMt4 import oReadMt4Csv, oPreprocessOhlc, vResampleFiles
             mFeedOhlc = oPreprocessOhlc(_dCurrentFeedFrame['mFeedOhlc'])
             sys.stdout.write('INFO:  Data Open length: %d\n' % len(mFeedOhlc))
             _dCurrentFeedFrame['mFeedOhlc'] = mFeedOhlc

@@ -8,18 +8,12 @@ back omlette check
 back feed read_mt4_csv EURUSD60-2014.csv EURUSD 60 2014
 # list the feeds we have read
 back feed list
-# get the key name of the current feed
-back feed get
 # list the known recipes
 back recipe list
-# show the current recipe
-back recipe set
 # set the current recipe
 back recipe set SMARecipe
 # list the known chefs
 back chef list
-# show the current chef
-back chef set
 # set the current chef
 back chef set PybacktestChef
 # make the ingredients
@@ -36,6 +30,6 @@ back servings trade_price
 back servings summary
 # display gives a complete listing of the contents of the HDF file
 back omlette display
-# close ans save the HDF file
+# close and save the HDF file
 back omlette close
 py assert os.path.isfile('/tmp/EURUSD60-2014.hdf')

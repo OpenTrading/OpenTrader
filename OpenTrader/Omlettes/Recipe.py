@@ -22,73 +22,42 @@ class Recipe(object):
     def __init__(self, oOm=None, oFd=sys.stdout):
         self.oOm = oOm
         self.oFd = oFd
-        self.oConfigObj = None
         self.sName = ""
         self.sFile = ""
         self.oOm = None
+        # The .ini file is now required and is relied on
+        self.oConfigObj = None
+        # There will always be at least one Feed Dataframe that is required
+        # but you could have more: multi-equity, multi-timeframe...
+        self.lRequiredFeeds = []
+        self.lRequiredIngredients = []
         
-    def zReadIniFile(self):
-        if self.sIniFile == "":
-            self.oFd.write("INFO: No INI file defined" +'\n')
-        else:
-            sIniFile = self.sIniFile
-            if not os.path.isabs(sIniFile):
-                sIniFile = os.path.join(os.path.dirname(__file__), self.sIniFile)
-            if not os.path.isfile(sIniFile):
-                self.zWriteIniFile()
-            if os.path.isfile(sIniFile) and not self.oConfigObj:
-                oConfigObj = ConfigObj(sIniFile, unrepr=True)
-                self.oFd.write("INFO: Read INI file: " +oConfigObj.filename +'\n')
-                self.oConfigObj = oConfigObj
-                for sKey, gValue in oConfigObj[self.sName].items():
-                    setattr(self, sKey, gValue)
- 
-                self.lRequiredFeeds = [oConfigObj[s] for s in
-                                       self.lRequiredFeedParams]
-                self.lRequiredDishes = [oConfigObj[s] for s in
-                                       self.lRequiredDishesParams]
-                # eliminate
-                self.lRequiredIngredients = []
-                for sElt in self.lRequiredIngredients:
-                    self.lRequiredDishes += [sElt]
-                    for sKey in oConfigObj[sElt].keys():
-                        if sKey not in self.lRequiredIngredients:
-                            self.lRequiredIngredients += [sKey]
+    def vReadIniFile(self):
+        assert self.sIniFile, "ERROR: No INI file defined"
+        sIniFile = self.sIniFile
+        if not os.path.isabs(sIniFile):
+            sIniFile = os.path.join(os.path.dirname(__file__), self.sIniFile)
+        assert os.path.isfile(sIniFile)
+        if os.path.isfile(sIniFile) and not self.oConfigObj:
+            oConfigObj = ConfigObj(sIniFile, unrepr=True)
+            self.oFd.write("INFO: Read INI file: " +oConfigObj.filename +'\n')
+            self.oConfigObj = oConfigObj
+            for sKey, gValue in oConfigObj[self.sName].items():
+                setattr(self, sKey, gValue)
+
+            self.lRequiredFeeds = [oConfigObj[s] for s in
+                                   self.lRequiredFeedParams]
+            self.lRequiredDishes = [oConfigObj[s] for s in
+                                   self.lRequiredDishesParams]
+            # eliminate
+            self.lRequiredIngredients = []
+            for sElt in self.lRequiredIngredients:
+                self.lRequiredDishes += [sElt]
+                for sKey in oConfigObj[sElt].keys():
+                    if sKey not in self.lRequiredIngredients:
+                        self.lRequiredIngredients += [sKey]
                                              
                 
-    def zWriteIniFile(self):
-        if self.sIniFile != "":
-            sIniFile = self.sIniFile
-            if not os.path.isabs(sIniFile):
-                sIniFile = os.path.join(os.path.dirname(__file__), self.sIniFile)
-            if not os.path.isfile(sIniFile):
-                oConfigObj = ConfigObj(unrepr=True)
-                oConfigObj.filename = sIniFile
-                oConfigObj[self.sName] = dict(fRecipeVersion= self.__fRecipeVersion__)
-                
-                lKeys = []
-                for dElt in self.lRequiredFeeds:
-                    for sKey, dVal in dElt.items():
-                        oConfigObj[sKey] = dVal
-                        lKeys += [sKey]
-                self.lRequiredFeedParams = lKeys
-                #? duplication
-                oConfigObj[self.sName]['lRequiredFeedParams'] = self.lRequiredFeedParams
-                
-                self.lRequiredDishesParams = []
-                self.lRequiredIngredientsParams = []
-                for dElt in self.lRequiredIngredients:
-                    for sKey, dVal in dElt.items():
-                        oConfigObj[sKey] = dVal
-                        self.lRequiredDishesParams += [sKey]
-                        for sKey1 in dVal.keys():
-                            if sKey1 not in self.lRequiredIngredientsParams:
-                                self.lRequiredIngredientsParams += [sKey1]
-                oConfigObj[self.sName]['lRequiredDishesParams'] = self.lRequiredDishesParams
-                oConfigObj[self.sName]['lRequiredIngredientsParams'] = self.lRequiredIngredientsParams
-                
-                oConfigObj.write()
-                self.oFd.write("INFO: Wrote INI file: " +oConfigObj.filename +'\n')
                 
     def dRecipeParams(self):
         return OrderedDict(sName=self.sName,

@@ -1,6 +1,8 @@
 ### OTCmd2 order
 ```
 
+Manage orders in an OTMql4AQMp enabled Metatrader:
+
   ord list          - list the ticket numbers of current orders.
   ord info iTicket  - list the current order information about iTicket.
   ord trades        - list the details of current orders.

@@ -157,7 +157,7 @@ def oOmain(lArgv):
     sSymbol = lArgs[1] # 'EURGBP'
     sTimeFrame = lArgs[2] # '1440'
     sYear = lArgs[3] # '2014'
-    # if not os.path.isfile(sCsvFile): vCookFiles(sSymbol, sDir)
+    # if not os.path.isfile(sCsvFile): vResampleFiles(sSymbol, sDir)
     assert os.path.isfile(sCsvFile)
     
     oOm = Omlette.Omlette(sHdfStore=oOptions.sOmelette, oFd=oFd)

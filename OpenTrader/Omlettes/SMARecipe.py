@@ -11,16 +11,7 @@ import pandas
 from Recipe import Recipe
 
 class SMARecipe(Recipe):
-    
-    # There will always be at least one Feed Dataframe that is required
-    # but you could have more: multi-equity, multi-timeframe...
-    lRequiredFeeds = [dict(mFeedOhlc=dict(lNames=['T', 'O', 'H', 'L', 'C'],
-                                          sPandasType='DataFrame',)),]
-    lRequiredIngredients = [dict(rShortMa=dict(iShortMa=50, bUseTalib=True,
-                                               sPandasType='Series',)),
-                            dict(rLongMa=dict(iLongMa=200, bUseTalib=True,
-                                              sPandasType='Series',))]
-    
+        
     #? should oOm be required?
     def __init__(self, oOm=None, oFd=sys.stdout):
         Recipe.__init__(self, oOm)
@@ -30,22 +21,33 @@ class SMARecipe(Recipe):
         self.sName = 'SMACross'
         self.sIniFile = 'SMARecipe.ini'
         self.sFile = __file__
-        # ugly - active
-        self.zReadIniFile()
 
+    # make this a property>
+    def oEnsureConfigObj(self):
+        """
+        oEnsureConfigObj ensures that the .ini file has been read.
+        For each recipe, an .ini file is now required and is relied on.
+        It's only read once, and is stored as self.oConfigObj
+        """
+        if self.oConfigObj is not None:
+            return self.oConfigObj
+        self.vReadIniFile()
+        assert self.oConfigObj is not None
+        
     def dMakeIngredients(self, dFeeds, dIngredientsParams):
-        """dMakeIngredients takes a dictionary of feeds dFeeds
+        """
+        dMakeIngredients takes a dictionary of feeds dFeeds
         with at least one key from lRequiredFeeds to work on.
         It returns a dictionary of ingredients with the keys in lRequiredIngredients
         and a key to the dIngredientsParams that it used.
         """
-        oC = self.oConfigObj
+        oC = self.oEnsureConfigObj()
         iLongMa = dIngredientsParams.get('iLongMa',
-                                         int(oC['rLongMa']['iLongMa']))
+                                         oC['rLongMa']['iLongMa'])
         iShortMa = dIngredientsParams.get('iShortMa',
-                                          int(oC['rShortMa']['iShortMa']))
+                                          oC['rShortMa']['iShortMa'])
         bUseTalib = dIngredientsParams.get('bUseTalib',
-                                           bool(oC['rShortMa']['bUseTalib']))
+                                           oC['rShortMa']['bUseTalib'])
 
         self.vCheckRequiredFeeds(dFeeds)
         mFeedOhlc = dFeeds['mFeedOhlc']

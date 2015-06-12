@@ -1,8 +1,5 @@
-# OpenTrader
 
 # OpenTrader
-
-OpenTrader
 
 https://github.com/OpenTrading/OpenTrader/
 
@@ -11,13 +8,24 @@ an OpenTrading Metatrader-Python bridge enabled MetaTrader
 (https://github.com/OpenTrading/OTMql4AMQP/).
 You can subscribe to tick, bar, and timer events,
 query, open and close orders, and execute Metatrader code remotely.
-If you have pyrabbit installed, you can query the AMQP server.
+If you have `pyrabbit` installed, you can query the AMQP server.
 
-Coming Real Soon Now(TM) is backtesting of trading recipes,
-reading Metatrader history into pandas DataFrames, plotting
-DataFrames using matplotlib, and live-trading on Metatrader from recipes.
 
-It builds on OTMql4AMQP, and requires that to be installed in your
+This ia a work in progress but it has quite a lot in there already:
+* send most Mql4 commands and gets the return values as Python,
+* receive bar, tick and timer notifications,
+* send and query orders to Mt4, using a better MQL4 trading library,
+* reads CSV and everything internally is pandas DataFrames,
+* there's a backtester for trading recipes based on `pybacktest`,
+  using pandas Series with numpy/ta-lib, so it's quite fast.
+* there's simple plotting of the CSV files and results using `matplotlib`,
+* you can save recipes and backtest results as HDF5, viewable by
+* (there's an optimizer in there, but not yet wired up.)
+
+Coming Real Soon Now(TM) is wiring up the backtester so that it should
+soon support recipes for live-trading on Metatrader from recipes and chefs.
+
+It builds on `OTMql4AMQP`, and requires that to be installed in your
 Metatrader Python as a pre-requisite, if you want to do live trading.
 In your Python, you also must have installed Pika:
 https://pypi.python.org/pypi/pika/, which must be accessible to your
@@ -26,6 +34,9 @@ You will have to call OTCmd2 with the `-P` option with the
 path of your installed Metatrader (e.g. `c:\Program Files\Metatrader`),
 or add your installed OTMql4Py Python directory to the `PYTHONPATH`
 environment variable (e.g. `c:\Program Files\Metatrader\MQL4\Python`).
+
+For backtesting, you need `pybacktest` installed
+https://github.com/ematvey/pybacktest/
 
 **This is a work in progress - a developers' pre-release version.**
 
@@ -56,12 +67,11 @@ https://github.com/OpenTrading/ into the Python called by your Metatrader:
 Attach the OTPyTestPikaEA.mq4 to a chart and make sure it's working:
 https://github.com/OpenTrading/OTMql4AMQP/MQL4/Experts/OTMql4/OTPyTestPikaEA.mq4
 
-Then (when it gets checked in :-) run 
+Then run 
 ```
 python setup.py
 ```
-to create the OTCmd2 script. Run `OTCmd2 help` (see below).
-
+to create the `OTCmd2` script. Run `OTCmd2 help` (see below).
 
 ### Project
 
@@ -144,7 +154,7 @@ we will probably replace this with json or pickled serialization, or kombu.
 
 ### Examples
 
-There are some example OTCmd2 command scripts in the `share/examples`
+There are some example `OTCmd2` command scripts in the `share/examples`
 directory that you can run from the command line with the stdin
 from these files:
 
@@ -155,12 +165,15 @@ OTCmd2 -P "c:\\Program Files\\MetaTrader"  < tests/OTCmd2-0.test
 Where the `-P` option is the path to your Metatrader installation
 with `OTMql4QQMP` installed.
 
-You should see no assertion errors,  and you should see no timeouts:
+You should see no `AssertionError`s, and you should see no timeouts:
 ```
 WARN: No retval returned in 60 seconds
 ```
 
-Note that you can use this scripting to open and close orders.
+Note that you can use this scripting to open and close orders:
+```
+python OTCmd2.py -P "c:\\Program Files\\MetaTrader" order buy SSYMBOL FVOLUME
+```
 
 
 ## Pandas love Omlettes!
@@ -205,32 +218,95 @@ provide a lot of documentation on the internals of `OTCmd2.py`.
     use the OTCmd2.py '-c' or '--config' command-line option to specify
     an alternate location. It uses configobj with unrepr=True
     so the values are Python, not just strings.
-
 ## OTBackTest.py
 
-OTBackTest.py can run as a stand-alone script for backtesting.
+Besides using the  `backtest` command in `OTCmd2`, you can run
+`OTBackTest.py` as a stand-alone script for backtesting:
 
 ```
 usage: OTBackTest.py [-h] [-T] [-P] [-R SRECIPE] [-C SCHEF] [-H SHDFSTORE]
-                     [lArgs [lArgs ...]]
+```
 
 give the Symbol Timeframe and Year to backtest The Timeframe is the period in
 minutes: e.g. 1 60 240 1440
 
-positional arguments:
-  lArgs                 the Symbol Timeframe and Year to backtest (required)
+### CSV Files
 
-optional arguments:
-  -h, --help            show this help message and exit
-  -T, --use_talib       Use Ta-lib for chart operations
-  -P, --plot_equity     plot the equity curves of the servings
-  -R SRECIPE, --recipe SRECIPE
-                        recipe to backtest
-  -C SCHEF, --chef SCHEF
-                        recipe to backtest
-  -H SHDFSTORE, --hdf SHDFSTORE
-                        store the recipe and servings in an hdf5 store
+In order to backtest, you will need some Open High Low Close (OHLC) data
+in CSV files. You can download the 1 minute history of major forex pairs from
+http://www.fxdd.com/us/en/forex-resources/forex-trading-tools/metatrader-1-minute-data/
+
+The pairs include:
 ```
+AUD / CAD
+AUD / JPY
+AUD / NZD
+AUD / USD
+CAD / JPY
+CHF / JPY
+EUR / AUD
+EUR / CAD
+EUR / CHF
+EUR / GBP
+EUR / JPY
+EUR / USD
+GBP / CHF
+GBP / JPY
+GBP / USD
+NZD / USD
+USD / CAD
+USD / CHF
+USD / JPY
+USD / MXN
+USD / TRY
+XAG / USD
+XAU / USD
+```
+The data comes as zip files, and are about 160Mbytes each, e.g.
+http://tools.fxdd.com/tools/M1Data/XAUUSD.zip
+
+When you unzip these downloaded files they give a file in Metatrader HST format.
+It's probably best to make a subdirectory under the Metatrader history folder,
+perhaps called `tools.fxdd.com`.
+
+To generate the CSV files, use the History Center in Metatrader.
+This is best done when NOT connected or logged in.
+
+* Select `Tools>History Center`.
+* Double click on the currency pair which you downloaded the data for.
+* BE SURE TO Highlight 1 Minute (M1).
+* Select Import.
+* Browse to the file you previously downloaded to your computer
+  (remember it has a .hst extension) and select Ok. Now the file has
+  been uploaded to the History Center.
+* BE SURE TO Highlight 1 Minute (M1) and click on `Export`
+* Give the name of the csv file you wish to save the CSV in, perhaps in a
+  subdirectory under the Metatrader history folder called `tools.fxdd.com`.
+* Click on OK.
+
+These CSV files have no header.
+
+### Resampling to longer time periods
+
+Once you have the large 1 minute history files in CSV, you will want to
+resample them and save them as OHLC CSV files at longer timeperiods.
+You can use the `OTCmd2 csv resample` command to do this:
+```
+python OTCmd2.py -P "c:\\Program Files\\MetaTrader" \
+       csv resample SRAW1MINFILE SRESAMPLEDCSV STIMEFRAME
+```
+
+which will resample 1 minute CSV data that you exported (above) in the
+`SRAW1MINFILE`, to a new timeframe such as 15, 60, 240, 1440 (minutes),
+and save it as CSV file `SRESAMPLEDCSV`.
+
+These resampled CSV files are what you need for the
+`backtest feed` command (see below).
+
+You may want to break them up into smaller chunks, such as one file
+per year, so that your bactests run faster. It can be also very
+informative to see how much your results vary in different years.
+
 ## OTPpnAmgc
 
 OTPpnAmgc charts a CSV file of Open High Low Close Volume values, along with
@@ -253,6 +329,19 @@ optional arguments:
   --iMacdFast IMACDFAST
   --iMacdEma IMACDEMA
 ```
+## OTCmd2
+
+Documented commands (type help <topic>):
+========================================
+_load           backtest        ed       l     ord    publish  run    shortcuts
+_relative_load  chart           edit     li    order  py       save   show     
+bac             cmdenvironment  hi       list  pause  r        set    sub      
+back            csv             history  load  pub    rabbit   shell  subscribe
+
+Undocumented commands:
+======================
+EOF  eof  exit  help  q  quit
+
 ### OTCmd2 subscribe
 ```
 
@@ -288,6 +377,7 @@ Options:
 ```
 
 Publish a message via RabbitMQ to a given chart on a OTMql4Py enabled terminal:
+
   pub cmd  COMMAND ARG1 ... - publish a Mql command to Mt4,
       the command should be a single string, with a space seperating arguments.
   pub wait COMMAND ARG1 ... - publish a Mql command to Mt4 and wait for the result,
@@ -330,6 +420,8 @@ Options:
 ```
 ### OTCmd2 order
 ```
+
+Manage orders in an OTMql4AQMp enabled Metatrader:
 
   ord list          - list the ticket numbers of current orders.
   ord info iTicket  - list the current order information about iTicket.

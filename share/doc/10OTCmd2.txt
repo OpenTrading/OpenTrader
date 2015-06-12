@@ -1,0 +1,13 @@
+## OTCmd2
+
+Documented commands (type help <topic>):
+========================================
+_load           backtest        ed       l     ord    publish  run    shortcuts
+_relative_load  chart           edit     li    order  py       save   show     
+bac             cmdenvironment  hi       list  pause  r        set    sub      
+back            csv             history  load  pub    rabbit   shell  subscribe
+
+Undocumented commands:
+======================
+EOF  eof  exit  help  q  quit
+

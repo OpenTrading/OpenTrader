@@ -1,3 +1,8 @@
+commit ebbaea3881f76a1635e91fba8c82a34987a90040
+Date:   Fri Jun 12 12:59:31 2015 +0300
+
+    Documentation and pylint cleanups and fixes.
+
 commit a8d79e246af89deb9474cbc83655b6c02dd6b463
 Date:   Fri Jun 12 10:35:19 2015 +0300
 

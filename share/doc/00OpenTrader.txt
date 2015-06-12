@@ -1,7 +1,5 @@
 # OpenTrader
 
-OpenTrader
-
 https://github.com/OpenTrading/OpenTrader/
 
 This project gives a command-line interpreter to communicate with
@@ -9,13 +7,24 @@ an OpenTrading Metatrader-Python bridge enabled MetaTrader
 (https://github.com/OpenTrading/OTMql4AMQP/).
 You can subscribe to tick, bar, and timer events,
 query, open and close orders, and execute Metatrader code remotely.
-If you have pyrabbit installed, you can query the AMQP server.
+If you have `pyrabbit` installed, you can query the AMQP server.
 
-Coming Real Soon Now(TM) is backtesting of trading recipes,
-reading Metatrader history into pandas DataFrames, plotting
-DataFrames using matplotlib, and live-trading on Metatrader from recipes.
 
-It builds on OTMql4AMQP, and requires that to be installed in your
+This ia a work in progress but it has quite a lot in there already:
+* send most Mql4 commands and gets the return values as Python,
+* receive bar, tick and timer notifications,
+* send and query orders to Mt4, using a better MQL4 trading library,
+* reads CSV and everything internally is pandas DataFrames,
+* there's a backtester for trading recipes based on `pybacktest`,
+  using pandas Series with numpy/ta-lib, so it's quite fast.
+* there's simple plotting of the CSV files and results using `matplotlib`,
+* you can save recipes and backtest results as HDF5, viewable by
+* (there's an optimizer in there, but not yet wired up.)
+
+Coming Real Soon Now(TM) is wiring up the backtester so that it should
+soon support recipes for live-trading on Metatrader from recipes and chefs.
+
+It builds on `OTMql4AMQP`, and requires that to be installed in your
 Metatrader Python as a pre-requisite, if you want to do live trading.
 In your Python, you also must have installed Pika:
 https://pypi.python.org/pypi/pika/, which must be accessible to your
@@ -24,6 +33,9 @@ You will have to call OTCmd2 with the `-P` option with the
 path of your installed Metatrader (e.g. `c:\Program Files\Metatrader`),
 or add your installed OTMql4Py Python directory to the `PYTHONPATH`
 environment variable (e.g. `c:\Program Files\Metatrader\MQL4\Python`).
+
+For backtesting, you need `pybacktest` installed
+https://github.com/ematvey/pybacktest/
 
 **This is a work in progress - a developers' pre-release version.**
 
@@ -54,12 +66,11 @@ https://github.com/OpenTrading/ into the Python called by your Metatrader:
 Attach the OTPyTestPikaEA.mq4 to a chart and make sure it's working:
 https://github.com/OpenTrading/OTMql4AMQP/MQL4/Experts/OTMql4/OTPyTestPikaEA.mq4
 
-Then (when it gets checked in :-) run 
+Then run 
 ```
 python setup.py
 ```
-to create the OTCmd2 script. Run `OTCmd2 help` (see below).
-
+to create the `OTCmd2` script. Run `OTCmd2 help` (see below).
 
 ### Project
 

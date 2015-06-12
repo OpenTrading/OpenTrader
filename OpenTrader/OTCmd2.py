@@ -21,7 +21,10 @@ order list               - list your open order tickets
 
 sCSV__doc__ = """
 Download, resample and convert CSV files into pandas:
-
+csv url PAIRSYMBOL       - show a URL where you can download  1 minute Mt HST data
+csv resample SRAW1MINFILE, SRESAMPLEDCSV, STIMEFRAME - Resample 1 minute CSV data,
+                                                       to a new timeframe
+                                                       and save it as CSV file
 """
 
 sCHART__doc__ = """
@@ -263,6 +266,46 @@ class CmdLineApp(Cmd):
         # if sMsgType == 'cmd': warn if not Mt4 connected?
         return(self.oChart.eSendOnSpeaker(sMsgType, sMsg))
 
+    ## csv
+    @options([],
+             arg_desc="command",
+             usage=sCSV__doc__,
+             )
+    def do_csv(self, oArgs, oOpts=None):
+        __doc__ = sCSV__doc__
+        
+        _lCmds = ['url', 'resample'] # read plot?
+        lArgs = oArgs.split()
+        assert len(lArgs) > 1, "ERROR: " +sDo +" " +str(_lCmds)
+        sDo = lArgs[0]
+        assert sDo in _lCmds, "ERROR: " +sDo +" choose one of: " +str(_lCmds)
+        
+        # o oConfig sHistoryDir:
+
+        if sDo == 'url':
+            # see http://www.fxdd.com/us/en/forex-resources/forex-trading-tools/metatrader-1-minute-data/
+            sSymbol =  lArgs[1].upper()
+            self.poutput("http://tools.fxdd.com/tools/M1Data/%s.zip" % (sSymbol,))
+            return
+        
+        if sDo == 'resample':
+            # Resample 1 minute data to new period, using pandas resample, how='ohlc'
+            from PandasMt4 import vResample1Min
+            assert len(lArgs) > 3, "ERROR: " +sDo +" SRAW1MINFILE, SRESAMPLEDCSV, STIMEFRAME"
+            sRaw1MinFile = lArgs[1]
+            assert os.path.exists(sRaw1MinFile)
+            sResampledCsv = lArgs[2]
+            if os.path.isabs(sResampledCsv):
+                assert os.path.isdir(os.path.dirname(sResampledCsv))
+            sTimeFrame = lArgs[3]
+            iTimeFrame = int(sTimeFrame)
+            oFd = sys.stdout
+            vResample1Min(sRaw1MinFile, sResampledCsv, sTimeFrame, oFd)
+            return
+        
+        self.vError("Unrecognized csv command: " + str(oArgs) +'\n' +__doc__)
+        return
+    
     ## charts
     @options([],
              arg_desc="command",
@@ -274,11 +317,12 @@ class CmdLineApp(Cmd):
             self.poutput("Chart operations are required\n" + __doc__)
             return
         lArgs = oArgs.split()
-        if lArgs[0] == 'get':
+        sDo = lArgs[0]
+        if sDo == 'get':
             self.poutput(self.G(self.sDefaultChart))
             return
 
-        if lArgs[0] == 'set':
+        if sDo == 'set':
             if len(lArgs) > 1:
                 self.sDefaultChart = self.G(lArgs[1])
             elif self.oListenerThread.lCharts:
@@ -287,7 +331,7 @@ class CmdLineApp(Cmd):
                 self.vWarn("No default charts available; try 'sub run'")
             return
 
-        if lArgs[0] == 'list':
+        if sDo == 'list':
             if self.oListenerThread is None:
                 self.poutput(repr(self.G([])))
             else:
@@ -306,6 +350,7 @@ class CmdLineApp(Cmd):
     def do_sub(self, oArgs, oOpts=None):
         __doc__ = sSUB__doc__
         lArgs = oArgs.split()
+        sDo = lArgs[0]
         try:
             # PikaListenerThread needs PikaMixin
             from OpenTrader import PikaListenerThread
@@ -321,27 +366,27 @@ class CmdLineApp(Cmd):
         else:
             sChartId = self.sDefaultChart
 
-        if lArgs[0] == 'topics':
+        if sDo == 'topics':
             # what if self.oListenerThread is not None:
             assert len(lArgs) > 1, "ERROR: sub topics TOPIC1..."
             self.lTopics = lArgs[1:]
             self.vInfo("Set topics to: " + repr(self.G(self.lTopics)))
             return
 
-        if lArgs[0] == 'clear':
+        if sDo == 'clear':
             # what if self.oListenerThread is not None:
             # do we dynamically change the subsciption or terminate the thread?
             self.lTopics = []
             return
 
-        if lArgs[0] == 'topics':
+        if sDo == 'topics':
             if self.oListenerThread:
                 self.poutput("oListenerThread.lTopics: " + repr(self.G(self.oListenerThread.lTopics)))
             else:
                 self.poutput("Default lTopics: " + repr(self.G(self.lTopics)))
             return
 
-        if lArgs[0] == 'run':
+        if sDo == 'run':
             if self.oListenerThread is not None:
                 self.vWarn("PikaListenerThread already listening to: " + repr(self.oListenerThread.lTopics))
                 return
@@ -357,10 +402,10 @@ class CmdLineApp(Cmd):
                 raise
             return
 
-        if lArgs[0] == 'thread':
+        if sDo == 'thread':
             _lCmds = ['info', 'stop', 'enumerate']
             assert len(lArgs) > 1, "ERROR: sub thread " +str(_lCmds)
-            assert lArgs[1] in _lCmds, "ERROR: " +lArgs[0] +" " +str(_lCmds)
+            assert lArgs[1] in _lCmds, "ERROR: " +sDo +" " +str(_lCmds)
             sSubCmd = lArgs[1]
 
             oT = self.oListenerThread
@@ -391,7 +436,7 @@ class CmdLineApp(Cmd):
             self.vError("Unrecognized subscribe thread command: " + str(lArgs) +'\n' +__doc__)
             return
 
-        if lArgs[0] == 'hide':
+        if sDo == 'hide':
             if not self.oListenerThread:
                 self.vWarn("PikaListenerThread not already started")
                 return
@@ -402,7 +447,7 @@ class CmdLineApp(Cmd):
                     self.oListenerThread.vHide(sElt)
             return
 
-        if lArgs[0] == 'show':
+        if sDo == 'show':
             if not self.oListenerThread:
                 self.vWarn("PikaListenerThread not already started")
                 return
@@ -413,7 +458,7 @@ class CmdLineApp(Cmd):
                     self.oListenerThread.vShow(sElt)
             return
 
-        if lArgs[0] == 'pprint':
+        if sDo == 'pprint':
             if not self.oListenerThread:
                 self.vWarn("PikaListenerThread not already started")
                 return
@@ -450,7 +495,8 @@ class CmdLineApp(Cmd):
         sMark = sMakeMark()
 
         lArgs = oArgs.split()
-        if lArgs[0] == 'wait' or lArgs[0] == 'sync':
+        sDo = lArgs[0]
+        if sDo == 'wait' or sDo == 'sync':
             sMsgType = 'cmd' # Mt4 command
             assert len(lArgs) > 1, "ERROR: pub cmd COMMAND ARG1..."
             # Raises a Mt4Timeout error if there is no answer in 60 seconds
@@ -459,14 +505,14 @@ class CmdLineApp(Cmd):
             self.vInfo("Returned: " +repr(self.G(gRetval)))
             return
 
-        if lArgs[0] == 'cmd' or lArgs[0] == 'async':
+        if sDo == 'cmd' or sDo == 'async':
             sMsgType = 'cmd' # Mt4 command
             assert len(lArgs) > 1, "ERROR: pub cmd COMMAND ARG1..."
             gRetval = self.gWaitForMessage(sMsgType, sMark, sChartId, *lArgs[1:])
             self.vInfo("Returned: " +repr(self.G(gRetval)))
             return
 
-        if lArgs[0] == 'eval':
+        if sDo == 'eval':
             sMsgType = 'eval'
             assert len(lArgs) > 1, "ERROR: pub eval COMMAND ARG1..."
             sInfo = str(lArgs[1]) # FixMe: how do we distinguish variable or thunk?
@@ -476,7 +522,7 @@ class CmdLineApp(Cmd):
             self.vInfo("Returned: " +repr(self.G(gRetval)))
             return
 
-        if lArgs[0] == 'json':
+        if sDo == 'json':
             sMsgType = 'json'
             assert len(lArgs) > 1, "ERROR: pub eval COMMAND ARG1..."
             # FixMe: broken but unused
@@ -514,28 +560,29 @@ class CmdLineApp(Cmd):
         sMark = sMakeMark()
 
         lArgs = oArgs.split()
-        if lArgs[0] == 'list' or lArgs[0] == 'tickets':
+        sDo = lArgs[0]
+        if sDo == 'list' or sDo == 'tickets':
             sMsgType = 'cmd' # Mt4 command
             # FixMe: trailing |
             sInfo = 'jOTOrdersTickets'
             self.gWaitForMessage(sMsgType, sMark, sChartId, sInfo)
             return
 
-        if lArgs[0] == 'trades':
+        if sDo == 'trades':
             sMsgType = 'cmd' # Mt4 command
             # FixMe: trailing |
             sInfo = 'jOTOrdersTrades'
             self.gWaitForMessage(sMsgType, sMark, sChartId, sInfo)
             return
 
-        if lArgs[0] == 'history':
+        if sDo == 'history':
             sMsgType = 'cmd' # Mt4 command
             # FixMe: trailing |
             sInfo = 'jOTOrdersHistory'
             self.gWaitForMessage(sMsgType, sMark, sChartId, sInfo)
             return
 
-        if lArgs[0] == 'info':
+        if sDo == 'info':
             sMsgType = 'cmd' # Mt4 command
             sCmd = 'jOTOrderInformationByTicket'
             assert len(lArgs) > 1, "ERROR: orders info iTicket"
@@ -543,14 +590,14 @@ class CmdLineApp(Cmd):
             self.gWaitForMessage(sMsgType, sMark, sChartId, sCmd, sInfo)
             return
 
-        if lArgs[0] == 'exposure':
+        if sDo == 'exposure':
             sMsgType = 'cmd' # Mt4 command
             sCmd = 'fOTExposedEcuInMarket'
             sInfo = str(0)
             self.gWaitForMessage(sMsgType, sMark, sChartId, sCmd, sInfo)
             return
 
-        if lArgs[0] == 'close':
+        if sDo == 'close':
             sMsgType = 'cmd' # Mt4 command
             assert len(lArgs) >= 2, "ERROR: order close iTicket [fPrice iSlippage}"
             sTicket = lArgs[1]
@@ -565,9 +612,9 @@ class CmdLineApp(Cmd):
 
             return
 
-        if lArgs[0] == 'buy' or lArgs[0] == 'sell':
+        if sDo == 'buy' or sDo == 'sell':
             sMsgType = 'cmd' # Mt4 command
-            if lArgs[0] == 'buy':
+            if sDo == 'buy':
                 iCmd = 0
             else:
                 iCmd = 1 # Sell 1
@@ -669,9 +716,10 @@ class CmdLineApp(Cmd):
             vNullifyLocalhostProxy(oOpts.sHttpAddress)
 
         lArgs = oArgs.split()
-        if lArgs[0] == 'get':
+        sDo = lArgs[0]
+        if sDo == 'get':
             assert len(lArgs) > 1, "ERROR: one of: get " +",".join(lRABBIT_GET_THUNKS)
-            oFun = getattr(self.oRabbit, lArgs[0] +'_' +lArgs[1])
+            oFun = getattr(self.oRabbit, sDo +'_' +lArgs[1])
             if lArgs[1] == 'queues':
                 lRetval = oFun()
                 # do we need a sub-command here?

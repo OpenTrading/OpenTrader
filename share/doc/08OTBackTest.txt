@@ -1,26 +1,89 @@
-
 ## OTBackTest.py
 
-OTBackTest.py can run as a stand-alone script for backtesting.
+Besides using the  `backtest` command in `OTCmd2`, you can run
+`OTBackTest.py` as a stand-alone script for backtesting:
 
 ```
 usage: OTBackTest.py [-h] [-T] [-P] [-R SRECIPE] [-C SCHEF] [-H SHDFSTORE]
-                     [lArgs [lArgs ...]]
+```
 
 give the Symbol Timeframe and Year to backtest The Timeframe is the period in
 minutes: e.g. 1 60 240 1440
 
-positional arguments:
-  lArgs                 the Symbol Timeframe and Year to backtest (required)
+### CSV Files
 
-optional arguments:
-  -h, --help            show this help message and exit
-  -T, --use_talib       Use Ta-lib for chart operations
-  -P, --plot_equity     plot the equity curves of the servings
-  -R SRECIPE, --recipe SRECIPE
-                        recipe to backtest
-  -C SCHEF, --chef SCHEF
-                        recipe to backtest
-  -H SHDFSTORE, --hdf SHDFSTORE
-                        store the recipe and servings in an hdf5 store
+In order to backtest, you will need some Open High Low Close (OHLC) data
+in CSV files. You can download the 1 minute history of major forex pairs from
+http://www.fxdd.com/us/en/forex-resources/forex-trading-tools/metatrader-1-minute-data/
+
+The pairs include:
 ```
+AUD / CAD
+AUD / JPY
+AUD / NZD
+AUD / USD
+CAD / JPY
+CHF / JPY
+EUR / AUD
+EUR / CAD
+EUR / CHF
+EUR / GBP
+EUR / JPY
+EUR / USD
+GBP / CHF
+GBP / JPY
+GBP / USD
+NZD / USD
+USD / CAD
+USD / CHF
+USD / JPY
+USD / MXN
+USD / TRY
+XAG / USD
+XAU / USD
+```
+The data comes as zip files, and are about 160Mbytes each, e.g.
+http://tools.fxdd.com/tools/M1Data/XAUUSD.zip
+
+When you unzip these downloaded files they give a file in Metatrader HST format.
+It's probably best to make a subdirectory under the Metatrader history folder,
+perhaps called `tools.fxdd.com`.
+
+To generate the CSV files, use the History Center in Metatrader.
+This is best done when NOT connected or logged in.
+
+* Select `Tools>History Center`.
+* Double click on the currency pair which you downloaded the data for.
+* BE SURE TO Highlight 1 Minute (M1).
+* Select Import.
+* Browse to the file you previously downloaded to your computer
+  (remember it has a .hst extension) and select Ok. Now the file has
+  been uploaded to the History Center.
+* BE SURE TO Highlight 1 Minute (M1) and click on `Export`
+* Give the name of the csv file you wish to save the CSV in, perhaps in a
+  subdirectory under the Metatrader history folder called `tools.fxdd.com`.
+* Click on OK.
+
+These CSV files have no header.
+
+### Resampling to longer time periods
+
+Once you have the large 1 minute history files in CSV, you will want to
+resample them and save them as OHLC CSV files at longer timeperiods.
+You can use the `OTCmd2 csv resample` command to do this:
+```
+python OTCmd2.py -P "c:\\Program Files\\MetaTrader" \
+       csv resample SRAW1MINFILE SRESAMPLEDCSV STIMEFRAME
+```
+
+which will resample 1 minute CSV data that you exported (above) in the
+`SRAW1MINFILE`, to a new timeframe such as 15, 60, 240, 1440 (minutes),
+and save it as CSV file `SRESAMPLEDCSV`.
+
+These resampled CSV files are what you need for the
+`backtest feed` command (see below).
+
+You may want to break them up into smaller chunks, such as one file
+per year, so that your bactests run faster. It can be also very
+informative to see how much your results vary in different years.
+
