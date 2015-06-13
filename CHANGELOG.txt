@@ -1,3 +1,8 @@
+commit ee8926c1c5501c0db856f065c43f19ed2f3632e2
+Date:   Sat Jun 13 23:47:43 2015 +0300
+
+    Added TitleIndex to wiki/_Sidebar.creole
+
 commit edfabb1d9a6032fd13f7323b2f48fa32a219f4c9
 Date:   Sat Jun 13 23:16:43 2015 +0300
 

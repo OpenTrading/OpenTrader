@@ -1,5 +1,3 @@
-== OTCmd2
-
 usage: OTCmd2.py [-h] [-v IVERBOSE] [-t] [-c SCONFIGFILE] [-P SMT4DIR]
                  [lArgs [lArgs ...]]
 

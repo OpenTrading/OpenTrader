@@ -1,9 +1,9 @@
 **Index**
-
 * [[TitleIndex]]
 
 **OTCmd2 Manual**
 
+* [[DocOTCmd2]]
 * [[DocOTCmd2]]
 * [[DocOTCmd2_subscribe]]
 * [[DocOTCmd2_publish]]
@@ -12,7 +12,6 @@
 * [[DocOTCmd2_csv]]
 * [[DocOTCmd2_backtest]]
 * [[DocOTCmd2_rabbit]]
-
 **OTBackTest Manual**
 
 * [[DocOTBackTest]]

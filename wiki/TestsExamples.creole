@@ -6,24 +6,24 @@ a list of commands from the stdin. This can be used to give
 examples of typical use-cases.
 
 Additionally, as we have Python under the cmd2 loop, we can
-use Python to make tests or assertions after nay step in the script.
+use Python to make tests or assertions after any step in the script.
 This makes it easy to write scripts as complete use-case tests.
 
 There are a series of example files in the
 [[share/examples|https://github.com/OpenTrading/OpenTrader/blob/master/share/examples/]]
 directory of the distribution. These example files are [[OTCmd2|DocOTCmd2]]
-ommand scripts that you run, for example under Msys or Unix, like this:
+command scripts that you run, for example under Msys or Unix, like this:
 {{{
 OTCmd2 -P "/c/Program Files/MetaTrader"  < share/examples/OTCmd2-sub.txt
-}}
+}}}
 
-You should see no {{{AssertionError}}}s,  and you should see no timeouts:
+You should see no {{{AssertionError}}}s, and you should see no timeouts:
 {{{
 WARN: No retval returned in 60 seconds
 }}}
 (You can adjust the timeout in the {{{[OTCmd2]}}} section of the
 [[OTCmd2.ini|https://github.com/OpenTrading/OpenTrader/blob/master/OpenTrader/OTCmd2.ini]]
-config file with the value {{{iRetvalTimeout}}}.)
+config file with the key {{{iRetvalTimeout}}}.)
 
 === Current Examples
 * [[OTCmd2-backtest.txt|https://github.com/OpenTrading/OpenTrader/blob/master/share/examples/OTCmd2-backtest.txt]]
