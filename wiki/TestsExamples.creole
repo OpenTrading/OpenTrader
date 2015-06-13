@@ -27,12 +27,22 @@ config file with the value {{{iRetvalTimeout}}}.)
 
 === Current Examples
 * [[OTCmd2-backtest.txt|https://github.com/OpenTrading/OpenTrader/blob/master/share/examples/OTCmd2-backtest.txt]]
+
 * [[OTCmd2-backtest_feed.txt|https://github.com/OpenTrading/OpenTrader/blob/master/share/examples/OTCmd2-backtest_feed.txt]]
+
 * [[OTCmd2-backtest_omlette.txt|https://github.com/OpenTrading/OpenTrader/blob/master/share/examples/OTCmd2-backtest_omlette.txt]]
+
 * [[OTCmd2-chart.txt|https://github.com/OpenTrading/OpenTrader/blob/master/share/examples/OTCmd2-chart.txt]]
+
 * [[OTCmd2-ord.txt|https://github.com/OpenTrading/OpenTrader/blob/master/share/examples/OTCmd2-ord.txt]]
+
 * [[OTCmd2-pub_wait-Accounts.txt|https://github.com/OpenTrading/OpenTrader/blob/master/share/examples/OTCmd2-pub_wait-Accounts.txt]]
+
 * [[OTCmd2-pub_wait-jOT.txt|https://github.com/OpenTrading/OpenTrader/blob/master/share/examples/OTCmd2-pub_wait-jOT.txt]]
+
 * [[OTCmd2-pub_wait.txt|https://github.com/OpenTrading/OpenTrader/blob/master/share/examples/OTCmd2-pub_wait.txt]]
+
 * [[OTCmd2-rabbit.txt|https://github.com/OpenTrading/OpenTrader/blob/master/share/examples/OTCmd2-rabbit.txt]]
+
 * [[OTCmd2-sub.txt|https://github.com/OpenTrading/OpenTrader/blob/master/share/examples/OTCmd2-sub.txt]]
+

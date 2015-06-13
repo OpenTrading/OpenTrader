@@ -1,3 +1,8 @@
+commit edfabb1d9a6032fd13f7323b2f48fa32a219f4c9
+Date:   Sat Jun 13 23:16:43 2015 +0300
+
+    Added wiki/TestsFeatures.txt and wiki/TestsExamples.txt
+
 commit fe5b5f05d0a4fd41a0808120e8ed793e65820300
 Date:   Sat Jun 13 20:50:38 2015 +0300
 
