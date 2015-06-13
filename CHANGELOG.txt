@@ -1,3 +1,8 @@
+commit 865aeb426f2ec36406ccb0efe48bc32dbbce4585
+Date:   Sat Jun 13 20:33:16 2015 +0300
+
+    renamed:    share/doc/08OTBackTest.txt -> wiki/DocOTBackTest.creole
+
 commit c69ca496f87e924622737d1ba275d4cf9ecc21de
 Date:   Sat Jun 13 20:00:01 2015 +0300
 

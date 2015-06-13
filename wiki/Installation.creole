@@ -42,7 +42,8 @@ python setup.py
 }}}
 to create the 3 scripts:
 
-* {{{OTCmd2}}} - see [[DocOTCmd2]].
+* {{{OTCmd2}}} - see [[DocOTCmd2]]
+* {{{OTBackTest}}} - see [[DocOTBackTest]]
 * {{{OTPpnAmgc}}} - see [[DocOTPpnAmgc]]
 
 

@@ -46,20 +46,18 @@ installed.
 
 **This is a work in progress - a developers' pre-release version.**
 
-The [[project wiki|https://github.com/OpenTrading/OpenTrader/wiki/Home]]
-should be open for editing by anyone logged into GitHub:
-**Please report any system it works or doesn't work on in the wiki:
+The project wiki should be open for editing by anyone logged into GitHub:
+Please report any system it works or doesn't work on in the wiki:
 include the Metatrader build number, the origin of the metatrader exe,
-the Windows version, and the AMQP server version and version of the Pika.**
+the Windows version, and the AMQP server version and version of the Pika.
 This code in known to run under Linux Wine (1.7.x), so this project
 bridges Metatrader to RabbitMQ under Linux.
 
-* [[Installation|https://github.com/OpenTrading/OpenTrader/wiki/DocOTCmd2]]
+* [[Installation|https://github.com/OpenTrading/OpenTrader/wiki/Installation]]
 
-* [[DocOTCmd2|https://github.com/OpenTrading/OpenTrader/wiki/DocOTCmd2]] Manual
-* [[DocOTPpnAmgc|https://github.com/OpenTrading/OpenTrader/wiki/DocOTPpnAmgc]] Manual
-
-* [[RoadMap|https://github.com/OpenTrading/OpenTrader/wiki/RoadMap]]
+* [[DocOTCmd2|https://github.com/OpenTrading/OpenTrader/wiki/DocOTCmd2]]
+* [[DocOTBackTest|https://github.com/OpenTrading/OpenTrader/wiki/DocOTBackTest]]
+* [[DocOTPpnAmgc|https://github.com/OpenTrading/OpenTrader/wiki/DocOTPpnAmgc]]
 
 ----
-Wiki Home: [[Home|https://github.com/OpenTrading/OpenTrader/wiki/Home]]
+Wiki Home: [[Home|https://github.com/OpenTrading/OpenTrader/wiki/]]
