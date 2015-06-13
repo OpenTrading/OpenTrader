@@ -1,34 +1,50 @@
 # -*-mode: python; py-indent-offset: 4; indent-tabs-mode: nil; encoding: utf-8-dos; coding: utf-8 -*-
 
-"""
+sUSAGE__doc__ = """
 This script can be run from the command line to send commands
 to a OTMql4Pika enabled Metatrader. It will start a command loop to
-listen, send commands, or query the RabbitMQ management interface, based
-on the cmd2 REPL: see cmd2plus.py in https://github.com/OpenTrading/OTMql4Lib
+listen, send commands, based on the cmd2 REPL, or take commands from
+the standard input, or take commands ascommand-line arguments.
 
-Type help at the command prompt to get more help.
+Type help at the command prompt to get more help, or
+call the script with --help to see the script options.
+"""
+# This assumes post processing by cmd2help_to_creole.sh
+sUSAGE_EPILOG__doc__ = """
 
-Call the script with --help to see the script options.
-
+The subcommands are:
+* subscribe - Subscribe to messages from RabbitMQ on a given topic
+* publish   - Publish a message to a given chart on a OTMql4Py enabled terminal
+* chart     - Set and query the chart in Metatrdaer that the messages are sent to
+* order     - Manage orders in an OTMql4AQMp enabled Metatrader
+* csv       - Download, resample and convert CSV files into pandas
+* backtest  - Backtest recipes with chefs, and serve the results as metrics and plots
+* rabbit    - Introspect some useful information from the RabbitMQ server
+"""
+sUSAGE_MAYBE__doc__ = """
 The normal usage is:
-
+{{{
 sub run timer# retval.#  - start a thread listening for messages: timer,tick,retval
 pub cmd AccountBalance   - to send a command to OTMql4Pika,
                          the return will be a retval message on the listener
 sub hide timer           - stop seeing timer messages (just see the retval.#)
 order list               - list your open order tickets
+}}}
 """
 
 sCSV__doc__ = """
 Download, resample and convert CSV files into pandas:
+{{{
 csv url PAIRSYMBOL       - show a URL where you can download  1 minute Mt HST data
 csv resample SRAW1MINFILE, SRESAMPLEDCSV, STIMEFRAME - Resample 1 minute CSV data,
                                                        to a new timeframe
                                                        and save it as CSV file
+}}}
 """
 
 sCHART__doc__ = """
-Set and query the chart used for messages to and from RabbitMQ:
+Set and query the chart in Metatrader that the messages are sent to:
+{{{
   list   - all the charts the listener has heard of,
            iff you have already started a listener with "sub run"
   get    - get the default chart to be published or subscribed to.
@@ -37,10 +53,12 @@ Set and query the chart used for messages to and from RabbitMQ:
            iff you have already started a listener with "sub run"
 
 The chart ID will look something like: oChart_EURGBP_240_93ACD6A2_1
+}}}
 """
 
 sSUB__doc__ = """
 Subscribe to messages from RabbitMQ on a given topic:
+{{{
   sub topics            - shows topics subscribed to.
   sub run TOPIC1 ...    - start a thread to listen for messages,
                           TOPIC is one or more Rabbit topic patterns.
@@ -51,37 +69,39 @@ Subscribe to messages from RabbitMQ on a given topic:
                           with 0 - off, 1 - on, no argument - current value
   sub thread info       - info on the thread listening for messages.
   sub thread stop       - stop a thread listening for messages.
-
+}}}
 Common RabbitMQ topic patterns are: # for all messages, tick.# for ticks,
 timer.# for timer events, retval.# for return values.
 You can choose as specific chart with syntax like:
+{{{
     tick.oChart.EURGBP.240.93ACD6A2.#
-
-The RabbitMQ host and login information is set in the `[RabbitMQ]`
-section of the `OTCmd2.ini` file; see the `-c/--config` command-line options.
+}}}
+The RabbitMQ host and login information is set in the {{{[RabbitMQ]}}}
+section of the {{{OTCmd2.ini}}} file; see the {{{-c/--config}}} command-line options.
 """
 
 sPUB__doc__ = """
 Publish a message via RabbitMQ to a given chart on a OTMql4Py enabled terminal:
-
+{{{
   pub cmd  COMMAND ARG1 ... - publish a Mql command to Mt4,
       the command should be a single string, with a space seperating arguments.
   pub wait COMMAND ARG1 ... - publish a Mql command to Mt4 and wait for the result,
       the command should be a single string, with a space seperating arguments.
   pub eval COMMAND ARG1 ... - publish a Python command to the OTMql4Py,
       the command should be a single string, with a space seperating arguments.
-
+}}}
 You wont see the return value unless you have already done a:
+{{{
   sub run retval.#
-
-The RabbitMQ host and login information is set in the `[RabbitMQ]`
-section of the `OTCmd2.ini` file; see the `-c/--config` command-line options.
+}}}
+The RabbitMQ host and login information is set in the {{{[RabbitMQ]}}}
+section of the {{{OTCmd2.ini}}} file; see the {{{-c/--config}}} command-line options.
 """
 
 # should these all be of chart ANY
 sORD__doc__ = """
 Manage orders in an OTMql4AQMp enabled Metatrader:
-
+{{{
   ord list          - list the ticket numbers of current orders.
   ord info iTicket  - list the current order information about iTicket.
   ord trades        - list the details of current orders.
@@ -93,19 +113,21 @@ Manage orders in an OTMql4AQMp enabled Metatrader:
   ord stoploss
   ord trail
   ord exposure      - total exposure of all orders, worst case scenario
-
+}}}
 """
 
 lRABBIT_GET_THUNKS = ['vhost_names', 'channels',
                       'connections', 'queues']
 sRABBIT__doc__ = """
-If we have pyrabbit installed, and iff the rabbitmq_management plugin
-has been installed in your server, we can introspect some useful
-information if the HTTP interface is enabled. Commands include:
-    get %s
-
-The RabbitMQ host and login information is set in the `[RabbitMQ]`
-section of the `OTCmd2.ini` file; see the `-c/--config` command-line options.
+Introspect some useful information from the RabbitMQ server:
+if we have pyrabbit installed, and iff the rabbitmq_management plugin has been
+installed in your server, we can query the  HTTP interface if it is enabled.
+Commands include:
+{{{
+  rabbit get %s
+}}}
+The RabbitMQ host and login information is set in the {{{[RabbitMQ]}}}
+section of the {{{OTCmd2.ini}}} file; see the {{{-c/--config}}} command-line options.
 """ % ("|".join(lRABBIT_GET_THUNKS),)
 
 import sys
@@ -115,7 +137,7 @@ import traceback
 import threading
 import time
 import unittest
-from argparse import ArgumentParser
+from argparse import ArgumentParser, RawDescriptionHelpFormatter
 
 from configobj import ConfigObj
 from pika import exceptions
@@ -347,7 +369,7 @@ class CmdLineApp(Cmd):
              arg_desc="command",
              usage=sSUB__doc__,
              )
-    def do_sub(self, oArgs, oOpts=None):
+    def do_subscribe(self, oArgs, oOpts=None):
         __doc__ = sSUB__doc__
         lArgs = oArgs.split()
         sDo = lArgs[0]
@@ -470,7 +492,7 @@ class CmdLineApp(Cmd):
 
         self.vError("Unrecognized subscribe command: " + str(oArgs) +'\n' +__doc__)
 
-    do_subscribe = do_sub
+    do_sub = do_subscribe
 
     ## publish
     @options([make_option("-c", "--chart",
@@ -480,7 +502,7 @@ class CmdLineApp(Cmd):
              arg_desc="command",
              usage=sPUB__doc__,
              )
-    def do_pub(self, oArgs, oOpts=None):
+    def do_publish(self, oArgs, oOpts=None):
         __doc__ = sPUB__doc__
         if not oArgs:
             self.poutput("Commands to publish (and arguments) are required\n" + __doc__)
@@ -533,7 +555,7 @@ class CmdLineApp(Cmd):
 
         self.vError("Unrecognized publish command: " + str(oArgs) +'\n' +__doc__)
 
-    do_publish = do_pub
+    do_pub = do_publish
 
     ## order
     @options([make_option("-c", "--chart",
@@ -543,7 +565,7 @@ class CmdLineApp(Cmd):
              arg_desc="command",
              usage=sORD__doc__,
              )
-    def do_ord(self, oArgs, oOpts=None):
+    def do_order(self, oArgs, oOpts=None):
         __doc__ = sORD__doc__
         if not oArgs:
             self.poutput("Commands to order (and arguments) are required\n" + __doc__)
@@ -637,7 +659,7 @@ class CmdLineApp(Cmd):
         # (int iTicket, double fPrice, int iSlippage, color cColor=CLR_NONE)
         self.vError("Unrecognized order command: " + str(oArgs) +'\n' +__doc__)
 
-    do_order = do_ord
+    do_ord = do_order
 
     # backtest
     @options([make_option("-C", "--chef",
@@ -655,7 +677,7 @@ class CmdLineApp(Cmd):
              arg_desc="command",
              usage=sBAC__doc__
              )
-    def do_back(self, oArgs, oOpts=None):
+    def do_backtest(self, oArgs, oOpts=None):
         __doc__ = sBAC__doc__
         if not pybacktest:
             self.poutput("Install pybacktest from git://github.com/ematvey/pybacktest/")
@@ -685,8 +707,8 @@ class CmdLineApp(Cmd):
             # This is still in the process of getting wired up and tested
             print(traceback.format_exc(10))
 
-    do_bac = do_back
-    do_backtest = do_back
+    do_back = do_backtest
+    do_bac = do_backtest
 
     ## rabbit
     @options([make_option("-a", "--address",
@@ -771,14 +793,17 @@ class TestMyAppCase(Cmd2TestCase):
     CmdApp = CmdLineApp
     transcriptFileName = 'exampleSession.txt'
 
-def oParseOptions(sUsage):
+def oParseOptions():
     """
     Look at the bottom of PikaListener.py and PikaChart.py for iMain
     functions that use the oParseOptions that is returned here.
     This function returns an ArgumentParser instance, so that you
     can override it before you call it to parse_args.
     """
-    oArgParser = ArgumentParser(description=sUsage)
+    oArgParser = ArgumentParser(description=sUSAGE__doc__ + sUSAGE_EPILOG__doc__,
+#                                epilog=sUSAGE_EPILOG__doc__.strip(),
+                                formatter_class=RawDescriptionHelpFormatter)
+
     oArgParser.add_argument("-v", "--verbose", action="store",
                             dest="iVerbose", type=int, default=4,
                             help="the verbosity, 0 for silent 4 max (default 4)")
@@ -810,8 +835,7 @@ def oParseConfig(sConfigFile):
 def iMain():
 #    from PikaArguments import oParseOptions
 
-    sUsage = __doc__.strip()
-    oArgParser = oParseOptions(sUsage)
+    oArgParser = oParseOptions()
     oOptions = oArgParser.parse_args()
     lArgs = oOptions.lArgs
 

@@ -1,3 +1,18 @@
+commit c69ca496f87e924622737d1ba275d4cf9ecc21de
+Date:   Sat Jun 13 20:00:01 2015 +0300
+
+    Renamed README.creole from README.md and generate it from wiki/FrontPage.creole.
+
+commit 2547ff45dad029328f9da40a64c6712609650a9a
+Date:   Sat Jun 13 19:29:25 2015 +0300
+
+    Moved share/doc/05OTCmd2.txt -> wikis/DocOTCmd2.creole etc.
+
+commit 4571853ce340a7b43fa08e79509a433c503438f3
+Date:   Fri Jun 12 22:38:17 2015 +0300
+
+    Added the OTCmd2 csv command to resample CSV data to make bactest feeds.
+
 commit ebbaea3881f76a1635e91fba8c82a34987a90040
 Date:   Fri Jun 12 12:59:31 2015 +0300
 

@@ -8,27 +8,43 @@ import os
 from pybacktest.data import load_from_yahoo
 
 #? feed rename delete
-sBAC__doc__ = ""
+sBAC__doc__ = """
+Backtest recipes with chefs, and serve the results as metrics and plots.
+
+The subcommands are:
+* omlette   - An omlette is an HDF5 file that saves all the data from a backtest
+* feed      - Create feeds (pandas DataFrames) from CSV OHLCV files
+* recipe    - Set the recipe that the chef will use, and make the ingredients from the feeds
+* chef      - Set the chef that we will use, and cook from the ingredients and the feeds
+* servings  - List the servings the chef has cooked, and dish out the servings
+* plot      - Plot the servings the chef has cooked, using matplotlib
+"""
 
 sBAComlette__doc__ = """
+==== OTCmd2 backtest omlette
+
 An omlette is an HDF5 file that saves all the information from a backtest,
 including the metadata: all of parameter values that were used in the recipe,
 the parameters used by the cook, and the servings results.
 
 You should open an omlette before you backtest giving it a filename,
 and close it after the 'chef cook' and 'servings'.
-
+{{{
 back omlette open FILE           - open an HDF file to save all the backtest parts
 back omlette check               - show the current omlette filename
 back omlette display             - display the current omlette HDF sections
 back omlette close               - close the HDF file saving the omlette
-
+}}}
 Real Soon Now you will be able to enjoy them more by reloading previously saved
 omlettes, plotting the data or the results, and adding or editing comments.
 """
 sBAC__doc__ += sBAComlette__doc__
 
 sBACfeed__doc__ = """
+==== OTCmd2 backtest feed
+
+Create feeds (pandas DataFrames) from CSV OHLCV files.
+{{{
 back feed dir                                  - NotImplemented
 back feed dir dirname                          - NotImplemented
 
@@ -39,39 +55,60 @@ back feed get                                  - get the key name of the current
 back feed info                                 - concise summary of the DataFrame
 back feed plot                                 - plot the CSV data using OTPpnAmgc
                This plots the feed, with SMA, RSIs and MACDs, using matplotlib.
+}}}
 """
 sBAC__doc__ += sBACfeed__doc__
 
 sBACrecipe__doc__ = """
+==== OTCmd2 backtest recipe
+
+Set the recipe that the chef will use, and make the ingredients from the feeds.
+{{{
 back recipe list                                 - list the known recipes
 back recipe set                                  - show the current recipe
 back recipe set RECIPE                           - set the current recipe
 back recipe ingredients                          - make the ingredients
+}}}
 """
 sBAC__doc__ += sBACrecipe__doc__
 
 sBACchef__doc__ = """
+==== OTCmd2 backtest chef
+
+Set the chef that we will use, and cook from the ingredients and the feeds.
+{{{
 back chef list                          - list the known chefs
 back chef set                           - show the current chef
 back chef set CHEF                      - set the current chef
 back chef cook                          - cook the recipe by the chef
+}}}
 """
 sBAC__doc__ += sBACchef__doc__
 
 sBACservings__doc__ = """
+==== OTCmd2 backtest servings
+
+List the servings the chef has cooked, and dish out the servings.
+{{{
 back servings list        - list the servings that result from the recipe and the chef
 back servings signals     - show the signals: when to buy or sell
 back servings trades      - show the trades: what was bought or sold
 back servings positions   - show how the trades effected the positions
 back servings equity      - show the results of the trades as equity differences
-back servings summary     - show the metrics and analyses of the trades
+back servings metrics     - show the metrics and analyses of the trades
+}}}
 """
 sBAC__doc__ += sBACservings__doc__
 
 sBACplot__doc__ = """
+==== OTCmd2 backtest plot
+
+Plot the servings the chef has cooked, using matplotlib.
+{{{
 back plot show      - show the current plot
 back plot trades    - plot the trades
 back plot equity    - plot the cumulative equity
+}}}
 """
 sBAC__doc__ += sBACplot__doc__
 
@@ -504,7 +541,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
             return
         oBt = oOm.oBt
 
-        # ['signals', 'trades', 'positions', 'equity', 'summary', 'trade_price']
+        # ['signals', 'trades', 'positions', 'equity', 'metrics', 'trade_price']
         _lCmds = oChefModule.lProducedServings
         
         assert len(lArgs) > 1, "ERROR: argument required" +sDo +str(_lCmds)
@@ -555,7 +592,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
             oOm.vAppendHdf('recipe/servings/rTradePrice', oBt.trade_price)
             return
             
-        if sCmd == 'summary':
+        if sCmd == 'metrics':
             oOm.vSetTitleHdf('recipe/servings', oOm.oChefModule.sChef)
             #? Leave this as derived or store it? reviews?
             oOm.vSetMetadataHdf('recipe/servings', oBt.dSummary())
