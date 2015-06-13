@@ -1,5 +1,5 @@
 
-### OTCmd2_ini
+=== OTCmd2_ini
 
     Settings for OTCmd2 are in a configobj .ini file that by default is
     found in the same place that the OTCmd2.py file is found, but you can

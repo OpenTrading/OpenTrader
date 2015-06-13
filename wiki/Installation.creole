@@ -1,0 +1,48 @@
+=== Installation
+
+One day we will make installers for a shrink-wrapped distribution, but
+for now, you must clone from github.com and manually install.
+
+==== Prerequisites
+
+You must have {{{cmd2}}} installed the Python that runs this script:
+see https://bitbucket.org/catherinedevlin/cmd2
+
+You must have {{{configobj}}} installed in the Python that runs this script.
+The up-to-date one is at https://github.com/DiffSK/configobj/
+
+In your Metatrader Python, you also must have installed {{{Pika}}}:
+https://pypi.python.org/pypi/pika/
+
+For backtesting, you need to have {{{pybacktest}}}
+installed in the Python that runs this script:
+https://github.com/ematvey/pybacktest/
+
+==== OpenTrading Components
+
+Firstly, install the OTMql4AMQP, OTMql4Py and OTMql4Lib projects from
+https://github.com/OpenTrading/ into the Python called by your Metatrader:
+* OTMql4AMQP https://github.com/OpenTrading/OTMql4AMQP/,
+* OTMql4Py https://github.com/OpenTrading/OTMql4Py/, and
+* OTMql4Lib https://github.com/OpenTrading/OTMql4Lib/
+
+Attach the {{{Experts/OTMql4/OTPyTestPikaEA.mq4}}} EA in
+[[OTMql4AMQP|https://github.com/OpenTrading/OTMql4AMQP/MQL4/]]
+to a chart and make sure it's working.
+
+==== Setup
+
+Clone this project from github
+{{{
+git clone https://github.com/OpenTrading/OpenTrader
+}}}
+and then run change to the {{{OpenTrader}}} directory and run
+{{{
+python setup.py
+}}}
+to create the 3 scripts:
+
+* {{{OTCmd2}}} - see [[DocOTCmd2]].
+* {{{OTPpnAmgc}}} - see [[DocOTPpnAmgc]]
+
+

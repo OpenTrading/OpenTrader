@@ -1,0 +1,23 @@
+Welcome to the OpenTrader wiki!
+
+[[DocOTCmd2]] can be run from the command line to send commands
+to a OTMql4Pika enabled Metatrader. It will start a command loop to
+listen, send commands, based on the cmd2 REPL, or take commands from
+the standard input, or take commands ascommand-line arguments.
+
+Use the Wiki to start topics for discussion; it's better to use the
+wiki for knowledge capture, and then we can pull pages back into the
+release documentation in the {{{wiki}}} directory. You may need to be
+signed into github.com to edit in the wiki.
+
+Please file any bugs in the
+[[issues tracker|https://github.com/OpenTrading/OpenTrader/issues]].
+
+* [[FrontPage]]
+
+The Manuals pages are automatically generated from the source; do not edit:
+* [[DocOTCmd2]]
+* [[DocOTPpnAmgc]]
+
+----
+Please format wiki pages as Creole. http://wikicreole.org/
