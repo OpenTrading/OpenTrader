@@ -1,0 +1,26 @@
+==== Testing
+
+To run the BDD test features and scenarios, install
+[[py-bdd|https://github.com/pytest-dev/pytest-bdd/]].
+Make sure that {{{bdd}}} in your list of
+py.test plugins.
+
+Then, in the main directory of the distribution, run
+{{{
+python -v tests/
+}}}
+
+The features can be found in the 
+[[tests/features/|https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/]]
+directory of the distribution.
+
+For the currently documented features, see [[TestsFeatures]].
+
+=== Examples
+
+Because [[OTCmd2|DocOTCmd2]] is a [[cmd2|https://bitbucket.org/catherinedevlin/cmd2]]
+application, not only can it interpret commands in an interactive loop,
+but it can read a list of commands from the stdin. This can be used to give
+examples of typical [[UseCases]].
+
+For the currently scripted examples, see [[TestsExamples]].

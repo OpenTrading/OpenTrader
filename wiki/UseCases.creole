@@ -1,0 +1,22 @@
+== Use Cases
+
+Use cases are the starting point for our Behaviour Driven Development (BDD).
+The use cases are elaborated into required feature need to fulfil
+the use case, which are turned into BDD test features and scenarios using
+[[py-bdd|https://github.com/pytest-dev/pytest-bdd/]]. The features can be found in the 
+[[tests/features/|https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/]]
+directory of the distribution.
+
+For the currently documented features, see [[TestsFeatures]].
+
+
+=== Backtesting Use Cases
+
+=== Livetrading Use Cases
+
+=== GUI Use Cases
+
+=== GUI Use Cases Tables
+
+=== GUI Use Cases Plotting
+

@@ -14,9 +14,31 @@ The up-to-date one is at https://github.com/DiffSK/configobj/
 In your Metatrader Python, you also must have installed {{{Pika}}}:
 https://pypi.python.org/pypi/pika/
 
-For backtesting, you need to have {{{pybacktest}}}
+===== Plotting Prerequisites
+
+You must have {{{pandas}}} installed in the Python that runs this script:
+http://pypi.python.org/pypi/pandas
+
+You must have {{{matplotlib}}} installed in the Python that runs this script:
+http://pypi.python.org/pypi/matplotlib
+
+===== Backtesting Prerequisites
+
+For backtesting ([[DocOTCmd2_backtest]]), you need to have {{{pybacktest}}}
 installed in the Python that runs this script:
 https://github.com/ematvey/pybacktest/
+
+You must have {{{pandas}}} installed in the Python that runs this script:
+http://pypi.python.org/pypi/pandas
+
+You will probably also want the Cythoned {{{ta-lib}}} that works with pandas/numpy:
+https://github.com/mrjbq7/ta-lib
+
+===== GUI Prerequisites
+
+If you want to visualize and explore [[Omlettes]], you can use {{{ViTables}}}:
+https://github.com/uvemas/ViTables 
+
 
 ==== OpenTrading Components
 
@@ -45,5 +67,4 @@ to create the 3 scripts:
 * {{{OTCmd2}}} - see [[DocOTCmd2]]
 * {{{OTBackTest}}} - see [[DocOTBackTest]]
 * {{{OTPpnAmgc}}} - see [[DocOTPpnAmgc]]
-
 

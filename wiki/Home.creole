@@ -14,9 +14,14 @@ Please file any bugs in the
 [[issues tracker|https://github.com/OpenTrading/OpenTrader/issues]].
 
 * [[FrontPage]]
+* [[TitleIndex]]
 
-The Manuals pages are automatically generated from the source; do not edit:
+* [[Installation]]
+* [[Testing]]
+
+
 * [[DocOTCmd2]]
+* [[DocOTBackTest]]
 * [[DocOTPpnAmgc]]
 
 ----

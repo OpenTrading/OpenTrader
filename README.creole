@@ -53,11 +53,9 @@ the Windows version, and the AMQP server version and version of the Pika.
 This code in known to run under Linux Wine (1.7.x), so this project
 bridges Metatrader to RabbitMQ under Linux.
 
+* Wiki (https://github.com/OpenTrading/OpenTrader/wiki/Home)
 * Installation (https://github.com/OpenTrading/OpenTrader/wiki/Installation)
-
-* DocOTCmd2 (https://github.com/OpenTrading/OpenTrader/wiki/DocOTCmd2)
-* DocOTBackTest (https://github.com/OpenTrading/OpenTrader/wiki/DocOTBackTest)
-* DocOTPpnAmgc (https://github.com/OpenTrading/OpenTrader/wiki/DocOTPpnAmgc)
+* Testing (https://github.com/OpenTrading/OpenTrader/wiki/Testing)
 
 * Index (https://github.com/OpenTrading/OpenTrader/wiki/TitleIndex)
 
