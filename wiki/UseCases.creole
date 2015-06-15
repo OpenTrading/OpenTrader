@@ -1,9 +1,18 @@
 == Use Cases
 
-Use cases are the starting point for our Behaviour Driven Development (BDD).
-The use cases are elaborated into required feature need to fulfil
-the use case, which are turned into BDD test features and scenarios using
-[[py-bdd|https://github.com/pytest-dev/pytest-bdd/]]. The features can be found in the 
+Use-cases are the starting point for our Behaviour Driven Development (BDD).
+The use-cases are elaborated into required feature need to fulfil
+the use-case, which are turned into BDD test features and scenarios using
+[[py-bdd|https://github.com/pytest-dev/pytest-bdd/]], and is well documented at:
+https://readthedocs.org/projects/pytest-bdd/
+
+{{{pytest-bdd}}} is inspired by [[behave|http://pypi.python.org/pypi/behave]],
+and uses similar conventions in writing feature files. Behave is well documented at:
+http://pythonhosted.org/behave/ and has a good page describing the philosophy of 
+[[behavior-driven development|http://pythonhosted.org/behave/philosophy.html]],
+something we have strongly benefited from.
+
+Our feature files can be found in the 
 [[tests/features/|https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/]]
 directory of the distribution.
 

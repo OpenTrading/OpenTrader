@@ -1,3 +1,8 @@
+commit b1db01863d71497e3f9714024469a8267ba7b0f6
+Date:   Sun Jun 14 13:56:04 2015 +0300
+
+    Added wiki/Testing.creole
+
 commit 684170b0f0a398b352b9b7db2e562569af93cca4
 Date:   Sun Jun 14 00:08:13 2015 +0300
 

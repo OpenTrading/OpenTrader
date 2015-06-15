@@ -2,10 +2,10 @@
 
 To run the BDD test features and scenarios, install
 [[py-bdd|https://github.com/pytest-dev/pytest-bdd/]].
-Make sure that {{{bdd}}} in your list of
-py.test plugins.
+Make sure that {{{bdd}}} in your list of {{{py.test}}} plugins.
 
-Then, in the main directory of the distribution, run
+
+In the main directory of the distribution, run
 {{{
 python -v tests/
 }}}

@@ -1,0 +1,72 @@
+== Backtesting
+
+The architecure of OpenTrader supports different chefs (backtesters), and it
+is assumed that some will have different features, strengths, and weaknesses.
+We want to lay out here the minimum requirements for inclusion, and we want
+lay out what we are looking for even if there is no currently available
+open source code that does everything we are looking for.
+
+Because there may be a large tradeoff between some features and speed, and
+because speed in backtesting is a prerequisite to do multi-variate optimization,
+we can imagine have more than one type of backtester: a fast coarse one, and a
+slower fine one. The former can be used to narrow down the range of parameters,
+and the latter can be used to test the former in more realisitic conditions.
+In backtesters, vector approaches (like pybacktest) are in the former category,
+and usually event-driven backtesters are in the latter. The same may also
+be true of backtesting versus live-trading, as it usually requires an
+event-driven backtester.
+
+It must be borne in mind that any of the currently available software projects
+are moving targets that may gain new features from one release to the next.
+So can their speed greatly from one release to the next, and it's usually best
+to just a project based on its quality and see how it evolves rather than just
+judge it on criteria. This is especially true now that core bottlenecks are being
+rewritten in Cython. Similarly, if a feature is missing and important enough to us,
+we perhaps can implement the feature and push it back upstream.
+
+=== Criteria
+
+Idealy, our backtesters will have all of the features found in the Stategy Tester,
+so that we can make direct comparisons.
+
+**Requirements:**
+
+* Open source.
+* Panderific. At the very least, numpy arrays as the basis.
+
+**Nice to Have:**
+
+* trailing stop-loss implementation
+* easily adapted to live-trading
+
+**Nice not to Have:**
+
+* slow
+
+=== Candidates
+
+We list here some of the open source software that we know of, with some
+comments based on our Criteria:
+
+[[pybacktest|https://github.com/ematvey/pybacktest/]]
+Fast, vectorized, no trailing stop-loss. {{{pybacktest}}} was the first bactester
+included in OpenTrader (see [[DocOTCmd2_backtest]]), and it formed the basis
+for our initial architecture. Very succinct.
+
+[[bt|https://github.com/pmorissette/bt]]
+No trailing stop-loss.
+
+[[zipline|https://github.com/quantopian/zipline]]
+Very actively developed. Not very fast. No trailing stop-loss.
+
+[[pyalgotrade|http://gbeced.github.io/pyalgotrade]]
+Actively developed and well-documented.
+Not pandaed. No trailing stop-loss.
+
+
+
+----
+
+See also:
+
+* http://tradingwithpython.blogspot.fr/2014/05/backtesting-dilemmas.html
