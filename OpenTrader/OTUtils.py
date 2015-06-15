@@ -5,3 +5,11 @@ def sStripCreole(s):
     s = s.replace('{{{', '')
     s = s.replace('}}}', '')
     return s
+
+def lConfigToList(oC):
+    l = [['Key', 'Value']]
+    for sSect in oC.keys():
+        for sKey in oC[sSect].keys():
+            sMark = sSect +'/' +sKey
+            l.append([sMark, oC[sSect][sKey]])
+    return l

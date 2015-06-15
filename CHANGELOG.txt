@@ -1,3 +1,8 @@
+commit 388e0d870f42ddd81dbf059b7125937b1e33f3fb
+Date:   Mon Jun 15 22:59:52 2015 +0300
+
+    Fixed bugs and tests.
+
 commit 0bc66b4ef1e8fce259f1ba536fd8660459323f9f
 Date:   Mon Jun 15 19:33:29 2015 +0300
 

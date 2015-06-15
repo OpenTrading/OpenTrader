@@ -5,6 +5,7 @@
 
 import sys
 import os
+from pprint import pprint, pformat
 from pybacktest.data import load_from_yahoo
 
 try:
@@ -17,7 +18,7 @@ try:
 except ImportError:
     tabview = None
 
-from OTUtils import sStripCreople
+from OTUtils import sStripCreole, lConfigToList
     
 #? feed rename delete
 sBAC__doc__ = """
@@ -83,6 +84,7 @@ back recipe ingredients                 - make the ingredients
 back recipe config                      - show the current recipe config
 back recipe config KEY                  - show the current config of KEY
 back recipe config KEY VAL              - set the current config of KEY to VAL
+back recipe config tabview              - view the config with tabview, if installed
 }}}
 """
 sBAC__doc__ += sBACrecipe__doc__
@@ -431,9 +433,9 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
         __doc__ = sBACrecipe__doc__
         from .Omlettes import lKnownRecipes
         # self.vDebug("lKnownRecipes: " + repr(lKnownRecipes))
-
+        # are ingredients under chef?
         _lCmds = ['set', 'list', 'get', 'make', 'ingredients', 'config']
-
+        
         sCmd = str(lArgs[1])
         if sCmd == 'list':
             self.poutput("Known Recipes: %r" % (self.G(lKnownRecipes,)))
@@ -447,19 +449,30 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
         assert sCmd in _lCmds, "ERROR: %s %s not in: %r " % (
             sDo, sCmd, _lCmds)
 
+        
         if sCmd == 'config':
             oRecipe = oEnsureRecipe(self, oOpts)
+            
             if len(lArgs) == 2:
-                self.poutput(repr(oRecipe.oConfig))
+                self.poutput(pformat(self.G(oRecipe.oConfig())))
+            elif len(lArgs) == 3 and tabview and str(lArgs[2]) == 'tabview':
+                l = lConfigToList(oRecipe.oConfig())
+                iMax = max(map(len, l.keys()))
+                tabview.view(l, column_widths=[iMax, 60 - iMax])
             elif len(lArgs) == 3:
-                sKey = str(lArgs[2])
-                self.poutput(repr(oRecipe.oConfig[sKey]))
+                sSect = str(lArgs[2])
+                self.poutput(repr(self.G(oRecipe.oConfig(sSect))))
             elif len(lArgs) == 4:
-                sKey = str(lArgs[2])
-                sVal = str(lArgs[3])
-                oType = repr(oRecipe.oConfig[sKey])
-                oRecipe.oConfig[sKey] = oType(sVal)
-                self.poutput(repr(oRecipe.oConfig[sKey]))
+                sSect = str(lArgs[2])
+                sKey = str(lArgs[3])
+                self.poutput(repr(self.G(oRecipe.oConfig(sSect, sKey))))
+            elif len(lArgs) == 5:
+                sSect = str(lArgs[2])
+                sKey = str(lArgs[3])
+                sVal = str(lArgs[5])
+                oType = type(oRecipe.oConfig(sSect, sKey))
+                gRetval = oRecipe.oConfig(sSect, sKey, oType(sVal))
+                self.poutput(repr(setf.G(gRetval)))
             return
         
         if sCmd == 'set':
@@ -637,7 +650,8 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
             
             sServing = lArgs[2]
             assert sServing in oChefModule.lProducedServings
-            tabview.view(getattr(oBt. sServing))
+            # FixMe: need index timestamp
+            tabview.view(getattr(oBt, sServing))
                          
         self.vError("Unrecognized servings command: " + str(oArgs) +'\n' +__doc__)
         return

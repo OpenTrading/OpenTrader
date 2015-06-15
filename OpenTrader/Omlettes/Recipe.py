@@ -23,6 +23,7 @@ class Recipe(object):
         self.oOm = oOm
         self.oFd = oFd
         self.sName = ""
+        self.sDescription = ""
         self.sFile = ""
         self.oOm = None
         # The .ini file is now required and is relied on
@@ -32,13 +33,20 @@ class Recipe(object):
         self.lRequiredFeeds = []
         self.lRequiredIngredients = []
 
-    def lKeys():
-        if self.sName == "" or self.oConfigObj is None: return []
-        return self.oConfigObj[self.sName].keys()
-
-    def oConfig():
-        if self.sName == "" or self.oConfigObj is None: return None
-        return self.oConfigObj[self.sName]
+    def oConfig(self, sSect=None, sKey=None, gVal=None):
+        if self.sName == "": return None
+        if self.oConfigObj is None:
+            self.vReadIniFile()
+        if sSect is None:
+            return self.oConfigObj
+        if sSect == "default":
+            sSect = self.sName
+        if sKey is None:
+            return self.oConfigObj[sSect]
+        if gVal is None:
+            return self.oConfigObj[sSect][sKey]
+        self.oConfigObj[sSect][sKey] = gVal
+        return self.oConfigObj[sSect][sKey]
         
     def vReadIniFile(self):
         assert self.sIniFile, "ERROR: No INI file defined"
@@ -50,7 +58,7 @@ class Recipe(object):
             oConfigObj = ConfigObj(sIniFile, unrepr=True)
             self.oFd.write("INFO: Read INI file: " +oConfigObj.filename +'\n')
             self.oConfigObj = oConfigObj
-            for sKey, gValue in oConfigObj[self.sName].items():
+            for sKey, gValue in oConfigObj['default'].items():
                 setattr(self, sKey, gValue)
 
             self.lRequiredFeeds = [oConfigObj[s] for s in

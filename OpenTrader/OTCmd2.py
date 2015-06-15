@@ -259,7 +259,7 @@ class CmdLineApp(Cmd):
     def gWaitForMessage(self, sMsgType, sMark, sChartId, *lArgs):
         """
         Raises a Mt4Timeout error if there is no answer in
-        oOptions['OTCmd2']['iRetvalTimeout'] seconds.
+        oOptions['default']['iRetvalTimeout'] seconds.
 
         Raising an error lets us return None as a return value.
         The protocol talking to Mt4 has the void return type,
@@ -270,7 +270,7 @@ class CmdLineApp(Cmd):
         self.eSendOnSpeaker(sChartId, sMsgType, sMsg)
         self.dLastCmd[sChartId] = sMsg
         i = 0
-        iTimeout = self.oConfig['OTCmd2']['iRetvalTimeout']
+        iTimeout = self.oConfig['default']['iRetvalTimeout']
         while i < int(iTimeout):
             # do I need a thread lock?
             if sMark in self.oListenerThread.dRetvals.keys():

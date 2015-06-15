@@ -75,6 +75,7 @@ class ChefsOven(object):
 
 
     """
+    # FixMe: ini file
     _lSignalFields = ('buy', 'sell', 'short', 'cover')
     _lSignalFieldsInt = ('Buy', 'Sell', 'Short', 'Cover')
     _lPriceFieldsInt = ('BuyPrice', 'SellPrice', 'ShortPrice', 'CoverPrice')

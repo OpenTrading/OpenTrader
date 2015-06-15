@@ -54,6 +54,7 @@ back recipe ingredients                 - make the ingredients
 back recipe config                      - show the current recipe config
 back recipe config KEY                  - show the current config of KEY
 back recipe config KEY VAL              - set the current config of KEY to VAL
+back recipe config tabview              - view the config with tabview, if installed
 }}}
 
 ==== OTCmd2 backtest chef

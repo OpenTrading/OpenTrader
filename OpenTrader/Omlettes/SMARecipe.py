@@ -14,11 +14,8 @@ class SMARecipe(Recipe):
         
     #? should oOm be required?
     def __init__(self, oOm=None, oFd=sys.stdout):
-        Recipe.__init__(self, oOm)
-        self.sFile = __file__
-        self.oFd = oFd
+        Recipe.__init__(self, oOm, oFd)
         self.__fVersion__ = 1.0
-        self.sName = 'SMACross'
         self.sIniFile = 'SMARecipe.ini'
         self.sFile = __file__
 
