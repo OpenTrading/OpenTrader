@@ -1,3 +1,8 @@
+commit 0bc66b4ef1e8fce259f1ba536fd8660459323f9f
+Date:   Mon Jun 15 19:33:29 2015 +0300
+
+    Added wiki/Backtesting.creole
+
 commit b1db01863d71497e3f9714024469a8267ba7b0f6
 Date:   Sun Jun 14 13:56:04 2015 +0300
 

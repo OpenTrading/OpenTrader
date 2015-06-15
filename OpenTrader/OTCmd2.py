@@ -70,8 +70,13 @@ Subscribe to messages from RabbitMQ on a given topic:
   sub thread info       - info on the thread listening for messages.
   sub thread stop       - stop a thread listening for messages.
 }}}
-Common RabbitMQ topic patterns are: # for all messages, tick.# for ticks,
-timer.# for timer events, retval.# for return values.
+
+Common RabbitMQ topic patterns are:
+* {{{#}}} for all messages,
+* {{{tick.#}}} for ticks,
+* {{{timer.#}}} for timer events,
+* {{{retval.#}}} for return values.
+
 You can choose as specific chart with syntax like:
 {{{
     tick.oChart.EURGBP.240.93ACD6A2.#

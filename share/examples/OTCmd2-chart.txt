@@ -1,5 +1,9 @@
-# Set and query the chart used for messages to and from RabbitMQ:
+# These tests will only work if you have an OTMql4AMQP enabled Metatrader running,
+# the Experts/OTMql4/OTPyTestPikaEA.mq4 attached to a chart in it, and
+# the RabbitMQ server configured and running.
+#
 set echo True
+# We need a listener thread running, subscribed to retval.#
 sub run retval.# timer.#
 py import time
 py time.sleep(15)

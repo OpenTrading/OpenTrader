@@ -64,7 +64,7 @@ def mExtractFrame(dDataDict, ext_mask, int_mask):
     return None
 
 # are these specific to the chef or generic to the process?
-lProducedServings = ['signals', 'trades', 'positions', 'equity', 'trade_price', 'summary']
+lProducedServings = ['signals', 'trades', 'positions', 'equity', 'trade_price', 'reviews']
 
 class ChefsOven(object):
     """

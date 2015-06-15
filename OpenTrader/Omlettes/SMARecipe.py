@@ -33,7 +33,8 @@ class SMARecipe(Recipe):
             return self.oConfigObj
         self.vReadIniFile()
         assert self.oConfigObj is not None
-        
+        return self.oConfigObj
+    
     def dMakeIngredients(self, dFeeds, dIngredientsParams):
         """
         dMakeIngredients takes a dictionary of feeds dFeeds
@@ -42,6 +43,7 @@ class SMARecipe(Recipe):
         and a key to the dIngredientsParams that it used.
         """
         oC = self.oEnsureConfigObj()
+        assert oC is not None
         iLongMa = dIngredientsParams.get('iLongMa',
                                          oC['rLongMa']['iLongMa'])
         iShortMa = dIngredientsParams.get('iShortMa',

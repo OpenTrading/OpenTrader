@@ -31,6 +31,14 @@ class Recipe(object):
         # but you could have more: multi-equity, multi-timeframe...
         self.lRequiredFeeds = []
         self.lRequiredIngredients = []
+
+    def lKeys():
+        if self.sName == "" or self.oConfigObj is None: return []
+        return self.oConfigObj[self.sName].keys()
+
+    def oConfig():
+        if self.sName == "" or self.oConfigObj is None: return None
+        return self.oConfigObj[self.sName]
         
     def vReadIniFile(self):
         assert self.sIniFile, "ERROR: No INI file defined"

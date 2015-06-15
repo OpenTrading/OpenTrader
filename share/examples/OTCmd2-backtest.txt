@@ -16,6 +16,8 @@ py assert len(self._G) > 0
 back recipe set
 # set the current recipe
 back recipe set SMARecipe
+# show the current recipe config
+back recipe config
 # list the known chefs
 back chef list
 # show the current chef

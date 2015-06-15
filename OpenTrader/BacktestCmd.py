@@ -7,6 +7,18 @@ import sys
 import os
 from pybacktest.data import load_from_yahoo
 
+try:
+    # This must be a version of tabview that supports pandas; see
+    # https://github.com/firecat53/tabview/pull/116 Either:
+    # git clone https://github.com/mdbartos/tabview ; cd tabview ; git checkout feat
+    # or:
+    # git clone https://github.com/wavexx/tabview ; cd tabview ; git checkout mva
+    import tabview
+except ImportError:
+    tabview = None
+
+from OTUtils import sStripCreople
+    
 #? feed rename delete
 sBAC__doc__ = """
 Backtest recipes with chefs, and serve the results as metrics and plots.
@@ -64,10 +76,13 @@ sBACrecipe__doc__ = """
 
 Set the recipe that the chef will use, and make the ingredients from the feeds.
 {{{
-back recipe list                                 - list the known recipes
-back recipe set                                  - show the current recipe
-back recipe set RECIPE                           - set the current recipe
-back recipe ingredients                          - make the ingredients
+back recipe list                        - list the known recipes
+back recipe get                         - show the current recipe
+back recipe set RECIPE                  - set the current recipe
+back recipe ingredients                 - make the ingredients
+back recipe config                      - show the current recipe config
+back recipe config KEY                  - show the current config of KEY
+back recipe config KEY VAL              - set the current config of KEY to VAL
 }}}
 """
 sBAC__doc__ += sBACrecipe__doc__
@@ -90,12 +105,13 @@ sBACservings__doc__ = """
 
 List the servings the chef has cooked, and dish out the servings.
 {{{
-back servings list        - list the servings that result from the recipe and the chef
-back servings signals     - show the signals: when to buy or sell
-back servings trades      - show the trades: what was bought or sold
-back servings positions   - show how the trades effected the positions
-back servings equity      - show the results of the trades as equity differences
-back servings metrics     - show the metrics and analyses of the trades
+back servings list            - list the servings that result from the recipe and chef
+back servings signals         - show the signals: when to buy or sell
+back servings trades          - show the trades: what was bought or sold
+back servings positions       - show how the trades effected the positions
+back servings equity          - show the results of the trades as equity differences
+back servings reviews         - show the metrics and analyses of the trades
+back servings tabview SERVING - view the SERVING with tabview, if installed
 }}}
 """
 sBAC__doc__ += sBACservings__doc__
@@ -263,7 +279,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
             return
         
         if sCmd == 'read_mt4_csv':
-            from OTBackTest import oReadMt4Csv
+            from PandasMt4 import oReadMt4Csv
             assert len(lArgs) >= 3, \
                    "ERROR: " +sDo +" " +sCmd +" FILENAME [SYMBOL TIMEFRAME YEAR]"
             sFile = lArgs[2]
@@ -416,7 +432,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
         from .Omlettes import lKnownRecipes
         # self.vDebug("lKnownRecipes: " + repr(lKnownRecipes))
 
-        _lCmds = ['set', 'list', 'get', 'make', 'ingredients']
+        _lCmds = ['set', 'list', 'get', 'make', 'ingredients', 'config']
 
         sCmd = str(lArgs[1])
         if sCmd == 'list':
@@ -431,6 +447,21 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
         assert sCmd in _lCmds, "ERROR: %s %s not in: %r " % (
             sDo, sCmd, _lCmds)
 
+        if sCmd == 'config':
+            oRecipe = oEnsureRecipe(self, oOpts)
+            if len(lArgs) == 2:
+                self.poutput(repr(oRecipe.oConfig))
+            elif len(lArgs) == 3:
+                sKey = str(lArgs[2])
+                self.poutput(repr(oRecipe.oConfig[sKey]))
+            elif len(lArgs) == 4:
+                sKey = str(lArgs[2])
+                sVal = str(lArgs[3])
+                oType = repr(oRecipe.oConfig[sKey])
+                oRecipe.oConfig[sKey] = oType(sVal)
+                self.poutput(repr(oRecipe.oConfig[sKey]))
+            return
+        
         if sCmd == 'set':
             assert len(lArgs) > 2, \
                    "ERROR: %s %s requires one of: %s" % (
@@ -541,14 +572,15 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
             return
         oBt = oOm.oBt
 
-        # ['signals', 'trades', 'positions', 'equity', 'metrics', 'trade_price']
-        _lCmds = oChefModule.lProducedServings
+        # ['signals', 'trades', 'positions', 'equity', 'reviews', 'trade_price']
+        _lCmds = oChefModule.lProducedServings[:]
+        if tabview and tabview not in _lCmds: _lCmds += ['tabview']
         
         assert len(lArgs) > 1, "ERROR: argument required" +sDo +str(_lCmds)
         sCmd = lArgs[1]
         
         if sCmd == 'list':
-            self.poutput("Produced Servings: %r" % (_lCmds,))
+            self.poutput("Produced Servings: %r" % (oChefModule.lProducedServings,))
             return
 
         # self.vDebug("lProducedServings: " + repr(_lCmds))
@@ -592,13 +624,21 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
             oOm.vAppendHdf('recipe/servings/rTradePrice', oBt.trade_price)
             return
             
-        if sCmd == 'metrics':
+        if sCmd == 'metrics' or sCmd == 'reviews':
             oOm.vSetTitleHdf('recipe/servings', oOm.oChefModule.sChef)
             #? Leave this as derived or store it? reviews?
             oOm.vSetMetadataHdf('recipe/servings', oBt.dSummary())
             oFd.write(oBt.sSummary())
             return
+
+        if tabview and sCmd == 'tabview':
+            assert len(lArgs) > 2, "ERROR: " +sDo +" " +sCmd \
+                   +": serving required, one of: " +str(oChefModule.lProducedServings)
             
+            sServing = lArgs[2]
+            assert sServing in oChefModule.lProducedServings
+            tabview.view(getattr(oBt. sServing))
+                         
         self.vError("Unrecognized servings command: " + str(oArgs) +'\n' +__doc__)
         return
 
