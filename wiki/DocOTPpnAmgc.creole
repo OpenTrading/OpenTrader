@@ -3,6 +3,8 @@
 OTPpnAmgc charts a CSV file of Open High Low Close Volume values, along with
 the MACD and RSI, using matplotlib.
 
+{{OTPpnAmgc.png}}
+
 Give the {{{CsvFile Symbol Timeframe and Year}}} as arguments to the script.
 
 The Timeframe is the period in minutes: e.g. 1 60 240 1440

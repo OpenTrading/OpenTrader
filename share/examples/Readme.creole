@@ -7,7 +7,8 @@ examples of typical use-cases.
 
 Additionally, as we have Python under the cmd2 loop, we can
 use Python to make tests or assertions after any step in the script.
-This makes it easy to write scripts as complete use-case tests.
+This makes it easy to write scripts as complete [[UseCase]] tests.
+At the same time, it gives end-users a catalogue of complete working examples.
 
 There are a series of example files in the
 [[share/examples|https://github.com/OpenTrading/OpenTrader/blob/master/share/examples/]]

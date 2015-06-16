@@ -1,7 +1,11 @@
 #!/bin/sh
 
+#  We don't run the plot test routinely because it requires
+#  manual intervention to close the plot.
+
 # These tests do not need to have either RabbitMQ or Mt4 running:
-# we need to know where you have your metatrader installed.
+
+# We need to know where you have your metatrader installed.
 if [ -z "$OTMT4_DIR" ] ; then
     export OTMT4_DIR="/c/Program Files/MetaTrader"
   fi
@@ -36,11 +40,5 @@ if [ -z "$OTLOG_DIR" ] ; then
   fi
 [ -d "$OTLOG_DIR" ] || mkdir "$OTLOG_DIR" || exit 4
 
-${OTCMD2} -P "$OTMT4_DIR" < share/examples/OTCmd2-backtest.txt \
-	  2>&1|tee "$OTLOG_DIR"/OTCmd2-backtest.log
-
-${OTCMD2} -P "$OTMT4_DIR" < share/examples/OTCmd2-backtest_recipe.txt \
-	  2>&1|tee "$OTLOG_DIR"/OTCmd2-backtest_recipe.log
-
-${OTCMD2} -P "$OTMT4_DIR" < share/examples/OTCmd2-backtest_omlette.txt \
-	  2>&1|tee "$OTLOG_DIR"/OTCmd2-backtest_omlette.log
+${OTCMD2} -P "$OTMT4_DIR" < share/examples/OTCmd2-backtest_feed_plot.txt \
+	  2>&1|tee "$OTLOG_DIR"/OTCmd2-backtest_feed_plot.log

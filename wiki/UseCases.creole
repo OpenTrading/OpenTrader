@@ -12,10 +12,11 @@ http://pythonhosted.org/behave/ and has a good page describing the philosophy of
 [[behavior-driven development|http://pythonhosted.org/behave/philosophy.html]],
 something we have strongly benefited from.
 
+Ideas are usually catalogued on the [[RoadMap]] before being elaborated into use-cases.
+
 Our feature files can be found in the 
 [[tests/features/|https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/]]
 directory of the distribution.
-
 For the currently documented features, see [[TestsFeatures]].
 
 
