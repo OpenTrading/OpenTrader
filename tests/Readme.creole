@@ -1,5 +1,6 @@
+== Features Tests
 
-Use cases are the starting point for our Behaviour Driven Development (BDD).
+[[UseCases]] are the starting point for our Behaviour Driven Development (BDD).
 The use cases are elaborated into required feature need to fulfil
 the use case, which are turned into BDD test features and scenarios using
 [[py-bdd|https://github.com/pytest-dev/pytest-bdd/]].
@@ -7,3 +8,4 @@ the use case, which are turned into BDD test features and scenarios using
 The currently documented features can be found in the 
 [[tests/features/|https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/]]
 directory of the distribution.
+

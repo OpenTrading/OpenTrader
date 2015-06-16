@@ -3,7 +3,7 @@
 # You dont need to have a listener thread running
 set echo True
 # read a CSV file from Mt4
-back feed read_mt4_csv EURUSD60-2014.csv EURUSD 60 2014
+back feed read_mt4_csv tmp/EURUSD60-2014.csv EURUSD 60 2014
 # list the feeds we have read
 back feed list
 py assert len(self._G) > 0
@@ -35,5 +35,6 @@ back servings trades
 back servings positions
 back servings equity
 back servings trade_price
-back servings summary
+back servings reviews
+# FixMe: cant test tabview
 

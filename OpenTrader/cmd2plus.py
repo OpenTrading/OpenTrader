@@ -403,7 +403,7 @@ class Cmd(cmd.Cmd):
         editor                Program used by ``edit``
         case_insensitive      upper- and lower-case both OK
         feedback_to_output    include nonessentials in `|`, `>` results
-        quiet                 Don't print nonessential feedback
+        quiet                 Do not print nonessential feedback
         echo                  Echo command issued into output
         timing                Report execution times
         abbrev                Accept abbreviated commands
@@ -482,6 +482,10 @@ class Cmd(cmd.Cmd):
             cmd.Cmd.do_help(self, arg)
 
     def __init__(self, *args, **kwargs):
+        self.continue_on_eof = False
+        if 'continue_on_eof' in kwargs:
+            self.continue_on_eof = kwargs['continue_on_eof']
+            del kwargs['continue_on_eof']
         cmd.Cmd.__init__(self, *args, **kwargs)
         self.initial_stdout = sys.stdout
         self.history = History()
@@ -765,6 +769,7 @@ class Cmd(cmd.Cmd):
     def postparsing_precmd(self, statement):
         stop = 0
         return stop, statement
+    
     def postparsing_postcmd(self, stop):
         return stop
 
@@ -891,13 +896,17 @@ class Cmd(cmd.Cmd):
         return self.postparsing_postcmd(self.default(arg))
 
     def pseudo_raw_input(self, prompt):
-        """copied from cmd's cmdloop; like raw_input, but accounts for changed stdin, stdout"""
+        """copied from cmd cmdloop; like raw_input, but accounts for changed stdin, stdout"""
 
         if self.use_rawinput:
             try:
                 line = raw_input(prompt)
             except EOFError:
-                line = 'EOF'
+                if self.continue_on_eof:
+                    line = '#'
+                    # Fixme: sys.stdin
+                else:
+                    line = 'EOF'
         else:
             self.stdout.write(prompt)
             self.stdout.flush()
@@ -1057,7 +1066,7 @@ class Cmd(cmd.Cmd):
         '''
         py <command>: Executes a Python command.
         py: Enters interactive Python mode.
-        End with ``Ctrl-D`` (Unix) / ``Ctrl-Z`` (Windows), ``quit()``, '`exit()``.
+        End with ``Ctrl-D`` (Unix) / ``Ctrl-Z`` (Windows), ``quit()``, ``exit()``.
         Non-python commands can be issued with ``cmd("your command")``.
         Run python code from external files with ``run("filename.py")``
         '''
@@ -1224,7 +1233,7 @@ class Cmd(cmd.Cmd):
         '''
         Runs commands in script at file or URL; if this is called from within an
         already-running script, the filename will be interpreted relative to the
-        already-running script's directory.'''
+        already-running scripts directory.'''
         if arg:
             arg = arg.split(None, 1)
             targetname, args = arg[0], (arg[1:] or [''])[0]
@@ -1606,5 +1615,3 @@ into a file, ``transcript.test``, and invoke the test like::
 
 Wildcards can be used to test against multiple transcript files.
 '''
-
-

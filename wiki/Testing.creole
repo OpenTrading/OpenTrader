@@ -1,5 +1,8 @@
 ==== Testing
 
+=== Features
+
+
 To run the BDD test features and scenarios, install
 [[py-bdd|https://github.com/pytest-dev/pytest-bdd/]].
 Make sure that {{{bdd}}} in your list of {{{py.test}}} plugins.
@@ -24,3 +27,4 @@ but it can read a list of commands from the stdin. This can be used to give
 examples of typical [[UseCases]].
 
 For the currently scripted examples, see [[TestsExamples]].
+

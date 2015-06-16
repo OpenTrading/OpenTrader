@@ -651,6 +651,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
             sServing = lArgs[2]
             assert sServing in oChefModule.lProducedServings
             # FixMe: need index timestamp
+            #? oBt.dSummary()
             tabview.view(getattr(oBt, sServing))
                          
         self.vError("Unrecognized servings command: " + str(oArgs) +'\n' +__doc__)

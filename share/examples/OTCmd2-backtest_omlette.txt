@@ -6,7 +6,7 @@ set echo True
 back omlette open /tmp/EURUSD60-2014.hdf
 back omlette check
 # read a CSV file from Mt4
-back feed read_mt4_csv /tmp/EURUSD60-2014.csv EURUSD 60 2014
+back feed read_mt4_csv tmp/EURUSD60-2014.csv EURUSD 60 2014
 # list the feeds we have read
 back feed list
 # list the known recipes

@@ -812,6 +812,9 @@ def oParseOptions():
     oArgParser.add_argument("-v", "--verbose", action="store",
                             dest="iVerbose", type=int, default=4,
                             help="the verbosity, 0 for silent 4 max (default 4)")
+    ## oArgParser.add_argument('-i', '--interactive',
+    ##                         dest='bInteractive', action='store_true', default=False,
+    ##                         help='Run the interactive command loop after command line args')
     oArgParser.add_argument('-t', '--test',
                             dest='bUnittests', action='store_true', default=False,
                             help='Run unit test suite')

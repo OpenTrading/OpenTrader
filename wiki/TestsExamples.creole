@@ -26,23 +26,90 @@ WARN: No retval returned in 60 seconds
 config file with the key {{{iRetvalTimeout}}}.)
 
 === Current Examples
-* [[OTCmd2-backtest.txt|https://github.com/OpenTrading/OpenTrader/raw/master/share/examples/OTCmd2-backtest.txt]]
 
-* [[OTCmd2-backtest_feed.txt|https://github.com/OpenTrading/OpenTrader/raw/master/share/examples/OTCmd2-backtest_feed.txt]]
+These examples can be run as a test suite, but some are slow
+and some require the rabbitq server to be running and some
+require a Metatrader to be running with a OTPyTestPikaEA.mq4 EA loaded.
 
-* [[OTCmd2-backtest_omlette.txt|https://github.com/OpenTrading/OpenTrader/raw/master/share/examples/OTCmd2-backtest_omlette.txt]]
+We will try to break the examples up into groups to be run under different conditions
+This script is in Unix bash and should run under Windows using MSYS.
+Or maybe someone can kindly convert it to MSDOS BAT and upload it to githib.com
 
-* [[OTCmd2-chart.txt|https://github.com/OpenTrading/OpenTrader/raw/master/share/examples/OTCmd2-chart.txt]]
+We need to know where you have your metatrader installed.
 
-* [[OTCmd2-ord.txt|https://github.com/OpenTrading/OpenTrader/raw/master/share/examples/OTCmd2-ord.txt]]
 
-* [[OTCmd2-pub_wait-Accounts.txt|https://github.com/OpenTrading/OpenTrader/raw/master/share/examples/OTCmd2-pub_wait-Accounts.txt]]
+The calling of OTCmd2 may need to be customized for your setup.
 
-* [[OTCmd2-pub_wait-jOT.txt|https://github.com/OpenTrading/OpenTrader/raw/master/share/examples/OTCmd2-pub_wait-jOT.txt]]
+==== share/examples/test_rabbitmq_running.sh
 
-* [[OTCmd2-pub_wait.txt|https://github.com/OpenTrading/OpenTrader/raw/master/share/examples/OTCmd2-pub_wait.txt]]
+Test our communications with the RabbitMQ server.
+You must have the Python package rabbit installed.
 
-* [[OTCmd2-rabbit.txt|https://github.com/OpenTrading/OpenTrader/raw/master/share/examples/OTCmd2-rabbit.txt]]
+* [[OTCmd2-rabbit.txt|https://github.com/OpenTrading/OpenTrader/raw/master/OTCmd2-rabbit.txt]]
+  Test our communications with the RabbitMQ server.
+  You must have the Python package rabbit installed.
 
-* [[OTCmd2-sub.txt|https://github.com/OpenTrading/OpenTrader/raw/master/share/examples/OTCmd2-sub.txt]]
+
+==== share/examples/test_backtest.sh
+
+These tests do not need to have either RabbitMQ or Mt4 running:
+we need to know where you have your metatrader installed.
+You MUST have created a CSV file for the tests to work on.
+
+* [[OTCmd2-backtest.txt|https://github.com/OpenTrading/OpenTrader/raw/master/OTCmd2-backtest.txt]]
+  These tests do not need to have either RabbitMQ or Mt4 running:
+  we need to know where you have your metatrader installed.
+  You MUST have created a CSV file for the tests to work on.
+
+* [[OTCmd2-backtest_feed.txt|https://github.com/OpenTrading/OpenTrader/raw/master/OTCmd2-backtest_feed.txt]]
+  These tests do not need to have either RabbitMQ or Mt4 running:
+  we need to know where you have your metatrader installed.
+  You MUST have created a CSV file for the tests to work on.
+
+* [[OTCmd2-backtest_omlette.txt|https://github.com/OpenTrading/OpenTrader/raw/master/OTCmd2-backtest_omlette.txt]]
+  These tests do not need to have either RabbitMQ or Mt4 running:
+  we need to know where you have your metatrader installed.
+  You MUST have created a CSV file for the tests to work on.
+
+
+==== share/examples/test_mt4_rabbitmq_running.sh
+
+Test the communications with Mt4 via RabbitMQ;
+these tests NEED to have BOTH RabbitMQ and Mt4 running
+We need to know where you have your metatrader installed.
+
+* [[OTCmd2-backtest.txt|https://github.com/OpenTrading/OpenTrader/raw/master/OTCmd2-backtest.txt]]
+  Test the communications with Mt4 via RabbitMQ;
+  these tests NEED to have BOTH RabbitMQ and Mt4 running
+  We need to know where you have your metatrader installed.
+
+* [[OTCmd2-chart.txt|https://github.com/OpenTrading/OpenTrader/raw/master/OTCmd2-chart.txt]]
+  Test the communications with Mt4 via RabbitMQ;
+  these tests NEED to have BOTH RabbitMQ and Mt4 running
+  We need to know where you have your metatrader installed.
+
+* [[OTCmd2-sub.txt|https://github.com/OpenTrading/OpenTrader/raw/master/OTCmd2-sub.txt]]
+  Test the communications with Mt4 via RabbitMQ;
+  these tests NEED to have BOTH RabbitMQ and Mt4 running
+  We need to know where you have your metatrader installed.
+
+* [[OTCmd2-pub_wait.txt|https://github.com/OpenTrading/OpenTrader/raw/master/OTCmd2-pub_wait.txt]]
+  Test the communications with Mt4 via RabbitMQ;
+  these tests NEED to have BOTH RabbitMQ and Mt4 running
+  We need to know where you have your metatrader installed.
+
+* [[OTCmd2-pub_wait-Accounts.txt|https://github.com/OpenTrading/OpenTrader/raw/master/OTCmd2-pub_wait-Accounts.txt]]
+  Test the communications with Mt4 via RabbitMQ;
+  these tests NEED to have BOTH RabbitMQ and Mt4 running
+  We need to know where you have your metatrader installed.
+
+* [[OTCmd2-pub_wait-jOT.txt|https://github.com/OpenTrading/OpenTrader/raw/master/OTCmd2-pub_wait-jOT.txt]]
+  Test the communications with Mt4 via RabbitMQ;
+  these tests NEED to have BOTH RabbitMQ and Mt4 running
+  We need to know where you have your metatrader installed.
+
+* [[OTCmd2-ord.txt|https://github.com/OpenTrading/OpenTrader/raw/master/OTCmd2-ord.txt]]
+  Test the communications with Mt4 via RabbitMQ;
+  these tests NEED to have BOTH RabbitMQ and Mt4 running
+  We need to know where you have your metatrader installed.
 
