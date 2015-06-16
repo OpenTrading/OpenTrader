@@ -1,6 +1,24 @@
 == Road Map
 
-=== Live Trading
+* Elaborate the [[UseCases]] to see what if important.
 
-Hook up  recipes to live-trading on Metatrader from recipes and chefs.
+* Elaborate the [[TestsFeatures]] to ensure coverage.
+
+* Break out the metrics from the chef and have interchangable reviewers.
+
+* Add an event driven chefs to expand the range of [[Backtesting]].
+
+* Hook up [[Recipes]] to live-trading on Metatrader from recipes and chefs.
+
+* Add recipes to abstract what OTCmd2 needs from a recipe specification.
+
+* Add chefs to be able to compare chefs on the same recipes.
+
+* Add features to compare the reviews of different omletttes.
+
+* Explore ViTables as an explorer of different omletttes.
+
+* Reduce the amount of syntax needed for a recipe by adding syntactic sugar.
+
+
 

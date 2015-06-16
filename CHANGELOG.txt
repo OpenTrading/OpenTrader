@@ -1,3 +1,8 @@
+commit c25f73157f36f3c15ea2ef8e54cf158f4b39a9e1
+Date:   Tue Jun 16 17:37:16 2015 +0300
+
+    Fixing the test scripts.
+
 commit ba0002fb6291574284a8cc047265783186c438f5
 Date:   Tue Jun 16 14:01:52 2015 +0300
 

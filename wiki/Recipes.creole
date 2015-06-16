@@ -1,0 +1,6 @@
+ == Recipes
+ 
+The recipes can be found in the 
+[[OpenTrader/Omlettes/|https://github.com/OpenTrading/OpenTrader/raw/master/OpenTrader/Omlettes//]]
+directory of the distribution.
+

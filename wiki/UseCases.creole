@@ -19,6 +19,9 @@ directory of the distribution.
 For the currently documented features, see [[TestsFeatures]].
 
 
+=== Omlettes Use Cases
+
+
 === Backtesting Use Cases
 
 === Livetrading Use Cases

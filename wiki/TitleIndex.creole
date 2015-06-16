@@ -16,6 +16,7 @@
 * [[Home]]
 * [[Installation]]
 * [[Omlettes]]
+* [[Recipes]]
 * [[RoadMap]]
 * [[Testing]]
 * [[TestsExamples]]
