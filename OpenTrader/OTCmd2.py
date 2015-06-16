@@ -142,10 +142,6 @@ import traceback
 import threading
 import time
 import unittest
-from argparse import ArgumentParser, RawDescriptionHelpFormatter
-
-from configobj import ConfigObj
-from pika import exceptions
 
 try:
     import OpenTrader
@@ -164,11 +160,6 @@ try:
     from OpenTrader.BacktestCmd import sBAC__doc__
 except ImportError, e:
     sys.stdout.write("pybacktest not installed: " +str(e) +"\n")
-try:
-    import pyrabbit
-except ImportError:
-    # sys.stdout.write("pyrabbit not installed: pip install pyrabbit\n")
-    pyrabbit = None
 
 class MqlError(Exception):
     pass
@@ -380,7 +371,7 @@ class CmdLineApp(Cmd):
         sDo = lArgs[0]
         try:
             # PikaListenerThread needs PikaMixin
-            from OpenTrader import PikaListenerThread
+            import PikaListenerThread
         except ImportError:
             self.vError("Cant import PikaChart: add the MQL4/Python directory to PYTHONPATH")
             raise
@@ -684,14 +675,13 @@ class CmdLineApp(Cmd):
              )
     def do_backtest(self, oArgs, oOpts=None):
         __doc__ = sBAC__doc__
-        if not pybacktest:
-            self.poutput("Install pybacktest from git://github.com/ematvey/pybacktest/")
-            return
+        # might let it import to list recipes and chefs?
         try:
-            from OpenTrader.BacktestCmd import vDoBacktestCmd
+            import pybacktest
         except ImportError, e:
-            self.vError("backtest unfinished at the moment: " +str(e))
+            self.vError("pybacktest not installed: " +str(e))
             return
+        from OpenTrader.BacktestCmd import vDoBacktestCmd
 
         if not oArgs:
             self.poutput("Commands to backtest (and arguments) are required\n" + __doc__)
@@ -726,8 +716,14 @@ class CmdLineApp(Cmd):
              arg_desc="command",
              usage=sRABBIT__doc__
              )
+    
     def do_rabbit(self, oArgs, oOpts=None):
         __doc__ = sRABBIT__doc__
+        try:
+            import pyrabbit
+        except ImportError:
+            # sys.stdout.write("pyrabbit not installed: pip install pyrabbit\n")
+            pyrabbit = None
         if not pyrabbit:
             self.poutput("Install pyrabbit from http://pypi.python.org/pypi/pyrabbit")
             return
@@ -805,6 +801,7 @@ def oParseOptions():
     This function returns an ArgumentParser instance, so that you
     can override it before you call it to parse_args.
     """
+    from argparse import ArgumentParser, RawDescriptionHelpFormatter
     oArgParser = ArgumentParser(description=sUSAGE__doc__ + sUSAGE_EPILOG__doc__,
 #                                epilog=sUSAGE_EPILOG__doc__.strip(),
                                 formatter_class=RawDescriptionHelpFormatter)
@@ -832,6 +829,7 @@ def oParseOptions():
     return(oArgParser)
 
 def oParseConfig(sConfigFile):
+    from configobj import ConfigObj
     if not os.path.isabs(sConfigFile):
         sConfigFile = os.path.join(os.path.dirname(__file__), sConfigFile)
         assert os.path.isfile(sConfigFile), "Missing configuration file: " + sConfigFile
@@ -841,7 +839,7 @@ def oParseConfig(sConfigFile):
     return ConfigObj(sConfigFile, unrepr=True)
 
 def iMain():
-#    from PikaArguments import oParseOptions
+    from pika import exceptions
 
     oArgParser = oParseOptions()
     oOptions = oArgParser.parse_args()

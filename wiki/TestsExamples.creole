@@ -61,12 +61,17 @@ You MUST have created a CSV file for the tests to work on.
   we need to know where you have your metatrader installed.
   You MUST have created a CSV file for the tests to work on.
 
-* [[OTCmd2-backtest_feed.txt|https://github.com/OpenTrading/OpenTrader/raw/master/OTCmd2-backtest_feed.txt]]
+* [[OTCmd2-backtest_recipe.txt|https://github.com/OpenTrading/OpenTrader/raw/master/OTCmd2-backtest_recipe.txt]]
   These tests do not need to have either RabbitMQ or Mt4 running:
   we need to know where you have your metatrader installed.
   You MUST have created a CSV file for the tests to work on.
 
 * [[OTCmd2-backtest_omlette.txt|https://github.com/OpenTrading/OpenTrader/raw/master/OTCmd2-backtest_omlette.txt]]
+  These tests do not need to have either RabbitMQ or Mt4 running:
+  we need to know where you have your metatrader installed.
+  You MUST have created a CSV file for the tests to work on.
+
+* [[OTCmd2-backtest_feed_plot.txt|https://github.com/OpenTrading/OpenTrader/raw/master/OTCmd2-backtest_feed_plot.txt]]
   These tests do not need to have either RabbitMQ or Mt4 running:
   we need to know where you have your metatrader installed.
   You MUST have created a CSV file for the tests to work on.
@@ -78,17 +83,12 @@ Test the communications with Mt4 via RabbitMQ;
 these tests NEED to have BOTH RabbitMQ and Mt4 running
 We need to know where you have your metatrader installed.
 
-* [[OTCmd2-backtest.txt|https://github.com/OpenTrading/OpenTrader/raw/master/OTCmd2-backtest.txt]]
+* [[OTCmd2-sub.txt|https://github.com/OpenTrading/OpenTrader/raw/master/OTCmd2-sub.txt]]
   Test the communications with Mt4 via RabbitMQ;
   these tests NEED to have BOTH RabbitMQ and Mt4 running
   We need to know where you have your metatrader installed.
 
 * [[OTCmd2-chart.txt|https://github.com/OpenTrading/OpenTrader/raw/master/OTCmd2-chart.txt]]
-  Test the communications with Mt4 via RabbitMQ;
-  these tests NEED to have BOTH RabbitMQ and Mt4 running
-  We need to know where you have your metatrader installed.
-
-* [[OTCmd2-sub.txt|https://github.com/OpenTrading/OpenTrader/raw/master/OTCmd2-sub.txt]]
   Test the communications with Mt4 via RabbitMQ;
   these tests NEED to have BOTH RabbitMQ and Mt4 running
   We need to know where you have your metatrader installed.

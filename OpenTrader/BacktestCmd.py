@@ -6,17 +6,8 @@
 import sys
 import os
 from pprint import pprint, pformat
-from pybacktest.data import load_from_yahoo
 
-try:
-    # This must be a version of tabview that supports pandas; see
-    # https://github.com/firecat53/tabview/pull/116 Either:
-    # git clone https://github.com/mdbartos/tabview ; cd tabview ; git checkout feat
-    # or:
-    # git clone https://github.com/wavexx/tabview ; cd tabview ; git checkout mva
-    import tabview
-except ImportError:
-    tabview = None
+import tabview
 
 from OTUtils import sStripCreole, lConfigToList
     
@@ -455,7 +446,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
             
             if len(lArgs) == 2:
                 self.poutput(pformat(self.G(oRecipe.oConfig())))
-            elif len(lArgs) == 3 and tabview and str(lArgs[2]) == 'tabview':
+            elif len(lArgs) == 3 and str(lArgs[2]) == 'tabview':
                 l = lConfigToList(oRecipe.oConfig())
                 iMax = max(map(len, l.keys()))
                 tabview.view(l, column_widths=[iMax, 60 - iMax])
@@ -587,7 +578,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
 
         # ['signals', 'trades', 'positions', 'equity', 'reviews', 'trade_price']
         _lCmds = oChefModule.lProducedServings[:]
-        if tabview and tabview not in _lCmds: _lCmds += ['tabview']
+        if tabview not in _lCmds: _lCmds += ['tabview']
         
         assert len(lArgs) > 1, "ERROR: argument required" +sDo +str(_lCmds)
         sCmd = lArgs[1]

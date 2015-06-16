@@ -1,0 +1,29 @@
+# These tests will only work if you have pybacktest installed:
+#     https://github.com/ematvey/pybacktest
+# You dont need to have a listener thread running
+set echo True
+# list the known recipes
+back recipe list
+py assert len(self._G) > 0
+# show the current recipe
+back recipe set
+# set the current recipe
+back recipe set SMARecipe
+# show the current recipe config
+back recipe config
+py assert len(self._G) > 0
+# show the current recipe config default section
+back recipe config default
+py assert len(self._G) > 0
+py assert len(self._G.keys()) > 0
+py assert 'sName' in self._G
+py assert 'sDescription' in self._G
+py assert 'fRecipeVersion' in self._G
+py assert 'lRequiredFeedParams' in self._G
+py assert 'lRequiredDishesParams' in self._G
+py assert 'lRequiredIngredientsParams' in self._G
+back recipe config
+py assert len(self._G) > 0
+py assert 'mFeedOhlc' in self._G
+py assert 'rShortMa' in self._G
+py assert 'rLongMa' in self._G

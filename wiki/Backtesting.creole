@@ -61,8 +61,10 @@ Very actively developed. Not very fast. No trailing stop-loss.
 
 [[pyalgotrade|http://gbeced.github.io/pyalgotrade]]
 Actively developed and well-documented.
-Not pandaed. No trailing stop-loss.
+Numpied, not pandaed. No trailing stop-loss.
 
+[[ultrafinance|https://github.com/panpanpandas/ultrafinance]]
+Numpied, not pandaed. Event driven backtester.
 
 
 ----

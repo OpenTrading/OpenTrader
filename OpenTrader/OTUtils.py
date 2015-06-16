@@ -10,6 +10,6 @@ def lConfigToList(oC):
     l = [['Key', 'Value']]
     for sSect in oC.keys():
         for sKey in oC[sSect].keys():
-            sMark = sSect +'/' +sKey
+            sMark = sSect +'_' +sKey
             l.append([sMark, oC[sSect][sKey]])
     return l

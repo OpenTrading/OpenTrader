@@ -22,7 +22,6 @@ import time
 from pandas.lib import cache_readonly
 
 import pandas
-from pybacktest import parts
 import PYBTDailyPerformance
 
 
@@ -198,6 +197,7 @@ class ChefsOven(object):
         WARNING: In production, override default zero value in init_pos with
         extreme caution.
         """
+        from pybacktest import parts
         return parts.signals_to_positions(self.signals, init_pos=0,
                                           mask=self._lSignalFieldsInt)
 
@@ -228,6 +228,7 @@ class ChefsOven(object):
     
     def rEquity(self):
         # equity diff series
+        from pybacktest import parts
         return parts.trades_to_equity(self.trades)
 
     @cache_readonly

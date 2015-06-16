@@ -9,11 +9,6 @@ back feed list
 py assert len(self._G) > 0
 # get the key name of the current feed
 back feed get
-# list the known recipes
-back recipe list
-py assert len(self._G) > 0
-# show the current recipe
-back recipe set
 # set the current recipe
 back recipe set SMARecipe
 # show the current recipe config

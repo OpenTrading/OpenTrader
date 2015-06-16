@@ -3,9 +3,13 @@
 #  and have the 'rabbitmq_management' plugin to rabbitmq enabled.
 #  See the OS command 'rabbitmq-plugins list' and make sure
 #  the 'rabbitmq_management' and 'rabbitmq_web_dispatch' plugins are enabled.
-#  You dont need to have a listener thread running
+#  You dont need to have a listener thread running.
 set echo True
 rabbit get vhost_names
+py assert len(self._G) > 0
 rabbit get channels
+py assert len(self._G) > 0
 rabbit get connections
+py assert len(self._G) > 0
 rabbit get queues
+py assert len(self._G) > 0

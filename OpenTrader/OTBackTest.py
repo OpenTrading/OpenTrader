@@ -8,16 +8,12 @@ The Timeframe is the period in minutes: e.g. 1 60 240 1440
 from __future__ import print_function
 import sys, os
 import traceback
-from collections import OrderedDict
-from argparse import ArgumentParser
 
 from PandasMt4 import oPreprocessOhlc
 
 from Omlettes import Omlette
 
 """ Set of data-loading helpers """
-
-
 
 # http://nbviewer.ipython.org/github/ematvey/pybacktest/blob/master/examples/tutorial.ipynb
 #? is this generic or specific to this chefModule?
@@ -29,6 +25,8 @@ def oPyBacktestCook(dFeeds, oRecipe, oChefModule, oOm, oFd=sys.stdout):
     """
     Returns an error message string on failure; a Cooker instance on success.
     """
+    from collections import OrderedDict
+    
     dDishes = oRecipe.dApplyRecipe(oRecipe.dIngredients)
     rBuy = rCover = dDishes['rBuy']
     rSell = rShort = dDishes['rSell']
@@ -122,6 +120,8 @@ def oParseOptions(sUsage):
       -O SOMELETTE, --omelette SOMELETTE
                             store the recipe and servings in an hdf5 store
     """
+    from argparse import ArgumentParser
+    
     oArgParser = ArgumentParser(description=sUsage)
     oArgParser.add_argument('-P', '--plot_equity',
                             dest='bPlotEquity', action='store_true', default=False,

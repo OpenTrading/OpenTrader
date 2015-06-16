@@ -36,14 +36,18 @@ if [ -z "$OTLOG_DIR" ] ; then
   fi
 [ -d "$OTLOG_DIR" ] || mkdir "$OTLOG_DIR" || exit 4
 
-# OTCmd2-backtest.txt
 ${OTCMD2} -P "$OTMT4_DIR" < share/examples/OTCmd2-backtest.txt \
 	  2>&1|tee "$OTLOG_DIR"/OTCmd2-backtest.log
 
-# OTCmd2-backtest_feed.txt
-${OTCMD2} -P "$OTMT4_DIR" < share/examples/OTCmd2-backtest_feed.txt \
-	  2>&1|tee "$OTLOG_DIR"/OTCmd2-backtest_feed.log
+${OTCMD2} -P "$OTMT4_DIR" < share/examples/OTCmd2-backtest_recipe.txt \
+	  2>&1|tee "$OTLOG_DIR"/OTCmd2-backtest_recipe.log
 
-# OTCmd2-backtest_omlette_omlette.txt
 ${OTCMD2} -P "$OTMT4_DIR" < share/examples/OTCmd2-backtest_omlette.txt \
 	  2>&1|tee "$OTLOG_DIR"/OTCmd2-backtest_omlette.log
+
+if [ 1 -eq 0 ] ; then
+    # we don't run the plot test routinely because it requires
+    # manual intervention to close the plot
+    ${OTCMD2} -P "$OTMT4_DIR" < share/examples/OTCmd2-backtest_feed_plot.txt \
+	  2>&1|tee "$OTLOG_DIR"/OTCmd2-backtest_feed_plot.log
+fi

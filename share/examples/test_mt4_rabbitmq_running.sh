@@ -21,30 +21,28 @@ fi
 if [ ! -f setup.py -o -f test.sh ] ; then
     cd ../..
 fi
+[ ! -f setup.py -o -f test.sh ] && exit 8
+
 # we put the output in tmp/logs
 if [ -z "$OTLOG_DIR" ] ; then
     export OTLOG_DIR="tmp/logs"
   fi
 [ -d "$OTLOG_DIR" ] || mkdir "$OTLOG_DIR" || exit 4
 
-${OTCMD2} -P "$OTMT4_DIR" < share/examples/OTCmd2-backtest.txt \
-	  2>&1|tee "$OTLOG_DIR"/OTCmd2-backtest.txt
+$OTCMD2 -P "$OTMT4_DIR" < share/examples/OTCmd2-sub.txt \
+	  2>&1|tee "$OTLOG_DIR"/OTCmd2-sub.log
 
-${OTCMD2} -P "$OTMT4_DIR" < share/examples/OTCmd2-chart.txt \
-	  2>&1|tee "$OTLOG_DIR"/OTCmd2-chart.txt
+$OTCMD2 -P "$OTMT4_DIR" < share/examples/OTCmd2-chart.txt \
+	  2>&1|tee "$OTLOG_DIR"/OTCmd2-chart.log
 
-${OTCMD2} -P "$OTMT4_DIR" < share/examples/OTCmd2-sub.txt \
-	  2>&1|tee "$OTLOG_DIR"/OTCmd2-sub.txt
+$OTCMD2 -P "$OTMT4_DIR" < share/examples/OTCmd2-pub_wait.txt \
+	  2>&1|tee "$OTLOG_DIR"/OTCmd2-pub_wait.log
 
-${OTCMD2} -P "$OTMT4_DIR" < share/examples/OTCmd2-pub_wait.txt \
-	  2>&1|tee "$OTLOG_DIR"/OTCmd2-pub_wait.txt
+$OTCMD2 -P "$OTMT4_DIR" < share/examples/OTCmd2-pub_wait-Accounts.txt \
+	  2>&1|tee "$OTLOG_DIR"/OTCmd2-pub_wait-Accounts.log
 
-${OTCMD2} -P "$OTMT4_DIR" < share/examples/OTCmd2-pub_wait-Accounts.txt \
-	  2>&1|tee "$OTLOG_DIR"/OTCmd2-pub_wait-Accounts.txt
+$OTCMD2 -P "$OTMT4_DIR" < share/examples/OTCmd2-pub_wait-jOT.txt \
+	  2>&1|tee "$OTLOG_DIR"/OTCmd2-pub_wait-jOT.log
 
-${OTCMD2} -P "$OTMT4_DIR" < share/examples/OTCmd2-pub_wait-jOT.txt \
-	  2>&1|tee "$OTLOG_DIR"/OTCmd2-pub_wait-jOT.txt
-
-${OTCMD2} -P "$OTMT4_DIR" < share/examples/OTCmd2-ord.txt \
-	  2>&1|tee "$OTLOG_DIR"/OTCmd2-ord.txt
-
+$OTCMD2 -P "$OTMT4_DIR" < share/examples/OTCmd2-ord.txt \
+	  2>&1|tee "$OTLOG_DIR"/OTCmd2-ord.log

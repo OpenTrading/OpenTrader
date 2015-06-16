@@ -18,7 +18,6 @@ import urllib2
 import time
 import datetime
 from collections import OrderedDict
-import pandas
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
@@ -310,6 +309,7 @@ def iMain():
 
     oOhlc = oReadMt4Csv(sCsvFile, sTimeFrame, sSymbol, sYear)
     oOhlc = oPreprocessOhlc(oOhlc)
+    # import pandas
     # (Pdb) pandas.tseries.converter._dt_to_float_ordinal(oOhlc.index)[0]
     # 735235.33333333337
     dates = matplotlib.dates.date2num(oOhlc.index.to_pydatetime())

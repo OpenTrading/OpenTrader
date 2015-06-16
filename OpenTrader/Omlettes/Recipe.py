@@ -37,10 +37,10 @@ class Recipe(object):
         if self.sName == "": return None
         if self.oConfigObj is None:
             self.vReadIniFile()
+        assert self.oConfigObj is not None
         if sSect is None:
             return self.oConfigObj
-        if sSect == "default":
-            sSect = self.sName
+        # sSect == "default"
         if sKey is None:
             return self.oConfigObj[sSect]
         if gVal is None:

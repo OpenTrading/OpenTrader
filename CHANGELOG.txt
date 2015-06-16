@@ -1,3 +1,8 @@
+commit ba0002fb6291574284a8cc047265783186c438f5
+Date:   Tue Jun 16 14:01:52 2015 +0300
+
+    Added shell scripts to keep the documentation up to date.
+
 commit e6f4db4aae662009602c0f6cf1d1b42fc0628d1a
 Date:   Tue Jun 16 01:04:19 2015 +0300
 

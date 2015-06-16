@@ -28,3 +28,4 @@ py assert type(self._G) == int and type(self._G) > 0
 pub wait WindowRedraw
 pub wait WindowsTotal
 py assert type(self._G) == int and type(self._G) > 0
+
