@@ -4,6 +4,8 @@
 
 * Elaborate the [[TestsFeatures]] to ensure coverage.
 
+* Speed up the round-trip time with OTAMQP.
+
 * Break out the metrics from the chef and have interchangable reviewers.
 
 * Add an event driven chefs to expand the range of [[Backtesting]].
@@ -16,9 +18,11 @@
 
 * Add features to compare the reviews of different omletttes.
 
-* Explore ViTables as an explorer of different omletttes.
+* Explore ViTables as a tool to compare the reviews of different omletttes.
 
 * Reduce the amount of syntax needed for a recipe by adding syntactic sugar.
+
+* Rationalize our syntactic sugar with other <<haute cuisine>> establishments.
 
 
 

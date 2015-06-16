@@ -1,9 +1,9 @@
-#  These tests will only work if you have pyrabbit installed:
-#     http://pypi.python.org/pypi/pyrabbit
-#  and have the 'rabbitmq_management' plugin to rabbitmq enabled.
-#  See the OS command 'rabbitmq-plugins list' and make sure
-#  the 'rabbitmq_management' and 'rabbitmq_web_dispatch' plugins are enabled.
-#  You dont need to have a listener thread running.
+# These tests will only work if you have pyrabbit installed:
+# http://pypi.python.org/pypi/pyrabbit
+# and have the 'rabbitmq_management' plugin to rabbitmq enabled.
+# See the OS command 'rabbitmq-plugins list' and make sure
+# the 'rabbitmq_management' and 'rabbitmq_web_dispatch' plugins are enabled.
+# You dont need to have a listener thread running.
 set echo True
 rabbit get vhost_names
 py assert len(self._G) > 0

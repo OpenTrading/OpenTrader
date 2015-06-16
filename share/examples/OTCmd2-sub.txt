@@ -1,4 +1,4 @@
-#  Subscribe to messages from RabbitMQ on a given topic:
+# Subscribe to messages from RabbitMQ on a given topic:
 # These tests will only work if you have an OTMql4AMQP enabled Metatrader running,
 # the Experts/OTMql4/OTPyTestPikaEA.mq4 attached to a chart in it, and
 # the RabbitMQ server configured and running.
@@ -20,7 +20,7 @@ py time.sleep(15)
 sub show timer
 py time.sleep(15)
 # pprint ?0|1       - seeing TOPIC messages with pretty-printing,
-#        with 0 - off, 1 - on, no argument - current value
+# with 0 - off, 1 - on, no argument - current value
 sub pprint
 sub pprint 0
 sub pprint 1

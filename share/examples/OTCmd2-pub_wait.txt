@@ -1,3 +1,4 @@
+#  These tests test some of the common Mt4 commands.
 # These tests will only work if you have an OTMql4AMQP enabled Metatrader running,
 # the Experts/OTMql4/OTPyTestPikaEA.mq4 attached to a chart in it, and
 # the RabbitMQ server configured and running.

@@ -34,8 +34,8 @@ for test in $TESTS ; do \
     FILES=`grep '< ' $test | sed -e 's/.*< //' -e 's/ .*//'`
     for file in $FILES ; do \
 	base=`basename $file .txt`
-	echo "* [[$base.txt|${EX_URL}/$base.txt]]" >> $OUT
-	grep '^#  ' $test | sed -e 's/^#  /  /'  >> $OUT
+	echo "* [[$base.txt|${EX_URL}/$file]]" >> $OUT
+	grep '^#  ' $file | sed -e 's/^#  /  /'  >> $OUT
 	echo "" >> $OUT
       done
 done

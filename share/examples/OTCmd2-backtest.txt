@@ -1,5 +1,5 @@
 # These tests will only work if you have pybacktest installed:
-#     https://github.com/ematvey/pybacktest
+# https://github.com/ematvey/pybacktest
 # You dont need to have a listener thread running
 set echo True
 # read a CSV file from Mt4

@@ -1,5 +1,12 @@
 #!/bin/sh
 #  Test our communications with the RabbitMQ server.
+#  These tests will only work if you have pyrabbit installed:
+#  http://pypi.python.org/pypi/pyrabbit
+#  and have the 'rabbitmq_management' plugin to rabbitmq enabled.
+#  See the OS command 'rabbitmq-plugins list' and make sure
+#  the 'rabbitmq_management' and 'rabbitmq_web_dispatch' plugins are enabled.
+#  
+#  You dont need to have a listener thread running.
 
 # The calling of OTCmd2 may need to be customized for your setup:
 if [ -z "$OTPYTHON_EXE" ] ; then
@@ -9,7 +16,7 @@ fi
 if [ -z "$OTCMD2" ] ; then
     export OTCMD2="$OTPYTHON_EXE OpenTrader/OTCmd2.py"
 fi
-#  You must have the Python package rabbit installed.
+# You must have the Python package rabbit installed.
 $OTPYTHON_EXE -c 'import pyrabbit' || exit 9
 
 # We run these tests in this directory of the source distribution
