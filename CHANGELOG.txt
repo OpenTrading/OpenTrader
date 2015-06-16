@@ -1,3 +1,8 @@
+commit e9990d6e83628289ffce7d340249b3e26bc88655
+Date:   Tue Jun 16 19:24:03 2015 +0300
+
+    Added share/examples/test_backtest_plot.sh
+
 commit ab8bc2b15e2661009c89ca512bdbae8d69d5671b
 Date:   Tue Jun 16 18:30:32 2015 +0300
 

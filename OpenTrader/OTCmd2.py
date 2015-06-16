@@ -189,6 +189,9 @@ def sFormatMessage(sMsgType, sMark, sChartId, *lArgs):
     iIgnore = 0
     # We are moving over to JSON - for now a command is separated by |
     sInfo = '|'.join(lArgs)
+    # fixme: what's python?
+    assert  sMsgType in ['cmd', 'eval']
+    assert sChartId
     sMsg = "%s|%s|%d|%s|%s" % (sMsgType, sChartId, iIgnore, sMark, sInfo,)
     return sMsg
 
@@ -507,6 +510,7 @@ class CmdLineApp(Cmd):
             sChartId = oOpts.sChartId
         else:
             sChartId = self.sDefaultChart
+        assert sChartId, "No default chart set"
         if self.oListenerThread is None:
             self.vWarn("PikaListenerThread not started; do 'sub run retval.#'")
         # sMark is a simple timestamp: unix time with msec.
@@ -759,15 +763,23 @@ class CmdLineApp(Cmd):
     def postloop(self):
         self.vDebug("atexit")
         if self.oListenerThread is not None:
-            # for sub
-            self.vInfo("oListenerThread.bCloseConnectionSockets")
-            self.oListenerThread.bCloseConnectionSockets()
-            self.oListenerThread = None
+            if True:
+                # new code
+                self.oListenerThread.stop()
+            else:
+                self.vInfo("oListenerThread.bCloseConnectionSockets")
+                self.oListenerThread.bCloseConnectionSockets()
+                self.oListenerThread = None
         if self.oChart is not None:
-            # for pub
-            self.vInfo("oChart.bCloseConnectionSockets")
-            # FixMe: refactor for multiple charts
-            self.oChart.bCloseConnectionSockets()
+            if True:
+                # new code
+                # There should be nothing to do in this thread after the above
+                pass
+            else:
+                # Ive seen it hang here
+                self.vInfo("oChart.bCloseConnectionSockets")
+                # FixMe: refactor for multiple charts
+                self.oChart.bCloseConnectionSockets()
             self.oChart = None
 
     def vError(self, sMsg):

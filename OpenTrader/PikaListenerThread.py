@@ -46,12 +46,18 @@ class PikaListenerThread(threading.Thread, PikaListener.PikaMixin):
                 sys.stdout.write("DEBUG: stopping due to exception " +str(e) +"\n")
                 self.stop()
             except (exceptions.ConsumerCancelled, KeyboardInterrupt,), e:
+                # Basic.Cancel
                 sys.stdout.write("DEBUG: stopping listener thread " +str(e) +"\n")
                 self.stop()
             except Exception, e:
                 sys.stdout.write("WARN: unhandled error - stopping listener thread " +str(e) +"\n")
                 #? raise
                 self.stop()
+        try:
+            self.oListenerChannel.connection.close()
+        except Exception, e:
+            sys.stdout.write("WARN: error closing listener thread connection" +str(e) +"\n")
+        self.oListenerChannel = None
 
     def stop(self):
         self._running.clear()

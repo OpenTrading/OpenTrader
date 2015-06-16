@@ -76,8 +76,7 @@ We need to know where you have your metatrader installed.
 
 * [[OTCmd2-chart.txt|https://github.com/OpenTrading/OpenTrader/raw/master/share/examples/OTCmd2-chart.txt]]
 
-* [[OTCmd2-pub_wait.txt|https://github.com/OpenTrading/OpenTrader/raw/master/share/examples/OTCmd2-pub_wait.txt]]
-  These tests test some of the common Mt4 commands.
+* [[OTCmd2-ord.txt|https://github.com/OpenTrading/OpenTrader/raw/master/share/examples/OTCmd2-ord.txt]]
 
 * [[OTCmd2-pub_wait-Accounts.txt|https://github.com/OpenTrading/OpenTrader/raw/master/share/examples/OTCmd2-pub_wait-Accounts.txt]]
   These test the Mt4 Accoun information commands.
@@ -86,5 +85,6 @@ We need to know where you have your metatrader installed.
   These are some simple examples of commands that dont need any
   arguments, and return their results in JSON
 
-* [[OTCmd2-ord.txt|https://github.com/OpenTrading/OpenTrader/raw/master/share/examples/OTCmd2-ord.txt]]
+* [[OTCmd2-pub_wait.txt|https://github.com/OpenTrading/OpenTrader/raw/master/share/examples/OTCmd2-pub_wait.txt]]
+  These tests test some of the common Mt4 commands.
 

@@ -7,6 +7,14 @@ set echo True
 sub run retval.# timer.#
 py import time
 py time.sleep(15)
+# get the list of charts we have seen because of listening to the timer
+chart list
+py assert type(self._G) == list and len(self._G) > 0
+# set the default chart to the first of list of charts we have seen
+chart set
+# check the default chart 
+chart get
+py assert type(self._G) == str and len(self._G) > 0
 pub wait OrdersTotal
 py assert type(self._G) == int and self._G >= 0
 pub wait Period
@@ -23,10 +31,9 @@ pub wait TerminalPath
 py assert type(self._G) == str and len(self._G) > 3
 pub wait WindowBarsPerChart
 py assert type(self._G) == int and type(self._G) > 0
-pub wait WindowFind
+##? string -1 pub wait WindowFind
 pub wait WindowFirstVisibleBar
 py assert type(self._G) == int and type(self._G) > 0
-pub wait WindowRedraw
+##? void pub wait WindowRedraw
 pub wait WindowsTotal
 py assert type(self._G) == int and type(self._G) > 0
-

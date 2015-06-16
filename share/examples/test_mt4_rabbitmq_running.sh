@@ -35,8 +35,8 @@ $OTCMD2 -P "$OTMT4_DIR" < share/examples/OTCmd2-sub.txt \
 $OTCMD2 -P "$OTMT4_DIR" < share/examples/OTCmd2-chart.txt \
 	  2>&1|tee "$OTLOG_DIR"/OTCmd2-chart.log
 
-$OTCMD2 -P "$OTMT4_DIR" < share/examples/OTCmd2-pub_wait.txt \
-	  2>&1|tee "$OTLOG_DIR"/OTCmd2-pub_wait.log
+$OTCMD2 -P "$OTMT4_DIR" < share/examples/OTCmd2-ord.txt \
+	  2>&1|tee "$OTLOG_DIR"/OTCmd2-ord.log
 
 $OTCMD2 -P "$OTMT4_DIR" < share/examples/OTCmd2-pub_wait-Accounts.txt \
 	  2>&1|tee "$OTLOG_DIR"/OTCmd2-pub_wait-Accounts.log
@@ -44,5 +44,5 @@ $OTCMD2 -P "$OTMT4_DIR" < share/examples/OTCmd2-pub_wait-Accounts.txt \
 $OTCMD2 -P "$OTMT4_DIR" < share/examples/OTCmd2-pub_wait-jOT.txt \
 	  2>&1|tee "$OTLOG_DIR"/OTCmd2-pub_wait-jOT.log
 
-$OTCMD2 -P "$OTMT4_DIR" < share/examples/OTCmd2-ord.txt \
-	  2>&1|tee "$OTLOG_DIR"/OTCmd2-ord.log
+$OTCMD2 -P "$OTMT4_DIR" < share/examples/OTCmd2-pub_wait.txt \
+	  2>&1|tee "$OTLOG_DIR"/OTCmd2-pub_wait.log
