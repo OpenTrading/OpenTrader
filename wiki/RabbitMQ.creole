@@ -1,0 +1,21 @@
+== RabbitMQ
+
+To run OpenTrader, you must have a AMQP server running,
+usually with the default guest account: see http://rabbitmq.org 
+
+You can run OpenTrader and Metatrader on different hosts, if you
+configure the {{{RabbitMQ}}} section of the [[DocOTCmd2]] {{{ini}}} file,
+or the configuration parameters when you attach the
+[[OTPyTestPikaEA.mq4|https://github.com/OpenTrading/OTMql4AMQP/raw/master/MQL4/Experts/OTMql4/OTPyTestPikaEA.mq4]]
+EA to a chart in
+[[OTMql4AMQP|https://github.com/OpenTrading/OTMql4AMQP/MQL4/]]
+
+You can run Metatrader under Wine on Linux, and have OpenTrader under Linux
+use the standard RabbitMQ that is supplied with your distribution.
+
+There is no reason why OpenTrader cannot be made to work with ZeroMQ using
+[[OTMql4Zmq|https://github.com/OpenTrading/OTMql4Zmq/]]
+but that work has not yet been done.
+
+----
+Parent: [[Components]]

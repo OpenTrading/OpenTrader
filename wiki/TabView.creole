@@ -22,3 +22,6 @@ git clone https://github.com/wavexx/tabview ; cd tabview ; git checkout mva
 
 We will manually keep the one file {{{tabview.py}}} up to date, or you can
 replace it yourself with a more recent version for http://github.com.
+
+----
+Parent: [[Components]]

@@ -5,15 +5,15 @@ how the Ingredients performed as a function of the Recipe, or the
 choices of configuration parameters used by the Recipe.
 
 After having used [[Backtesting]], the open trader will have a series
-of [[Omlettes]], that are stored in HDF5 files. Each of the Ingredients
-will have configuration parameters. And each of the [[Omlettes]] will have
+of [[Omlettes]], that are stored in HDF5 files. Each of the Ingredients in the
+Omlette will have configuration parameters. And each of the [[Omlettes]] will have
 Reviews, which are different metrics on the performance each of the [[Omlettes]].
 The open trader wants to visualize this data to see how the configuration
 parameters effected the metrics of performance.
 
 This is an important use-case as the whole point of [[Backtesting]] is
-to find the Recipe and configuration parameters that give the best metrics
-of performance. And as there are a lot of different metrics, sometimes
+to find the Recipe and Ingredients configuration parameters that give the best
+metrics of performance. And as there are a lot of different metrics, sometimes
 competing or conflicting, it must be easy to browse of visualize this data.
 
 **Tabular:** Perhaps the simplest, and probably the fastest, it to display

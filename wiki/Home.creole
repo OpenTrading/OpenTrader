@@ -19,10 +19,13 @@ Please file any bugs in the
 * [[Installation]]
 * [[Testing]]
 
-
 * [[DocOTCmd2]]
 * [[DocOTBackTest]]
 * [[DocOTPpnAmgc]]
+
+* [[Architecture]]
+* [[RoadMap]]
+
 
 ----
 Please format wiki pages as Creole. http://wikicreole.org/

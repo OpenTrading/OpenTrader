@@ -45,6 +45,8 @@ installed.
 === Work in Progress
 
 **This is a work in progress - a developers' pre-release version.**
+It has been fully checked in, and there is a test-suite based on the
+examples that provides good coverage, but the internal APIs will change.
 
 The project wiki should be open for editing by anyone logged into GitHub:
 Please report any system it works or doesn't work on in the wiki:

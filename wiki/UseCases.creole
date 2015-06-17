@@ -21,7 +21,7 @@ For the currently documented features, see [[TestsFeatures]].
 
 === Omlettes Use Cases
 
-* [[CompaingOmeletteReviews]]
+* [[ComparingOmeletteReviews]]
 
 === Backtesting Use Cases
 
@@ -33,3 +33,5 @@ For the currently documented features, see [[TestsFeatures]].
 
 === GUI Use Cases Plotting
 
+----
+Parent: [[RoadMap]]

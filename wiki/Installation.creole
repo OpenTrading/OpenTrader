@@ -1,14 +1,14 @@
 === Installation
 
 One day we will make installers for a shrink-wrapped distribution, but
-for now, you must clone from github.com and manually install.
+for now, you must clone from https://github.com and manually install.
 
 ==== Prerequisites
 
-You must have {{{cmd2}}} installed the Python that runs this script:
+You must have {{{cmd2}}} installed the Python that runs these scripts:
 see https://bitbucket.org/catherinedevlin/cmd2
 
-You must have {{{configobj}}} installed in the Python that runs this script.
+You must have {{{configobj}}} installed in the Python that runs these scripts.
 The up-to-date one is at https://github.com/DiffSK/configobj/
 
 In your Metatrader Python, you also must have installed {{{Pika}}}:
@@ -16,41 +16,53 @@ https://pypi.python.org/pypi/pika/
 
 ===== Plotting Prerequisites
 
-You must have {{{pandas}}} installed in the Python that runs this script:
+You must have {{{pandas}}} installed in the Python that runs these scripts:
 http://pypi.python.org/pypi/pandas
 
-You must have {{{matplotlib}}} installed in the Python that runs this script:
+You must have {{{matplotlib}}} installed in the Python that runs these scripts:
 http://pypi.python.org/pypi/matplotlib
 
 ===== Backtesting Prerequisites
 
 For backtesting ([[DocOTCmd2_backtest]]), you need to have {{{pybacktest}}}
-installed in the Python that runs this script:
+installed in the Python that runs these scripts:
 https://github.com/ematvey/pybacktest/
 
-You must have {{{pandas}}} installed in the Python that runs this script:
+You must have {{{pandas}}} installed in the Python that runs these scripts:
 http://pypi.python.org/pypi/pandas
 
 You will probably also want the Cythoned {{{ta-lib}}} that works with pandas/numpy:
 https://github.com/mrjbq7/ta-lib
 
-===== GUI Prerequisites
+==== Metatrader Prerequisites
 
-If you want to visualize and explore [[Omlettes]], you can use {{{ViTables}}}:
-https://github.com/uvemas/ViTables 
-
-
-==== OpenTrading Components
-
-Firstly, install the OTMql4AMQP, OTMql4Py and OTMql4Lib projects from
+In order to interact with Metatrader, you will need to
+install the OTMql4AMQP, OTMql4Py and OTMql4Lib projects from
 https://github.com/OpenTrading/ into the Python called by your Metatrader:
 * OTMql4AMQP https://github.com/OpenTrading/OTMql4AMQP/,
 * OTMql4Py https://github.com/OpenTrading/OTMql4Py/, and
 * OTMql4Lib https://github.com/OpenTrading/OTMql4Lib/
 
-Attach the {{{Experts/OTMql4/OTPyTestPikaEA.mq4}}} EA in
-[[OTMql4AMQP|https://github.com/OpenTrading/OTMql4AMQP/MQL4/]]
-to a chart and make sure it's working.
+One day we will make installers for shrink-wrapped distributions, but
+for now, you must clone them from https://github.com and manually install.
+Make a directory anywhere called {{{OpenTrading}}, and clone each of the above
+into that directory. Then recursively copy the contents of each of the three
+{{{MQL4}}} subdirectories into your Metatrader {{{MQL4}}} subdirectory.
+
+You must have a AMQP server running, such as [[RabbitMQ]], by default with the
+default guest account: see http://rabbitmq.org 
+
+
+Attach the
+[[OTPyTestPikaEA.mq4|https://github.com/OpenTrading/OTMql4AMQP/raw/master/MQL4/Experts/OTMql4/OTPyTestPikaEA.mq4]]
+EA in [[OTMql4AMQP|https://github.com/OpenTrading/OTMql4AMQP/MQL4/]]
+to a chart and make sure it's working; look at the Experts log in Mt4
+to see messages of success. With the EA loaded onto a chart, run the
+{{{OTCmd2}}} script ([[DocOTCmd2]]) from a command line, with the {{{-P}}
+option to give the path to your Metatrader installation. Then give the
+command {{{sub run retval.# timer.#}}}. Within about 15 seconds you should
+see timer messages coming for your {{{OTMql4AMQP}}} enabled Metatrader.
+
 
 ==== Setup
 
@@ -68,3 +80,6 @@ to create the 3 scripts:
 * {{{OTBackTest}}} - see [[DocOTBackTest]]
 * {{{OTPpnAmgc}}} - see [[DocOTPpnAmgc]]
 
+
+----
+Parent: [Home]

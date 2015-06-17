@@ -1,14 +1,16 @@
 == Road Map
 
+The order should be approximately that of importance.
+
 * Elaborate the [[UseCases]] to see what if important.
 
 * Elaborate the [[TestsFeatures]] to ensure coverage.
 
-* Speed up the round-trip time with OTAMQP.
+* Speed up the round-trip time with OTMql4AMQP.
 
-* Break out the metrics from the chef and have interchangable reviewers.
+* Break out the metrics from the Chefs and have interchangable Reviewers.
 
-* Add an event driven chefs to expand the range of [[Backtesting]].
+* Add event driven Chefs to expand the range of [[Backtesting]].
 
 * Hook up [[Recipes]] to live-trading on Metatrader from recipes and chefs.
 
@@ -16,13 +18,19 @@
 
 * Add chefs to be able to compare chefs on the same recipes.
 
-* Add features to compare the reviews of different omletttes.
+* Add the ability of compare the reviews of different omletttes: see
+  [[ComparingOmeletteReviews]]
 
 * Explore ViTables as a tool to compare the reviews of different omletttes.
-
-* Reduce the amount of syntax needed for a recipe by adding syntactic sugar.
+  It should be extended to provide GUI editing of the dictionary stored
+  in the metadata slot of pandas objects.
+  
+* Reduce the amount of syntax needed for [[Recipes]] by adding syntactic sugar.
 
 * Rationalize our syntactic sugar with other <<haute cuisine>> establishments.
 
+* Add the ability to round-trip with OTMql4Zmq.
 
 
+----
+Parent: [Home]

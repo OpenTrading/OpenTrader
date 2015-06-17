@@ -1,28 +1,12 @@
+== Omlettes
 
-== Pandas Love Omlettes!
-
-=== (And you thought pandas were vegans :-)
-
-There are many steps to making a good Omlette:
-
-1. Get a feed to make ingredients out of.
-
-2. Get a Recipe to make the Omlette.
-
-3. Make the Ingredients from the Recipe and the Feed(s).
-
-4. Find a Chef to give the Recipe and Ingredients to.
-
-5. Have the Chef cook the Recipe and Ingredients in the Oven(Backtester).
-
-6. Enjoy the Servings that come out of the Oven(Backtester).
-
-=== HDF5
-
-An omlette is an HDF5 file that saves all the information from a backtest,
-including the metadata: all of parameter values that were used in the recipe,
-the parameters used by the cook, and the servings results.
+An omlette is an HDF5 file that saves all the information obtained from [[Backtesting]],
+including the metadata: all of parameter values that were used in the [[Recipe]],
+the parameters used by the Chef, and the Servings results.
 
 Omlettes can be viewed by  [[ViTables|https://github.com/uvemas/ViTables]].
 
 See [[DocOTCmd2_backtest]].
+
+----
+Parent: [[Architecture]]

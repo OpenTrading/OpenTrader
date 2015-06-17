@@ -1,0 +1,12 @@
+== ViTables
+
+[[ViTables|https://github.com/uvemas/ViTables]] can visualize tabular data, based on
+[[pytables|http://pypi.python.org/packages/source/p/pytables]].
+It is capable of reading HDF5 files, the kind that Pandas
+can read and write to, and the kind that are used to write our [[Omlettes]].
+
+There is a plotting plugin to ViTables:
+[[VTPlot||github.com/alexey-naydenov/VTPlot]].
+
+----
+Parent: [[Components]]

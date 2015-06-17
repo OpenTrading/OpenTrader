@@ -66,9 +66,8 @@ Numpied, not pandaed. No trailing stop-loss.
 [[ultrafinance|https://github.com/panpanpandas/ultrafinance]]
 Numpied, not pandaed. Event driven backtester.
 
-
 ----
-
 See also:
-
 * http://tradingwithpython.blogspot.fr/2014/05/backtesting-dilemmas.html
+
+Parent: [[Architecture]]

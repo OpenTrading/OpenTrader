@@ -1,0 +1,35 @@
+== Pandas Love Omlettes!
+
+=== (And you thought pandas were vegans :-)
+
+There are many steps to making a good Omlette:
+
+1. Get Feeds to make Ingredients out of.
+
+2. Get a Recipe to make the Omlette.
+
+3. Make the Ingredients from the Recipe and the Feeds.
+
+4. Find a Chef to give the Recipe and Ingredients to.
+
+5. Have the Chef cook the Recipe and Ingredients in the Oven ([[Backtesting]]).
+
+6. Enjoy the Servings that come out of the Oven ([[Backtesting]]).
+
+7. Evaluate the Servings by Reviewers.
+
+The architecture is designed to be modular:
+* there should be many recipes using the many Ingredients of {{{ta-lib}}}
+* different Recipes should work with different Chefs
+* all the Servings should be able to be reviewed by different Reviewers.
+
+
+* [[Omlettes]]
+* Feeds
+* [[Recipes]]
+* Ingredients
+* Chefs
+* Reviewers
+
+----
+Parent: [[Home]]

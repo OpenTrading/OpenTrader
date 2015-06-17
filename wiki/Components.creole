@@ -1,0 +1,26 @@
+== Components
+
+OpenTrader is made without any additives or preservatives, and is GMO free:
+only pure, natural, Open Source components.
+
+No animals were used in the testing or production of OpenTrader
+(except the animal that are the programmers who wrote the code).
+
+For the pre-requisites, see [[Installation]].
+
+The [[Architecture]] is designed to be modular, and we aim at having
+components that can plug in to provide functionality.
+
+Current compnents:
+
+* [[TabView]]
+
+===== GUI 
+
+If you want to visualize and explore [[Omlettes]], you can use [[[ViTables]]]:
+https://github.com/uvemas/ViTables 
+
+
+
+----
+Parent: [[Architecture]]

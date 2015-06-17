@@ -4,7 +4,6 @@
 **OTCmd2 Manual**
 
 * [[DocOTCmd2]]
-* [[DocOTCmd2]]
 * [[DocOTCmd2_subscribe]]
 * [[DocOTCmd2_publish]]
 * [[DocOTCmd2_chart]]

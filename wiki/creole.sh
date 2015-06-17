@@ -27,9 +27,11 @@ echo '**Index**' > wiki/_Sidebar.creole
 echo "* [[TitleIndex]]" >> wiki/_Sidebar.creole
 echo -e '\n**OTCmd2 Manual**\n' >> wiki/_Sidebar.creole
 echo "* [[DocOTCmd2]]" >> wiki/_Sidebar.creole
-echo "* [[DocOTCmd2]]" >> wiki/_Sidebar.creole
 $OTCMD2 -h | /g/Agile/bin/cmd2help_to_creole.sh \
 	>> wiki/DocOTCmd2.creole
+echo "----" >> wiki/DocOTCmd2.creole
+# Scripts maybe
+echo "Parent: [[Components]]" >> wiki/DocOTCmd2.creole
 
 last=""
 for elt in ${DOS} ; do
@@ -37,6 +39,8 @@ for elt in ${DOS} ; do
     $OTCMD2 help $elt | /g/Agile/bin/cmd2help_to_creole.sh \
 	>> wiki/DocOTCmd2_$elt.creole
     echo -n "Next: [[DocOTCmd2_$elt]]" >> wiki/DocOTCmd2$last.creole
+    echo -n "----" >> wiki/DocOTCmd2$last.creole
+    echo -n "Parent: [[DocOTCmd2]]" >> wiki/DocOTCmd2$last.creole
     echo "* [[DocOTCmd2_$elt]]" >> wiki/_Sidebar.creole
     echo wiki/DocOTCmd2_$elt.creole
     last="_$elt"
