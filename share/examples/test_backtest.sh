@@ -36,7 +36,7 @@ if [ -z "$OTLOG_DIR" ] ; then
   fi
 [ -d "$OTLOG_DIR" ] || mkdir "$OTLOG_DIR" || exit 4
 
-${OTCMD2} -P "$OTMT4_DIR" < share/examples/OTCmd2-backtest.txt \
+${OTCMD2} -P "$OTMT4_DIR" < share/examples/OTCmd2-backtest_SMARecipe.txt \
 	  2>&1|tee "$OTLOG_DIR"/OTCmd2-backtest.log
 
 ${OTCMD2} -P "$OTMT4_DIR" < share/examples/OTCmd2-backtest_recipe.txt \

@@ -1,0 +1,150 @@
+
+**[[ADX|http://tadoc.org/indicator/ADX.htm]]** - Average Directional Movement Index
+
+{{{real = ADX(high, low, close, timeperiod=14)}}}
+
+
+**[[ADXR|http://tadoc.org/indicator/ADXR.htm]]** - Average Directional Movement Index Rating
+
+{{{real = ADXR(high, low, close, timeperiod=14)}}}
+
+
+**[[APO|http://tadoc.org/indicator/APO.htm]]** - Absolute Price Oscillator
+
+{{{real = APO(close, fastperiod=12, slowperiod=26, matype=0)}}}
+
+
+**[[AROON|http://tadoc.org/indicator/AROON.htm]]** - Aroon
+
+{{{aroondown, aroonup = AROON(high, low, timeperiod=14)}}}
+
+
+**[[AROONOSC|http://tadoc.org/indicator/AROONOSC.htm]]** - Aroon Oscillator
+
+{{{real = AROONOSC(high, low, timeperiod=14)}}}
+
+
+**[[BOP|http://tadoc.org/indicator/BOP.htm]]** - Balance Of Power
+
+{{{real = BOP(open, high, low, close)}}}
+
+
+**[[CCI|http://tadoc.org/indicator/CCI.htm]]** - Commodity Channel Index
+
+{{{real = CCI(high, low, close, timeperiod=14)}}}
+
+
+**[[CMO|http://tadoc.org/indicator/CMO.htm]]** - Chande Momentum Oscillator
+
+{{{real = CMO(close, timeperiod=14)}}}
+
+
+**[[DX|http://tadoc.org/indicator/DX.htm]]** - Directional Movement Index
+
+{{{real = DX(high, low, close, timeperiod=14)}}}
+
+
+**[[MACD|http://tadoc.org/indicator/MACD.htm]]** - Moving Average Convergence/Divergence
+
+{{{macd, macdsignal, macdhist = MACD(close, fastperiod=12, slowperiod=26, signalperiod=9)}}}
+
+
+**[[MACDEXT|http://tadoc.org/indicator/MACDEXT.htm]]** - MACD with controllable MA type
+
+{{{macd, macdsignal, macdhist = MACDEXT(close, fastperiod=12, fastmatype=0, slowperiod=26, slowmatype=0, signalperiod=9, signalmatype=0)}}}
+
+
+**[[MACDFIX|http://tadoc.org/indicator/MACDFIX.htm]]** - Moving Average Convergence/Divergence Fix 12/26
+
+{{{macd, macdsignal, macdhist = MACDFIX(close, signalperiod=9)}}}
+
+
+**[[MFI|http://tadoc.org/indicator/MFI.htm]]** - Money Flow Index
+
+{{{real = MFI(high, low, close, volume, timeperiod=14)}}}
+
+
+**[[MINUS_DI|http://tadoc.org/indicator/MINUS_DI.htm]]** - Minus Directional Indicator
+
+{{{real = MINUS_DI(high, low, close, timeperiod=14)}}}
+
+
+**[[MINUS_DM|http://tadoc.org/indicator/MINUS_DM.htm]]** - Minus Directional Movement
+
+{{{real = MINUS_DM(high, low, timeperiod=14)}}}
+
+
+**[[MOM|http://tadoc.org/indicator/MOM.htm]]** - Momentum
+
+{{{real = MOM(close, timeperiod=10)}}}
+
+
+**[[PLUS_DI|http://tadoc.org/indicator/PLUS_DI.htm]]** - Plus Directional Indicator
+
+{{{real = PLUS_DI(high, low, close, timeperiod=14)}}}
+
+
+**[[PLUS_DM|http://tadoc.org/indicator/PLUS_DM.htm]]** - Plus Directional Movement
+
+{{{real = PLUS_DM(high, low, timeperiod=14)}}}
+
+
+**[[PPO|http://tadoc.org/indicator/PPO.htm]]** - Percentage Price Oscillator
+
+{{{real = PPO(close, fastperiod=12, slowperiod=26, matype=0)}}}
+
+
+**[[ROC|http://tadoc.org/indicator/ROC.htm]]** - Rate of change : ((price/prevPrice)-1)*100
+
+{{{real = ROC(close, timeperiod=10)}}}
+
+
+**[[ROCP|http://tadoc.org/indicator/ROCP.htm]]** - Rate of change Percentage: (price-prevPrice)/prevPrice
+
+{{{real = ROCP(close, timeperiod=10)}}}
+
+
+**[[ROCR|http://tadoc.org/indicator/ROCR.htm]]** - Rate of change ratio: (price/prevPrice)
+
+{{{real = ROCR(close, timeperiod=10)}}}
+
+
+**[[ROCR100|http://tadoc.org/indicator/ROCR100.htm]]** - Rate of change ratio 100 scale: (price/prevPrice)*100
+
+{{{real = ROCR100(close, timeperiod=10)}}}
+
+
+**[[RSI|http://tadoc.org/indicator/RSI.htm]]** - Relative Strength Index
+
+{{{real = RSI(close, timeperiod=14)}}}
+
+
+**[[STOCH|http://tadoc.org/indicator/STOCH.htm]]** - Stochastic
+
+{{{slowk, slowd = STOCH(high, low, close, fastk_period=5, slowk_period=3, slowk_matype=0, slowd_period=3, slowd_matype=0)}}}
+
+
+**[[STOCHF|http://tadoc.org/indicator/STOCHF.htm]]** - Stochastic Fast
+
+{{{fastk, fastd = STOCHF(high, low, close, fastk_period=5, fastd_period=3, fastd_matype=0)}}}
+
+
+**[[STOCHRSI|http://tadoc.org/indicator/STOCHRSI.htm]]** - Stochastic Relative Strength Index
+
+{{{fastk, fastd = STOCHRSI(close, timeperiod=14, fastk_period=5, fastd_period=3, fastd_matype=0)}}}
+
+
+**[[TRIX|http://tadoc.org/indicator/TRIX.htm]]** - 1-day Rate-Of-Change (ROC) of a Triple Smooth EMA
+
+{{{real = TRIX(close, timeperiod=30)}}}
+
+
+**[[ULTOSC|http://tadoc.org/indicator/ULTOSC.htm]]** - Ultimate Oscillator
+
+{{{real = ULTOSC(high, low, close, timeperiod1=7, timeperiod2=14, timeperiod3=28)}}}
+
+
+**[[WILLR|http://tadoc.org/indicator/WILLR.htm]]** - Williams' %R
+
+{{{real = WILLR(high, low, close, timeperiod=14)}}}
+

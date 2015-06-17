@@ -13,8 +13,7 @@ This ia a work in progress but it has quite a lot in there already:
 * reads CSV and everything internally is pandas DataFrames or Series,
 * there's a backtester for trading recipes based on 
   [[pybacktest|https://github.com/ematvey/pybacktest/]],
-  using pandas with [[numpy/ta-lib|https://github.com/mrjbq7/ta-lib]],
-  so it's quite fast.
+  using pandas with [[TaLib]], so it's quite fast.
 * there's simple plotting of the CSV files and results using
   [[matplotlib|http://matplotlib.org]],
 * you can save recipes and backtest results as an HDF5 file, viewable by

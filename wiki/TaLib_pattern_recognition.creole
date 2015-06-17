@@ -1,0 +1,305 @@
+
+**[[CDL2CROWS|http://tadoc.org/indicator/CDL2CROWS.htm]]** - Two Crows
+
+{{{integer = CDL2CROWS(open, high, low, close)}}}
+
+
+**[[CDL3BLACKCROWS|http://tadoc.org/indicator/CDL3BLACKCROWS.htm]]** - Three Black Crows
+
+{{{integer = CDL3BLACKCROWS(open, high, low, close)}}}
+
+
+**[[CDL3INSIDE|http://tadoc.org/indicator/CDL3INSIDE.htm]]** - Three Inside Up/Down
+
+{{{integer = CDL3INSIDE(open, high, low, close)}}}
+
+
+**[[CDL3LINESTRIKE|http://tadoc.org/indicator/CDL3LINESTRIKE.htm]]** - Three-Line Strike 
+
+{{{integer = CDL3LINESTRIKE(open, high, low, close)}}}
+
+
+**[[CDL3OUTSIDE|http://tadoc.org/indicator/CDL3OUTSIDE.htm]]** - Three Outside Up/Down
+
+{{{integer = CDL3OUTSIDE(open, high, low, close)}}}
+
+
+**[[CDL3STARSINSOUTH|http://tadoc.org/indicator/CDL3STARSINSOUTH.htm]]** - Three Stars In The South
+
+{{{integer = CDL3STARSINSOUTH(open, high, low, close)}}}
+
+
+**[[CDL3WHITESOLDIERS|http://tadoc.org/indicator/CDL3WHITESOLDIERS.htm]]** - Three Advancing White Soldiers
+
+{{{integer = CDL3WHITESOLDIERS(open, high, low, close)}}}
+
+
+**[[CDLABANDONEDBABY|http://tadoc.org/indicator/CDLABANDONEDBABY.htm]]** - Abandoned Baby
+
+{{{integer = CDLABANDONEDBABY(open, high, low, close, penetration=0)}}}
+
+
+**[[CDLADVANCEBLOCK|http://tadoc.org/indicator/CDLADVANCEBLOCK.htm]]** - Advance Block
+
+{{{integer = CDLADVANCEBLOCK(open, high, low, close)}}}
+
+
+**[[CDLBELTHOLD|http://tadoc.org/indicator/CDLBELTHOLD.htm]]** - Belt-hold
+
+{{{integer = CDLBELTHOLD(open, high, low, close)}}}
+
+
+**[[CDLBREAKAWAY|http://tadoc.org/indicator/CDLBREAKAWAY.htm]]** - Breakaway
+
+{{{integer = CDLBREAKAWAY(open, high, low, close)}}}
+
+
+**[[CDLCLOSINGMARUBOZU|http://tadoc.org/indicator/CDLCLOSINGMARUBOZU.htm]]** - Closing Marubozu
+
+{{{integer = CDLCLOSINGMARUBOZU(open, high, low, close)}}}
+
+
+**[[CDLCONCEALBABYSWALL|http://tadoc.org/indicator/CDLCONCEALBABYSWALL.htm]]** - Concealing Baby Swallow
+
+{{{integer = CDLCONCEALBABYSWALL(open, high, low, close)}}}
+
+
+**[[CDLCOUNTERATTACK|http://tadoc.org/indicator/CDLCOUNTERATTACK.htm]]** - Counterattack
+
+{{{integer = CDLCOUNTERATTACK(open, high, low, close)}}}
+
+
+**[[CDLDARKCLOUDCOVER|http://tadoc.org/indicator/CDLDARKCLOUDCOVER.htm]]** - Dark Cloud Cover
+
+{{{integer = CDLDARKCLOUDCOVER(open, high, low, close, penetration=0)}}}
+
+
+**[[CDLDOJI|http://tadoc.org/indicator/CDLDOJI.htm]]** - Doji
+
+{{{integer = CDLDOJI(open, high, low, close)}}}
+
+
+**[[CDLDOJISTAR|http://tadoc.org/indicator/CDLDOJISTAR.htm]]** - Doji Star
+
+{{{integer = CDLDOJISTAR(open, high, low, close)}}}
+
+
+**[[CDLDRAGONFLYDOJI|http://tadoc.org/indicator/CDLDRAGONFLYDOJI.htm]]** - Dragonfly Doji
+
+{{{integer = CDLDRAGONFLYDOJI(open, high, low, close)}}}
+
+
+**[[CDLENGULFING|http://tadoc.org/indicator/CDLENGULFING.htm]]** - Engulfing Pattern
+
+{{{integer = CDLENGULFING(open, high, low, close)}}}
+
+
+**[[CDLEVENINGDOJISTAR|http://tadoc.org/indicator/CDLEVENINGDOJISTAR.htm]]** - Evening Doji Star
+
+{{{integer = CDLEVENINGDOJISTAR(open, high, low, close, penetration=0)}}}
+
+
+**[[CDLEVENINGSTAR|http://tadoc.org/indicator/CDLEVENINGSTAR.htm]]** - Evening Star
+
+{{{integer = CDLEVENINGSTAR(open, high, low, close, penetration=0)}}}
+
+
+**[[CDLGAPSIDESIDEWHITE|http://tadoc.org/indicator/CDLGAPSIDESIDEWHITE.htm]]** - Up/Down-gap side-by-side white lines
+
+{{{integer = CDLGAPSIDESIDEWHITE(open, high, low, close)}}}
+
+
+**[[CDLGRAVESTONEDOJI|http://tadoc.org/indicator/CDLGRAVESTONEDOJI.htm]]** - Gravestone Doji
+
+{{{integer = CDLGRAVESTONEDOJI(open, high, low, close)}}}
+
+
+**[[CDLHAMMER|http://tadoc.org/indicator/CDLHAMMER.htm]]** - Hammer
+
+{{{integer = CDLHAMMER(open, high, low, close)}}}
+
+
+**[[CDLHANGINGMAN|http://tadoc.org/indicator/CDLHANGINGMAN.htm]]** - Hanging Man
+
+{{{integer = CDLHANGINGMAN(open, high, low, close)}}}
+
+
+**[[CDLHARAMI|http://tadoc.org/indicator/CDLHARAMI.htm]]** - Harami Pattern
+
+{{{integer = CDLHARAMI(open, high, low, close)}}}
+
+
+**[[CDLHARAMICROSS|http://tadoc.org/indicator/CDLHARAMICROSS.htm]]** - Harami Cross Pattern
+
+{{{integer = CDLHARAMICROSS(open, high, low, close)}}}
+
+
+**[[CDLHIGHWAVE|http://tadoc.org/indicator/CDLHIGHWAVE.htm]]** - High-Wave Candle
+
+{{{integer = CDLHIGHWAVE(open, high, low, close)}}}
+
+
+**[[CDLHIKKAKE|http://tadoc.org/indicator/CDLHIKKAKE.htm]]** - Hikkake Pattern
+
+{{{integer = CDLHIKKAKE(open, high, low, close)}}}
+
+
+**[[CDLHIKKAKEMOD|http://tadoc.org/indicator/CDLHIKKAKEMOD.htm]]** - Modified Hikkake Pattern
+
+{{{integer = CDLHIKKAKEMOD(open, high, low, close)}}}
+
+
+**[[CDLHOMINGPIGEON|http://tadoc.org/indicator/CDLHOMINGPIGEON.htm]]** - Homing Pigeon
+
+{{{integer = CDLHOMINGPIGEON(open, high, low, close)}}}
+
+
+**[[CDLIDENTICAL3CROWS|http://tadoc.org/indicator/CDLIDENTICAL3CROWS.htm]]** - Identical Three Crows
+
+{{{integer = CDLIDENTICAL3CROWS(open, high, low, close)}}}
+
+
+**[[CDLINNECK|http://tadoc.org/indicator/CDLINNECK.htm]]** - In-Neck Pattern
+
+{{{integer = CDLINNECK(open, high, low, close)}}}
+
+
+**[[CDLINVERTEDHAMMER|http://tadoc.org/indicator/CDLINVERTEDHAMMER.htm]]** - Inverted Hammer
+
+{{{integer = CDLINVERTEDHAMMER(open, high, low, close)}}}
+
+
+**[[CDLKICKING|http://tadoc.org/indicator/CDLKICKING.htm]]** - Kicking
+
+{{{integer = CDLKICKING(open, high, low, close)}}}
+
+
+**[[CDLKICKINGBYLENGTH|http://tadoc.org/indicator/CDLKICKINGBYLENGTH.htm]]** - Kicking - bull/bear determined by the longer marubozu
+
+{{{integer = CDLKICKINGBYLENGTH(open, high, low, close)}}}
+
+
+**[[CDLLADDERBOTTOM|http://tadoc.org/indicator/CDLLADDERBOTTOM.htm]]** - Ladder Bottom
+
+{{{integer = CDLLADDERBOTTOM(open, high, low, close)}}}
+
+
+**[[CDLLONGLEGGEDDOJI|http://tadoc.org/indicator/CDLLONGLEGGEDDOJI.htm]]** - Long Legged Doji
+
+{{{integer = CDLLONGLEGGEDDOJI(open, high, low, close)}}}
+
+
+**[[CDLLONGLINE|http://tadoc.org/indicator/CDLLONGLINE.htm]]** - Long Line Candle
+
+{{{integer = CDLLONGLINE(open, high, low, close)}}}
+
+
+**[[CDLMARUBOZU|http://tadoc.org/indicator/CDLMARUBOZU.htm]]** - Marubozu
+
+{{{integer = CDLMARUBOZU(open, high, low, close)}}}
+
+
+**[[CDLMATCHINGLOW|http://tadoc.org/indicator/CDLMATCHINGLOW.htm]]** - Matching Low
+
+{{{integer = CDLMATCHINGLOW(open, high, low, close)}}}
+
+
+**[[CDLMATHOLD|http://tadoc.org/indicator/CDLMATHOLD.htm]]** - Mat Hold
+
+{{{integer = CDLMATHOLD(open, high, low, close, penetration=0)}}}
+
+
+**[[CDLMORNINGDOJISTAR|http://tadoc.org/indicator/CDLMORNINGDOJISTAR.htm]]** - Morning Doji Star
+
+{{{integer = CDLMORNINGDOJISTAR(open, high, low, close, penetration=0)}}}
+
+
+**[[CDLMORNINGSTAR|http://tadoc.org/indicator/CDLMORNINGSTAR.htm]]** - Morning Star
+
+{{{integer = CDLMORNINGSTAR(open, high, low, close, penetration=0)}}}
+
+
+**[[CDLONNECK|http://tadoc.org/indicator/CDLONNECK.htm]]** - On-Neck Pattern
+
+{{{integer = CDLONNECK(open, high, low, close)}}}
+
+
+**[[CDLPIERCING|http://tadoc.org/indicator/CDLPIERCING.htm]]** - Piercing Pattern
+
+{{{integer = CDLPIERCING(open, high, low, close)}}}
+
+
+**[[CDLRICKSHAWMAN|http://tadoc.org/indicator/CDLRICKSHAWMAN.htm]]** - Rickshaw Man
+
+{{{integer = CDLRICKSHAWMAN(open, high, low, close)}}}
+
+
+**[[CDLRISEFALL3METHODS|http://tadoc.org/indicator/CDLRISEFALL3METHODS.htm]]** - Rising/Falling Three Methods
+
+{{{integer = CDLRISEFALL3METHODS(open, high, low, close)}}}
+
+
+**[[CDLSEPARATINGLINES|http://tadoc.org/indicator/CDLSEPARATINGLINES.htm]]** - Separating Lines
+
+{{{integer = CDLSEPARATINGLINES(open, high, low, close)}}}
+
+
+**[[CDLSHOOTINGSTAR|http://tadoc.org/indicator/CDLSHOOTINGSTAR.htm]]** - Shooting Star
+
+{{{integer = CDLSHOOTINGSTAR(open, high, low, close)}}}
+
+
+**[[CDLSHORTLINE|http://tadoc.org/indicator/CDLSHORTLINE.htm]]** - Short Line Candle
+
+{{{integer = CDLSHORTLINE(open, high, low, close)}}}
+
+
+**[[CDLSPINNINGTOP|http://tadoc.org/indicator/CDLSPINNINGTOP.htm]]** - Spinning Top
+
+{{{integer = CDLSPINNINGTOP(open, high, low, close)}}}
+
+
+**[[CDLSTALLEDPATTERN|http://tadoc.org/indicator/CDLSTALLEDPATTERN.htm]]** - Stalled Pattern
+
+{{{integer = CDLSTALLEDPATTERN(open, high, low, close)}}}
+
+
+**[[CDLSTICKSANDWICH|http://tadoc.org/indicator/CDLSTICKSANDWICH.htm]]** - Stick Sandwich
+
+{{{integer = CDLSTICKSANDWICH(open, high, low, close)}}}
+
+
+**[[CDLTAKURI|http://tadoc.org/indicator/CDLTAKURI.htm]]** - Takuri (Dragonfly Doji with very long lower shadow)
+
+{{{integer = CDLTAKURI(open, high, low, close)}}}
+
+
+**[[CDLTASUKIGAP|http://tadoc.org/indicator/CDLTASUKIGAP.htm]]** - Tasuki Gap
+
+{{{integer = CDLTASUKIGAP(open, high, low, close)}}}
+
+
+**[[CDLTHRUSTING|http://tadoc.org/indicator/CDLTHRUSTING.htm]]** - Thrusting Pattern
+
+{{{integer = CDLTHRUSTING(open, high, low, close)}}}
+
+
+**[[CDLTRISTAR|http://tadoc.org/indicator/CDLTRISTAR.htm]]** - Tristar Pattern
+
+{{{integer = CDLTRISTAR(open, high, low, close)}}}
+
+
+**[[CDLUNIQUE3RIVER|http://tadoc.org/indicator/CDLUNIQUE3RIVER.htm]]** - Unique 3 River
+
+{{{integer = CDLUNIQUE3RIVER(open, high, low, close)}}}
+
+
+**[[CDLUPSIDEGAP2CROWS|http://tadoc.org/indicator/CDLUPSIDEGAP2CROWS.htm]]** - Upside Gap Two Crows
+
+{{{integer = CDLUPSIDEGAP2CROWS(open, high, low, close)}}}
+
+
+**[[CDLXSIDEGAP3METHODS|http://tadoc.org/indicator/CDLXSIDEGAP3METHODS.htm]]** - Upside/Downside Gap Three Methods
+
+{{{integer = CDLXSIDEGAP3METHODS(open, high, low, close)}}}
+

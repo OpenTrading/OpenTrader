@@ -493,10 +493,8 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
             dFeedParams = _dCurrentFeedFrame
             mFeedOhlc = _dCurrentFeedFrame['mFeedOhlc']
             dFeeds = dict(mFeedOhlc=mFeedOhlc, dFeedParams=dFeedParams)
-            dRecipeParams = oRecipe.dRecipeParams()
-            dIngredientsParams = dict(dRecipeParams=dRecipeParams)
 
-            oRecipe.dMakeIngredients(dFeeds, dIngredientsParams)
+            oRecipe.dMakeIngredients(dFeeds)
             assert oRecipe.dIngredients
             return
         
@@ -565,12 +563,12 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
         self.vError("Unrecognized chef command: " + str(oArgs) +'\n' +__doc__)
         return
 
+    oOm = oEnsureOmlette(self, oOpts)
+    oRecipe = oEnsureRecipe(self, oOpts)
+    oChefModule = oEnsureChef(self, oOpts)
+
     if sDo == 'servings':
         __doc__ = sBACservings__doc__
-        oOm = oEnsureOmlette(self, oOpts)
-        oRecipe = oEnsureRecipe(self, oOpts)
-        oChefModule = oEnsureChef(self, oOpts)
-
         if not hasattr(oOm, 'oBt') or not oOm.oBt:
             self.vError("You must use \"chef cook\" before you can have servings")
             return
@@ -651,22 +649,43 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
     if sDo == 'plot':
         __doc__ = sBACplot__doc__
         _lCmds = ['show', 'trades', 'equity']
+        if not hasattr(oOm, 'oBt') or not oOm.oBt:
+            self.vError("You must use \"chef cook\" before you can plot")
+            return
+        oBt = oOm.oBt
         
         assert len(lArgs) > 1, "ERROR: " +sDo +str(_lCmds)
         sCmd = lArgs[1]
         assert sCmd in _lCmds, "ERROR: " +sDo +str(_lCmds)
 
+        import matplotlib
         import matplotlib.pylab as pylab
         if sCmd == 'show':
             pylab.show()
             return
 
-        assert len(lArgs) > 2, "ERROR: " +sDo +str(_lCmds)
-        sCmd = lArgs[2]
-        assert sCmd in _lCmds, "ERROR: " +sDo +str(_lCmds)
-        oFun = getattr(self.oBt, 'plot_' + sCmd)
-        oFun()
-        pylab.show()
+        # FixMe:
+        matplotlib.rcParams['figure.figsize'] = (10, 5)
+
+        if sCmd == 'equity':
+            # FixMe: derive the period from the sTimeFrame
+            sPeriod='W'
+            close_label='C'
+            mOhlc = oRecipe.dIngredients['mOhlc']
+            oChefModule.vPlotEquity(oBt.equity, mOhlc, sTitle="%s\nEquity" % repr(oBt),
+                                    sPeriod=sPeriod,
+                                    close_label=close_label,
+                                    )
+            pylab.show()
+            return
+        
+        if sCmd == 'trades':
+            oBt.vPlotTrades()
+            pylab.legend(loc='lower left')
+            pylab.show()
+            
+            return
+        self.vError("Unrecognized plot command: " + str(oArgs) +"\n" + sBAC__doc__)
         return
 
     self.vError("Unrecognized backtest command: " + str(oArgs) +"\n" + sBAC__doc__)

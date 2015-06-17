@@ -1,0 +1,45 @@
+
+**[[BETA|http://tadoc.org/indicator/BETA.htm]]** - Beta
+
+{{{real = BETA(high, low, timeperiod=5)}}}
+
+
+**[[CORREL|http://tadoc.org/indicator/CORREL.htm]]** - Pearson's Correlation Coefficient (r)
+
+{{{real = CORREL(high, low, timeperiod=30)}}}
+
+
+**[[LINEARREG|http://tadoc.org/indicator/LINEARREG.htm]]** - Linear Regression
+
+{{{real = LINEARREG(close, timeperiod=14)}}}
+
+
+**[[LINEARREG_ANGLE|http://tadoc.org/indicator/LINEARREG_ANGLE.htm]]** - Linear Regression Angle
+
+{{{real = LINEARREG_ANGLE(close, timeperiod=14)}}}
+
+
+**[[LINEARREG_INTERCEPT|http://tadoc.org/indicator/LINEARREG_INTERCEPT.htm]]** - Linear Regression Intercept
+
+{{{real = LINEARREG_INTERCEPT(close, timeperiod=14)}}}
+
+
+**[[LINEARREG_SLOPE|http://tadoc.org/indicator/LINEARREG_SLOPE.htm]]** - Linear Regression Slope
+
+{{{real = LINEARREG_SLOPE(close, timeperiod=14)}}}
+
+
+**[[STDDEV|http://tadoc.org/indicator/STDDEV.htm]]** - Standard Deviation
+
+{{{real = STDDEV(close, timeperiod=5, nbdev=1)}}}
+
+
+**[[TSF|http://tadoc.org/indicator/TSF.htm]]** - Time Series Forecast
+
+{{{real = TSF(close, timeperiod=14)}}}
+
+
+**[[VAR|http://tadoc.org/indicator/VAR.htm]]** - Variance
+
+{{{real = VAR(close, timeperiod=5, nbdev=1)}}}
+

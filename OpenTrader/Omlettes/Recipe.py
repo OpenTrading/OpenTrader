@@ -75,10 +75,6 @@ class Recipe(object):
                                              
                 
                 
-    def dRecipeParams(self):
-        return OrderedDict(sName=self.sName,
-                           sUrl='file://' +self.sFile)
-        
     def vCheckRequiredFeeds(self, dFeeds):
         for sKey in self.lRequiredFeedParams:
             assert sKey in dFeeds, \

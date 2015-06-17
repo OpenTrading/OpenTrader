@@ -1,0 +1,15 @@
+
+**[[ATR|http://tadoc.org/indicator/ATR.htm]]** - Average True Range
+
+{{{real = ATR(high, low, close, timeperiod=14)}}}
+
+
+**[[NATR|http://tadoc.org/indicator/NATR.htm]]** - Normalized Average True Range
+
+{{{real = NATR(high, low, close, timeperiod=14)}}}
+
+
+**[[TRANGE|http://tadoc.org/indicator/TRANGE.htm]]** - True Range
+
+{{{real = TRANGE(high, low, close)}}}
+

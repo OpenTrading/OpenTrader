@@ -1,3 +1,8 @@
+commit 2d9e66a7bd03d67c6d1319c10642646c2b8cba48
+Date:   Wed Jun 17 10:47:49 2015 +0300
+
+    Updated wiki.
+
 commit 6f50dcdfc8cb4850523f9d60122b468b50522db4
 Date:   Wed Jun 17 08:09:38 2015 +0300
 

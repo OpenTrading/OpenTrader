@@ -1,0 +1,55 @@
+
+**[[ADD|http://tadoc.org/indicator/ADD.htm]]** - Vector Arithmetic Add
+
+{{{real = ADD(high, low)}}}
+
+
+**[[DIV|http://tadoc.org/indicator/DIV.htm]]** - Vector Arithmetic Div
+
+{{{real = DIV(high, low)}}}
+
+
+**[[MAX|http://tadoc.org/indicator/MAX.htm]]** - Highest value over a specified period
+
+{{{real = MAX(close, timeperiod=30)}}}
+
+
+**[[MAXINDEX|http://tadoc.org/indicator/MAXINDEX.htm]]** - Index of highest value over a specified period
+
+{{{integer = MAXINDEX(close, timeperiod=30)}}}
+
+
+**[[MIN|http://tadoc.org/indicator/MIN.htm]]** - Lowest value over a specified period
+
+{{{real = MIN(close, timeperiod=30)}}}
+
+
+**[[MININDEX|http://tadoc.org/indicator/MININDEX.htm]]** - Index of lowest value over a specified period
+
+{{{integer = MININDEX(close, timeperiod=30)}}}
+
+
+**[[MINMAX|http://tadoc.org/indicator/MINMAX.htm]]** - Lowest and highest values over a specified period
+
+{{{min, max = MINMAX(close, timeperiod=30)}}}
+
+
+**[[MINMAXINDEX|http://tadoc.org/indicator/MINMAXINDEX.htm]]** - Indexes of lowest and highest values over a specified period
+
+{{{minidx, maxidx = MINMAXINDEX(close, timeperiod=30)}}}
+
+
+**[[MULT|http://tadoc.org/indicator/MULT.htm]]** - Vector Arithmetic Mult
+
+{{{real = MULT(high, low)}}}
+
+
+**[[SUB|http://tadoc.org/indicator/SUB.htm]]** - Vector Arithmetic Substraction
+
+{{{real = SUB(high, low)}}}
+
+
+**[[SUM|http://tadoc.org/indicator/SUM.htm]]** - Summation
+
+{{{real = SUM(close, timeperiod=30)}}}
+

@@ -1,0 +1,25 @@
+
+**[[HT_DCPERIOD|http://tadoc.org/indicator/HT_DCPERIOD.htm]]** - Hilbert Transform - Dominant Cycle Period
+
+{{{real = HT_DCPERIOD(close)}}}
+
+
+**[[HT_DCPHASE|http://tadoc.org/indicator/HT_DCPHASE.htm]]** - Hilbert Transform - Dominant Cycle Phase
+
+{{{real = HT_DCPHASE(close)}}}
+
+
+**[[HT_PHASOR|http://tadoc.org/indicator/HT_PHASOR.htm]]** - Hilbert Transform - Phasor Components
+
+{{{inphase, quadrature = HT_PHASOR(close)}}}
+
+
+**[[HT_SINE|http://tadoc.org/indicator/HT_SINE.htm]]** - Hilbert Transform - SineWave
+
+{{{sine, leadsine = HT_SINE(close)}}}
+
+
+**[[HT_TRENDMODE|http://tadoc.org/indicator/HT_TRENDMODE.htm]]** - Hilbert Transform - Trend vs Cycle Mode
+
+{{{integer = HT_TRENDMODE(close)}}}
+

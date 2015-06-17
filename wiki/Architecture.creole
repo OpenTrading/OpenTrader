@@ -18,8 +18,10 @@ There are many steps to making a good Omlette:
 
 7. Evaluate the Servings by Reviewers.
 
+Think of OpenTrader as a //sommelier// for hungry pandas :-)
+
 The architecture is designed to be modular:
-* there should be many recipes using the many Ingredients of {{{ta-lib}}}
+* there should be many recipes using the many Ingredients of [[TaLib]]
 * different Recipes should work with different Chefs
 * all the Servings should be able to be reviewed by different Reviewers.
 
@@ -30,6 +32,14 @@ The architecture is designed to be modular:
 * Ingredients
 * Chefs
 * Reviewers
+
+OpenTrader is currently a {{{cmd2}} based command-line read-eval-print loop, 
+which is an easy substitute for a GUI; we can  always add a GUI later.
+But the command-line is easy to use for this kind of work, plus it gives
+a domain-specific scripting language at the same time, so we can use example
+scripts as functional tests: see [[TestsExamples]]. It uses [[TabView]]
+to present multi-line tabular data, and {{{matplotlib}}} to plot the underlying
+pandas objects.
 
 ----
 Parent: [[Home]]

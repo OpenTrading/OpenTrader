@@ -5,7 +5,6 @@
 
 import sys, os
 import datetime
-from collections import OrderedDict
 import pandas
 
 from Recipe import Recipe
@@ -32,21 +31,18 @@ class SMARecipe(Recipe):
         assert self.oConfigObj is not None
         return self.oConfigObj
     
-    def dMakeIngredients(self, dFeeds, dIngredientsParams):
+    def dMakeIngredients(self, dFeeds):
         """
         dMakeIngredients takes a dictionary of feeds dFeeds
         with at least one key from lRequiredFeeds to work on.
         It returns a dictionary of ingredients with the keys in lRequiredIngredients
-        and a key to the dIngredientsParams that it used.
+        and a copy of the config  that it used as the key dIngredientsConfig.
         """
         oC = self.oEnsureConfigObj()
         assert oC is not None
-        iLongMa = dIngredientsParams.get('iLongMa',
-                                         oC['rLongMa']['iLongMa'])
-        iShortMa = dIngredientsParams.get('iShortMa',
-                                          oC['rShortMa']['iShortMa'])
-        bUseTalib = dIngredientsParams.get('bUseTalib',
-                                           oC['rShortMa']['bUseTalib'])
+        iLongMa = oC['rLongMa']['iLongMa']
+        iShortMa = oC['rShortMa']['iShortMa']
+        bUseTalib = oC['rShortMa']['bUseTalib']
 
         self.vCheckRequiredFeeds(dFeeds)
         mFeedOhlc = dFeeds['mFeedOhlc']
@@ -56,18 +52,12 @@ class SMARecipe(Recipe):
 
         if bUseTalib:
             import talib
-            if False:
-                # This is how I read the documentation:
-                rShortMa = talib.SMA(mFeedOhlc.O, timeperiod=iShortMa)
-                rLongMa = talib.SMA(mFeedOhlc.O, timeperiod=iLongMa)
-                # TypeError: Argument 'real' has incorrect type (expected numpy.ndarray, got Series)
-            else:
-                aOhlcCleanShortMA = talib.SMA(mFeedOhlc.O.values, timeperiod=iShortMa)
-                aOhlcCleanLongMA = talib.SMA(mFeedOhlc.O.values, timeperiod=iLongMa)
-                rShortMa = pandas.Series(aOhlcCleanShortMA, name='O',
-                                         index=mFeedOhlc.O.index)
-                rLongMa = pandas.Series(aOhlcCleanLongMA, name='O',
-                                        index=mFeedOhlc.O.index)
+            aShortMA = talib.SMA(mFeedOhlc.O.values, timeperiod=iShortMa)
+            aLongMA = talib.SMA(mFeedOhlc.O.values, timeperiod=iLongMa)
+            rShortMa = pandas.Series(aShortMA, name='O',
+                                     index=mFeedOhlc.O.index)
+            rLongMa = pandas.Series(aLongMA, name='O',
+                                    index=mFeedOhlc.O.index)
         else:
             rShortMa = pandas.rolling_mean(mFeedOhlc.O, iShortMa)
             rLongMa = pandas.rolling_mean(mFeedOhlc.O, iLongMa)
@@ -76,20 +66,20 @@ class SMARecipe(Recipe):
         rLongMa = rLongMa[iBeginValid:]
         mOhlc = mFeedOhlc[iBeginValid:]
         self.oOm.vAppendHdf('recipe/ingredients/rShortMa', rShortMa)
-        self.oOm.vSetMetadataHdf('recipe/ingredients/rShortMa', dIngredientsParams)
         self.oOm.vAppendHdf('recipe/ingredients/rLongMa', rLongMa)
-        self.oOm.vSetMetadataHdf('recipe/ingredients/rLongMa', dIngredientsParams)
         self.dIngredients = dict(rShortMa=rShortMa, rLongMa=rLongMa,
                                  mOhlc=mOhlc,
-                                 dIngredientsParams=dIngredientsParams)
+                                 dIngredientsConfig=dict(oC))
         return self.dIngredients
     
-    def dApplyRecipe(self, dDishesParams):
+    def dApplyRecipe(self):
         """dApplyRecipe
-        and returns a dictionary with keys rBuy, rCover, rSell, rShort,
-        which are pandas timeseries ismorphic to the 
+        returns a dictionary with keys rBuy, rCover, rSell, rShort,
+        which are pandas timeseries 
         and a copy of the dDishesParams.
         """
+        #? copy this
+        dDishesParams = self.dIngredients
         self.vCheckRequiredDishes(dDishesParams)
         rShortMa = dDishesParams['rShortMa']
         rLongMa = dDishesParams['rLongMa']

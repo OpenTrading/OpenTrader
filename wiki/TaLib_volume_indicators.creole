@@ -1,0 +1,15 @@
+
+**[[AD|http://tadoc.org/indicator/AD.htm]]** - Chaikin A/D Line
+
+{{{real = AD(high, low, close, volume)}}}
+
+
+**[[ADOSC|http://tadoc.org/indicator/ADOSC.htm]]** - Chaikin A/D Oscillator
+
+{{{real = ADOSC(high, low, close, volume, fastperiod=3, slowperiod=10)}}}
+
+
+**[[OBV|http://tadoc.org/indicator/OBV.htm]]** - On Balance Volume
+
+{{{real = OBV(close, volume)}}}
+

@@ -27,7 +27,7 @@ def oPyBacktestCook(dFeeds, oRecipe, oChefModule, oOm, oFd=sys.stdout):
     """
     from collections import OrderedDict
     
-    dDishes = oRecipe.dApplyRecipe(oRecipe.dIngredients)
+    dDishes = oRecipe.dApplyRecipe()
     rBuy = rCover = dDishes['rBuy']
     rSell = rShort = dDishes['rSell']
 
@@ -173,10 +173,9 @@ def oOmain(lArgv):
     oFd.write('INFO:  Data Open length: %d\n' % len(mFeedOhlc))
     # ugly - should be a list of different feed timeframes etc.
     dFeeds = dict(mFeedOhlc=mFeedOhlc, dFeedParams=dFeedParams)
-    dRecipeParams = oRecipe.dRecipeParams()
-    # this now comes from the recipe ini file: bUseTalib=oOptions.bUseTalib
-    dIngredientsParams = dict(dRecipeParams=dRecipeParams)
-    oRecipe.dMakeIngredients(dFeeds, dIngredientsParams)
+    # dRecipeParams now comes from the recipe ini file: bUseTalib=oOptions.bUseTalib
+    dIngredientsParams = dict(dRecipeParams=dict())
+    oRecipe.dMakeIngredients(dFeeds)
     assert oRecipe.dIngredients
 
     oBt = oPyBacktestCook(dFeeds, oRecipe, oChefModule, oOm)
@@ -213,7 +212,7 @@ def oOmain(lArgv):
     oOm.vSetMetadataHdf('recipe/servings', oBt.dSummary())
     oFd.write(oBt.sSummary())
 
-    oOm.vSetMetadataHdf('recipe', dRecipeParams)
+    oOm.vSetMetadataHdf('recipe', dict(oRecipe.oConfig))
 
     if oOptions.bPlotEquity:
         mOhlc = oRecipe.dIngredients['mOhlc']

@@ -11,15 +11,29 @@ For the pre-requisites, see [[Installation]].
 The [[Architecture]] is designed to be modular, and we aim at having
 components that can plug in to provide functionality.
 
-Current compnents:
+=== Current Compnents
 
+* [[RabbitMQ]]
 * [[TabView]]
 
-===== GUI 
+=== GUI Components
 
-If you want to visualize and explore [[Omlettes]], you can use [[[ViTables]]]:
-https://github.com/uvemas/ViTables 
+If you want to visualize and explore [[Omlettes]], you can use [[ViTables]].
 
+=== Visualization Components
+
+Many of the Scientific Visualization packages can work with HDF files.
+
+We will list here some of the ones we know of; please add your own
+comments here if you have tried them with [[Omlettes]].
+
+* [[veusz|http://home.gna.org/veusz/]]
+
+
+=== Possible Future Compenents
+
+* See the Chefs listed in [[Backtesting]]
+* [[seaborn||http://stanford.edu/~mwaskom/software/seaborn/]]
 
 
 ----

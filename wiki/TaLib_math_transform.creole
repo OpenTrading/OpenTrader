@@ -1,0 +1,75 @@
+
+**[[ACOS|http://tadoc.org/indicator/ACOS.htm]]** - Vector Trigonometric ACos
+
+{{{real = ACOS(close)}}}
+
+
+**[[ASIN|http://tadoc.org/indicator/ASIN.htm]]** - Vector Trigonometric ASin
+
+{{{real = ASIN(close)}}}
+
+
+**[[ATAN|http://tadoc.org/indicator/ATAN.htm]]** - Vector Trigonometric ATan
+
+{{{real = ATAN(close)}}}
+
+
+**[[CEIL|http://tadoc.org/indicator/CEIL.htm]]** - Vector Ceil
+
+{{{real = CEIL(close)}}}
+
+
+**[[COS|http://tadoc.org/indicator/COS.htm]]** - Vector Trigonometric Cos
+
+{{{real = COS(close)}}}
+
+
+**[[COSH|http://tadoc.org/indicator/COSH.htm]]** - Vector Trigonometric Cosh
+
+{{{real = COSH(close)}}}
+
+
+**[[EXP|http://tadoc.org/indicator/EXP.htm]]** - Vector Arithmetic Exp
+
+{{{real = EXP(close)}}}
+
+
+**[[FLOOR|http://tadoc.org/indicator/FLOOR.htm]]** - Vector Floor
+
+{{{real = FLOOR(close)}}}
+
+
+**[[LN|http://tadoc.org/indicator/LN.htm]]** - Vector Log Natural
+
+{{{real = LN(close)}}}
+
+
+**[[LOG10|http://tadoc.org/indicator/LOG10.htm]]** - Vector Log10
+
+{{{real = LOG10(close)}}}
+
+
+**[[SIN|http://tadoc.org/indicator/SIN.htm]]** - Vector Trigonometric Sin
+
+{{{real = SIN(close)}}}
+
+
+**[[SINH|http://tadoc.org/indicator/SINH.htm]]** - Vector Trigonometric Sinh
+
+{{{real = SINH(close)}}}
+
+
+**[[SQRT|http://tadoc.org/indicator/SQRT.htm]]** - Vector Square Root
+
+{{{real = SQRT(close)}}}
+
+
+**[[TAN|http://tadoc.org/indicator/TAN.htm]]** - Vector Trigonometric Tan
+
+{{{real = TAN(close)}}}
+
+
+**[[TANH|http://tadoc.org/indicator/TANH.htm]]** - Vector Trigonometric Tanh
+
+{{{real = TANH(close)}}}
+

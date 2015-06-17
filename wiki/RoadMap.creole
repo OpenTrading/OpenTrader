@@ -8,6 +8,11 @@ The order should be approximately that of importance.
 
 * Speed up the round-trip time with OTMql4AMQP.
 
+* Extend the Feed parsing to be able to read Mt HST files.
+
+* Extend the Feed parsing to be able update a CSV file with recent bars
+  of the same chart that are currently in a live Mt4.
+
 * Break out the metrics from the Chefs and have interchangable Reviewers.
 
 * Add event driven Chefs to expand the range of [[Backtesting]].
@@ -21,15 +26,20 @@ The order should be approximately that of importance.
 * Add the ability of compare the reviews of different omletttes: see
   [[ComparingOmeletteReviews]]
 
-* Explore ViTables as a tool to compare the reviews of different omletttes.
-  It should be extended to provide GUI editing of the dictionary stored
+* Explore ViTables as a tool to compare the reviews of different omletttes:
+
+  # It should be extended to provide GUI editing of the dictionary stored
   in the metadata slot of pandas objects.
+
+  # The log window in ViTables could be replaced by a OTCmd2 read-evel-print window,
+  which would embed OpenTrader in ViTables. Then the plotting from OTCmd2 under
+  ViTables could get wired up to display {{{pandas.plot()}}} in VTPlot/PyQtGraph.
   
 * Reduce the amount of syntax needed for [[Recipes]] by adding syntactic sugar.
 
 * Rationalize our syntactic sugar with other <<haute cuisine>> establishments.
 
-* Add the ability to round-trip with OTMql4Zmq.
+* Add the ability to round-trip with ZeroMQ/OTMql4Zmq: 
 
 
 ----

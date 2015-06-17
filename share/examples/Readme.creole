@@ -27,12 +27,12 @@ WARN: No retval returned in 60 seconds
 config file with the key {{{iRetvalTimeout}}}.)
 
 These test runners are written in BASH. To run them under Windows you will need
-to install a Unix bash, such as
+to install a Unix {{{bash}}}, such as
 http://downloads.sourceforge.net/mingw/MSYS-1.0.11.exe
 
 They're not very complicated, so if you don't have a Unix BASH installed,
 you can just read the scripts and run the commands from a command-line window.
-Perhaps someone can contribute the {{{.bat}} script equivalents, even
+Perhaps someone can contribute the {{{.bat}}} script equivalents, even
 simplified versions.
 
 

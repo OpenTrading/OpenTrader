@@ -1,0 +1,20 @@
+
+**[[AVGPRICE|http://tadoc.org/indicator/AVGPRICE.htm]]** - Average Price
+
+{{{real = AVGPRICE(open, high, low, close)}}}
+
+
+**[[MEDPRICE|http://tadoc.org/indicator/MEDPRICE.htm]]** - Median Price
+
+{{{real = MEDPRICE(high, low)}}}
+
+
+**[[TYPPRICE|http://tadoc.org/indicator/TYPPRICE.htm]]** - Typical Price
+
+{{{real = TYPPRICE(high, low, close)}}}
+
+
+**[[WCLPRICE|http://tadoc.org/indicator/WCLPRICE.htm]]** - Weighted Close Price
+
+{{{real = WCLPRICE(high, low, close)}}}
+

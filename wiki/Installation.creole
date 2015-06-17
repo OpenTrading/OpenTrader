@@ -32,7 +32,7 @@ You must have {{{pandas}}} installed in the Python that runs these scripts:
 http://pypi.python.org/pypi/pandas
 
 You will probably also want the Cythoned {{{ta-lib}}} that works with pandas/numpy:
-https://github.com/mrjbq7/ta-lib
+see [[TaLib]].
 
 ==== Metatrader Prerequisites
 

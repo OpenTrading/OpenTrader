@@ -1,0 +1,85 @@
+
+**[[BBANDS|http://tadoc.org/indicator/BBANDS.htm]]** - Bollinger Bands
+
+{{{upperband, middleband, lowerband = BBANDS(close, timeperiod=5, nbdevup=2, nbdevdn=2, matype=0)}}}
+
+
+**[[DEMA|http://tadoc.org/indicator/DEMA.htm]]** - Double Exponential Moving Average
+
+{{{real = DEMA(close, timeperiod=30)}}}
+
+
+**[[EMA|http://tadoc.org/indicator/EMA.htm]]** - Exponential Moving Average
+
+{{{real = EMA(close, timeperiod=30)}}}
+
+
+**[[HT_TRENDLINE|http://tadoc.org/indicator/HT_TRENDLINE.htm]]** - Hilbert Transform - Instantaneous Trendline
+
+{{{real = HT_TRENDLINE(close)}}}
+
+
+**[[KAMA|http://tadoc.org/indicator/KAMA.htm]]** - Kaufman Adaptive Moving Average
+
+{{{real = KAMA(close, timeperiod=30)}}}
+
+
+**[[MA|http://tadoc.org/indicator/MA.htm]]** - Moving average
+
+{{{real = MA(close, timeperiod=30, matype=0)}}}
+
+
+**[[MAMA|http://tadoc.org/indicator/MAMA.htm]]** - MESA Adaptive Moving Average
+
+{{{mama, fama = MAMA(close, fastlimit=0, slowlimit=0)}}}
+
+
+**[[MAVP|http://tadoc.org/indicator/MAVP.htm]]** - Moving average with variable period
+
+{{{real = MAVP(close, periods, minperiod=2, maxperiod=30, matype=0)}}}
+
+
+**[[MIDPOINT|http://tadoc.org/indicator/MIDPOINT.htm]]** - MidPoint over period
+
+{{{real = MIDPOINT(close, timeperiod=14)}}}
+
+
+**[[MIDPRICE|http://tadoc.org/indicator/MIDPRICE.htm]]** - Midpoint Price over period
+
+{{{real = MIDPRICE(high, low, timeperiod=14)}}}
+
+
+**[[SAR|http://tadoc.org/indicator/SAR.htm]]** - Parabolic SAR
+
+{{{real = SAR(high, low, acceleration=0, maximum=0)}}}
+
+
+**[[SAREXT|http://tadoc.org/indicator/SAREXT.htm]]** - Parabolic SAR - Extended
+
+{{{real = SAREXT(high, low, startvalue=0, offsetonreverse=0, accelerationinitlong=0, accelerationlong=0, accelerationmaxlong=0, accelerationinitshort=0, accelerationshort=0, accelerationmaxshort=0)}}}
+
+
+**[[SMA|http://tadoc.org/indicator/SMA.htm]]** - Simple Moving Average
+
+{{{real = SMA(close, timeperiod=30)}}}
+
+
+**[[T3|http://tadoc.org/indicator/T3.htm]]** - Triple Exponential Moving Average (T3)
+
+{{{real = T3(close, timeperiod=5, vfactor=0)}}}
+
+
+**[[TEMA|http://tadoc.org/indicator/TEMA.htm]]** - Triple Exponential Moving Average
+
+{{{real = TEMA(close, timeperiod=30)}}}
+
+
+**[[TRIMA|http://tadoc.org/indicator/TRIMA.htm]]** - Triangular Moving Average
+
+{{{real = TRIMA(close, timeperiod=30)}}}
+
+
+**[[WMA|http://tadoc.org/indicator/WMA.htm]]** - Weighted Moving Average
+
+{{{real = WMA(close, timeperiod=30)}}}
+
