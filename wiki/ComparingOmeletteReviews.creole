@@ -1,0 +1,33 @@
+== Comparing Omelette Reviews
+
+After having used [[Backtesting]], the open trader wants to compare
+how the Ingredients performed as a function of the Recipe, or the
+choices of configuration parameters used by the Recipe.
+
+After having used [[Backtesting]], the open trader will have a series
+of [[Omlettes]], that are stored in HDF5 files. Each of the Ingredients
+will have configuration parameters. And each of the [[Omlettes]] will have
+Reviews, which are different metrics on the performance each of the [[Omlettes]].
+The open trader wants to visualize this data to see how the configuration
+parameters effected the metrics of performance.
+
+This is an important use-case as the whole point of [[Backtesting]] is
+to find the Recipe and configuration parameters that give the best metrics
+of performance. And as there are a lot of different metrics, sometimes
+competing or conflicting, it must be easy to browse of visualize this data.
+
+**Tabular:** Perhaps the simplest, and probably the fastest, it to display
+the data as in a spreadsheet-like display.
+
+**Plotting.** We can display the data as in graph, but this is slower
+and it may not be so easy to visualize large numbers (20-30) of metrics
+from each of the Reviews, with  large numbers (10-20) of [[Omlettes]].
+
+We will start with the tabular route, and elaborate it in this use-case.
+
+=== Tabular Comparing Omelette Reviews
+
+For this we may have the required tool already: [[TabView]].
+
+----
+Parent: [[UseCases]]

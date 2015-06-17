@@ -2,6 +2,7 @@
 == Title Index
 
 * [[Backtesting]]
+* [[ComparingOmeletteReviews]]
 * [[DocOTBackTest]]
 * [[DocOTCmd2]]
 * [[DocOTCmd2_backtest]]
@@ -18,6 +19,7 @@
 * [[Omlettes]]
 * [[Recipes]]
 * [[RoadMap]]
+* [[TabView]]
 * [[Testing]]
 * [[TestsExamples]]
 * [[TestsFeatures]]

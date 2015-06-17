@@ -1,3 +1,8 @@
+commit da85ba9ad60b51b45991463a43f4ca938c562a1c
+Date:   Tue Jun 16 23:35:34 2015 +0300
+
+    Fixed threading atexit hang.
+
 commit e9990d6e83628289ffce7d340249b3e26bc88655
 Date:   Tue Jun 16 19:24:03 2015 +0300
 

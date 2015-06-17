@@ -1,0 +1,24 @@
+=== Tabview
+
+[[tabview.py|https://github.com/OpenTrading/OpenTrader/raw/master/OpenTrader/tabview.py]]
+allows you to view a tab-delimited file in a spreadsheet-like display.
+It was written by:
+*  Scott Hansen <firecat four one five three at gmail dot com>
+*  Based on code contributed by A.M. Kuchling <amk at amk dot ca>
+
+This is the tabview from the 2015-06-14 mva branch of
+https://github.com/wavexx/tabview that handles dictionaries
+and pandas series dataframes and panels. For the discussion, see
+https://github.com/firecat53/tabview/pull/116
+
+There is a choice of either:
+{{{
+git clone https://github.com/mdbartos/tabview ; cd tabview ; git checkout feat
+}}}
+or:
+{{{
+git clone https://github.com/wavexx/tabview ; cd tabview ; git checkout mva
+}}}
+
+We will manually keep the one file {{{tabview.py}}} up to date, or you can
+replace it yourself with a more recent version for http://github.com.

@@ -10,9 +10,8 @@ https://readthedocs.org/projects/pytest-bdd/
 and uses similar conventions in writing feature files. Behave is well documented at:
 http://pythonhosted.org/behave/ and has a good page describing the philosophy of 
 [[behavior-driven development|http://pythonhosted.org/behave/philosophy.html]],
-something we have strongly benefited from.
-
-Ideas are usually catalogued on the [[RoadMap]] before being elaborated into use-cases.
+something we have strongly benefited from. Broader 
+Ideas are usually collected on the [[RoadMap]] before being elaborated into use-cases.
 
 Our feature files can be found in the 
 [[tests/features/|https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/]]
@@ -22,6 +21,7 @@ For the currently documented features, see [[TestsFeatures]].
 
 === Omlettes Use Cases
 
+* [[CompaingOmeletteReviews]]
 
 === Backtesting Use Cases
 
