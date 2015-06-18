@@ -3,5 +3,6 @@
 # FixMe: make this dynamic
 lKnownChefs = ['PybacktestChef']
 
-lKnownRecipes = ['SMARecipe', 'Gold4HrRecipe']
+lKnownRecipes = ['SMARecipe', 'MACD4HrRecipe']
+
 

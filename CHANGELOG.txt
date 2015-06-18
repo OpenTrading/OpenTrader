@@ -1,3 +1,8 @@
+commit 5f1c6ffee1e47bd957cf154348e559c7c76f5409
+Date:   Thu Jun 18 00:27:39 2015 +0300
+
+    Wired up backtest plot, and added TaLib documentation.
+
 commit 2d9e66a7bd03d67c6d1319c10642646c2b8cba48
 Date:   Wed Jun 17 10:47:49 2015 +0300
 

@@ -1,6 +1,6 @@
 == OTBackTest.py
 
-Besides using the  {{{backtest}}} command in {{{OTCmd2}}}, you can run
+Besides using the  {{{backtest}}} command in [[OTCmd2|DocOTCmd2]], you can run
 {{{OTBackTest.py}}} as a stand-alone script for backtesting:
 
 {{{

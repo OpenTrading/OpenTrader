@@ -260,6 +260,19 @@ class ChefsOven(object):
     def dSummary(self):
         return PYBTDailyPerformance.dPerformanceSummary(self.equity)
     
+    def lSummary(self):
+        dSummary = self.dSummary()
+        l = []
+        for sTop in dSummary.keys():
+            for sMid in dSummary[sTop].keys():
+                g = dSummary[sTop][sMid]
+                if isinstance(g, dict):
+                    for sBot in g.keys():
+                        l.append([sTop +'_' +sBot +'_' +sBot, g[sBot]])
+                else:
+                    l.append([sTop +'_' +sMid, g])
+        return l
+    
     def vPlotTrades(self, subset=None):
         if subset is None:
             subset = slice(None, None)

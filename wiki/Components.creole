@@ -13,6 +13,7 @@ components that can plug in to provide functionality.
 
 === Current Compnents
 
+* [[Cmd2]]
 * [[RabbitMQ]]
 * [[TabView]]
 

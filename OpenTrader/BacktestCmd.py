@@ -75,7 +75,7 @@ back recipe ingredients                 - make the ingredients
 back recipe config                      - show the current recipe config
 back recipe config KEY                  - show the current config of KEY
 back recipe config KEY VAL              - set the current config of KEY to VAL
-back recipe config tabview              - view the config with tabview, if installed
+back recipe config tabview              - view the config with tabview
 }}}
 """
 sBAC__doc__ += sBACrecipe__doc__
@@ -103,10 +103,11 @@ back servings signals         - show the signals: when to buy or sell
 back servings trades          - show the trades: what was bought or sold
 back servings positions       - show how the trades effected the positions
 back servings equity          - show the results of the trades as equity differences
-back servings reviews         - show the metrics and analyses of the trades
-back servings tabview SERVING - view the SERVING with tabview, if installed
+back servings reviews         - show the metrics and reviews of the trades
+back servings tabview SERVING - view with tabview: the SERVING, or reviews
 }}}
 """
+#? back reviews get/set/servings/tabview
 sBAC__doc__ += sBACservings__doc__
 
 sBACplot__doc__ = """
@@ -578,13 +579,12 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
         _lCmds = oChefModule.lProducedServings[:]
         if tabview not in _lCmds: _lCmds += ['tabview']
         
-        assert len(lArgs) > 1, "ERROR: argument required" +sDo +str(_lCmds)
-        sCmd = lArgs[1]
-        
-        if sCmd == 'list':
+        if len(lArgs) == 1 or lArgs[1] == 'list':
             self.poutput("Produced Servings: %r" % (oChefModule.lProducedServings,))
             return
 
+        assert len(lArgs) > 1, "ERROR: argument required" +sDo +str(_lCmds)
+        sCmd = lArgs[1]
         # self.vDebug("lProducedServings: " + repr(_lCmds))
         assert sCmd in _lCmds, "ERROR: %s %s not in %r" % (
             sDo, sCmd, _lCmds)
@@ -635,13 +635,22 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
 
         if tabview and sCmd == 'tabview':
             assert len(lArgs) > 2, "ERROR: " +sDo +" " +sCmd \
-                   +": serving required, one of: " +str(oChefModule.lProducedServings)
+                   +": serving required, one of: reviews " +str(oChefModule.lProducedServings)
             
             sServing = lArgs[2]
+            if sServing in ['metrics','reviews']:
+                l = [['Metric', 'Value']]
+                l += oBt.lSummary()
+                l.sort()
+                # , hdr_rows=lHdrRows
+                tabview.view(l, column_width='max')
+                return
+
             assert sServing in oChefModule.lProducedServings
-            # FixMe: need index timestamp
-            #? oBt.dSummary()
-            tabview.view(getattr(oBt, sServing))
+            mDf = getattr(oBt, sServing)
+            # FixMe: need index timestamp for mva 
+            tabview.view(mDf)
+            return
                          
         self.vError("Unrecognized servings command: " + str(oArgs) +'\n' +__doc__)
         return

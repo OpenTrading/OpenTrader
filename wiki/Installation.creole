@@ -45,7 +45,7 @@ https://github.com/OpenTrading/ into the Python called by your Metatrader:
 
 One day we will make installers for shrink-wrapped distributions, but
 for now, you must clone them from https://github.com and manually install.
-Make a directory anywhere called {{{OpenTrading}}, and clone each of the above
+Make a directory anywhere called {{{OpenTrading}}}, and clone each of the above
 into that directory. Then recursively copy the contents of each of the three
 {{{MQL4}}} subdirectories into your Metatrader {{{MQL4}}} subdirectory.
 
@@ -58,7 +58,7 @@ Attach the
 EA in [[OTMql4AMQP|https://github.com/OpenTrading/OTMql4AMQP/MQL4/]]
 to a chart and make sure it's working; look at the Experts log in Mt4
 to see messages of success. With the EA loaded onto a chart, run the
-{{{OTCmd2}}} script ([[DocOTCmd2]]) from a command line, with the {{{-P}}
+{{{OTCmd2}}} script ([[DocOTCmd2]]) from a command line, with the {{{-P}}}
 option to give the path to your Metatrader installation. Then give the
 command {{{sub run retval.# timer.#}}}. Within about 15 seconds you should
 see timer messages coming for your {{{OTMql4AMQP}}} enabled Metatrader.

@@ -51,6 +51,15 @@ import pyparsing
 
 __version__ = '0.6.6.1'
 
+# should get this from terminfo or curses
+dANSI_COLORS = {'bold':{True:'\x1b[1m',False:'\x1b[22m'},
+                'cyan':{True:'\x1b[36m',False:'\x1b[39m'},
+                'blue':{True:'\x1b[34m',False:'\x1b[39m'},
+                'red':{True:'\x1b[31m',False:'\x1b[39m'},
+                'magenta':{True:'\x1b[35m',False:'\x1b[39m'},
+                'green':{True:'\x1b[32m',False:'\x1b[39m'},
+                'underline':{True:'\x1b[4m',False:'\x1b[24m'}}
+
 if sys.version_info[0] == 2:
     pyparsing.ParserElement.enablePackrat()
 
@@ -439,13 +448,7 @@ class Cmd(cmd.Cmd):
                 if subprocess.Popen(['which', editor], stdout=subprocess.PIPE, stderr=subprocess.STDOUT).communicate()[0]:
                     break
 
-    colorcodes =    {'bold':{True:'\x1b[1m',False:'\x1b[22m'},
-                  'cyan':{True:'\x1b[36m',False:'\x1b[39m'},
-                  'blue':{True:'\x1b[34m',False:'\x1b[39m'},
-                  'red':{True:'\x1b[31m',False:'\x1b[39m'},
-                  'magenta':{True:'\x1b[35m',False:'\x1b[39m'},
-                  'green':{True:'\x1b[32m',False:'\x1b[39m'},
-                  'underline':{True:'\x1b[4m',False:'\x1b[24m'}}
+    colorcodes = dANSI_COLORS 
     colors = (platform.system() != 'Windows')
     def colorize(self, val, color):
         '''Given a string (``val``), returns that string wrapped in UNIX-style

@@ -1,0 +1,29 @@
+== OTMql4AMQP - AMQP bindings for MQL4 Python
+
+https://github.com/OpenTrading/OTMql4AMQP/
+
+OTMql4AMQP project allows the OpenTrading Metatrader-Python bridge
+(https://github.com/OpenTrading/OTMql4Py/)
+to work with [[RabbitMQ|http://rabbitmq.org]], or probably any version of AMQP,
+the emerging standard for high performance enterprise messaging,
+for asynchronous communications between financial and trading applications.
+It builds on OTMql4Py, and requires it as a pre-requisite.
+
+In your Python, you must have installed Pika:
+https://pypi.python.org/pypi/pika/
+
+Pika offers the advantage of being pure Python: no DLLs to compile
+or install. Pika communicates with AMQP servers, the most common
+open-source one being RabbitMQ: http://www.rabbitmq.com
+You will need an AMPQ server installed, configured and running to use this project.
+The code assumes the default server setup of
+    username: {{{guest}}}, password: {{{guest}}}, virtual host: {{{/}}}
+but you can change those when you attach the EA to the chart:
+[[OTPyTestPikaEA.mq4|https://github.com/OpenTrading/OTMql4AMQP/raw/master/MQL4/Experts/OTMql4/OTPyTestPikaEA.mq4]]
+
+Look at the {{{OnTick}} and {{{OnTimer}}} functions of {{{OTPyTestPikaEA.mq4}}}
+to see how the EA works to send and recieve messages from [[OTCmd2|DocOTCmd2]].
+
+See [[Installation]].
+
+

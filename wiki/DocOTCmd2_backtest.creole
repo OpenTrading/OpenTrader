@@ -54,7 +54,7 @@ back recipe ingredients                 - make the ingredients
 back recipe config                      - show the current recipe config
 back recipe config KEY                  - show the current config of KEY
 back recipe config KEY VAL              - set the current config of KEY to VAL
-back recipe config tabview              - view the config with tabview, if installed
+back recipe config tabview              - view the config with tabview
 }}}
 
 ==== OTCmd2 backtest chef
@@ -76,8 +76,8 @@ back servings signals         - show the signals: when to buy or sell
 back servings trades          - show the trades: what was bought or sold
 back servings positions       - show how the trades effected the positions
 back servings equity          - show the results of the trades as equity differences
-back servings reviews         - show the metrics and analyses of the trades
-back servings tabview SERVING - view the SERVING with tabview, if installed
+back servings reviews         - show the metrics and reviews of the trades
+back servings tabview SERVING - view with tabview: the SERVING, or reviews
 }}}
 
 ==== OTCmd2 backtest plot

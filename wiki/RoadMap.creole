@@ -1,17 +1,25 @@
 == Road Map
 
+There are a lot of directions we can take this project, and a lot
+of tings we can do. The Road Map is ideas that when they are accepted,
+proceed to getting fleshed out as [[UseCases]].
+
 The order should be approximately that of importance.
 
-* Elaborate the [[UseCases]] to see what if important.
+* Elaborate the [[UseCases]] to see what is important.
 
 * Elaborate the [[TestsFeatures]] to ensure coverage.
 
 * Speed up the round-trip time with OTMql4AMQP.
 
+* Speed up the Python initial load time of [[OTCmd2|DocOTCmd2]].
+
 * Extend the Feed parsing to be able to read Mt HST files.
 
 * Extend the Feed parsing to be able update a CSV file with recent bars
   of the same chart that are currently in a live Mt4.
+
+* Look at integrating pandas_datareaders_unofficial with caching.
 
 * Break out the metrics from the Chefs and have interchangable Reviewers.
 
@@ -19,7 +27,7 @@ The order should be approximately that of importance.
 
 * Hook up [[Recipes]] to live-trading on Metatrader from recipes and chefs.
 
-* Add recipes to abstract what OTCmd2 needs from a recipe specification.
+* Add recipes to abstract what [[OTCmd2|DocOTCmd2]] needs from a recipe specification.
 
 * Add chefs to be able to compare chefs on the same recipes.
 
@@ -31,8 +39,8 @@ The order should be approximately that of importance.
   # It should be extended to provide GUI editing of the dictionary stored
   in the metadata slot of pandas objects.
 
-  # The log window in ViTables could be replaced by a OTCmd2 read-evel-print window,
-  which would embed OpenTrader in ViTables. Then the plotting from OTCmd2 under
+  # The log window in ViTables could be replaced by a [[OTCmd2|DocOTCmd2]] read-evel-print window,
+  which would embed OpenTrader in ViTables. Then the plotting from [[OTCmd2|DocOTCmd2]] under
   ViTables could get wired up to display {{{pandas.plot()}}} in VTPlot/PyQtGraph.
   
 * Reduce the amount of syntax needed for [[Recipes]] by adding syntactic sugar.

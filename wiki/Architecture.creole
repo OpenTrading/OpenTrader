@@ -33,13 +33,39 @@ The architecture is designed to be modular:
 * Chefs
 * Reviewers
 
-OpenTrader is currently a {{{cmd2}} based command-line read-eval-print loop, 
+OpenTrader is currently a [[Cmd2]] based command-line read-eval-print loop, 
 which is an easy substitute for a GUI; we can  always add a GUI later.
 But the command-line is easy to use for this kind of work, plus it gives
 a domain-specific scripting language at the same time, so we can use example
 scripts as functional tests: see [[TestsExamples]]. It uses [[TabView]]
 to present multi-line tabular data, and {{{matplotlib}}} to plot the underlying
 pandas objects.
+
+The normal usage of the OTCmd2 script is to talk to an
+OTMql4AMQP enabled Metatrader is:
+{{{
+sub run timer# retval.#  - start a thread listening for messages: timer and retval
+pub cmd AccountBalance   - to send a command to OTMql4AMQP,
+                           the return will be a retval message on the listener
+sub hide timer           - stop seeing timer messages (just see the retval.#)
+order list               - list your open order tickets
+order buy EURUSD 0.1	 - send a market order for 0.1 lots of EURUSD
+}}}
+
+The [[OTCmd2|DocOTCmd2]] is based on [[Cmd2]], a tool for writing command-line
+interactive applications. It provides the following features:
+
+* Searchable command history
+* Load commands from file, save to file, edit commands in file
+* Multi-line commands
+* Case-insensitive commands
+* Special-character shortcut commands (beyond cmd's {{{@}}} and {{{!}}})
+* Settable environment parameters
+* Parsing commands with flags
+* Redirection to file with {{{>}}}, {{{>>}}}; input from file with {{{<}}}
+* Bare {{{>}}}, {{{>>}}} with no filename send output to paste buffer
+* Pipe output to shell commands with {{{|}}}
+* Simple transcript-based application testing
 
 ----
 Parent: [[Home]]

@@ -13,20 +13,31 @@ call the script with --help to see the script options.
 sUSAGE_EPILOG__doc__ = """
 
 The subcommands are:
-* subscribe - Subscribe to messages from RabbitMQ on a given topic
-* publish   - Publish a message to a given chart on a OTMql4Py enabled terminal
+* subscribe - Subscribe to messages from RabbitMQ on a given topic (sub)
+* publish   - Publish a message to a given chart on a OTMql4Py enabled terminal (pub)
 * chart     - Set and query the chart in Metatrdaer that the messages are sent to
-* order     - Manage orders in an OTMql4AQMp enabled Metatrader
+* order     - Manage orders in an OTMql4AQMp enabled Metatrader (ord)
 * csv       - Download, resample and convert CSV files into pandas
-* backtest  - Backtest recipes with chefs, and serve the results as metrics and plots
+* backtest  - Backtest recipes with chefs, and serve the results as metrics or plots (back)
 * rabbit    - Introspect some useful information from the RabbitMQ server
+
+Useful cmd2 subcommands are:
+* history     - show the command history; rereun commands with: run.
+* load FILE   - load a script of commands from FILE.
+* save * FILE - save a script of commands to FILE; use * for all commands,
+                a number for that command, or nothing for the last command.
+* edit        - edit the previous command in an editor, or edit *, or edit FILE;
+                commands are run after editor is closed; used EDITOR environment var.
+* py [CMD]    - execute a Python command CMD, or with no arguments, enter a Python loop:
+                In the loop: self = CMD2 object, self.oOm = Omellete, self.oOm.oBt = Oven
+* help [SUB]  - help, or help on subcommand SUB.
 """
 sUSAGE_MAYBE__doc__ = """
 The normal usage is:
 {{{
 sub run timer# retval.#  - start a thread listening for messages: timer,tick,retval
 pub cmd AccountBalance   - to send a command to OTMql4Pika,
-                         the return will be a retval message on the listener
+                           the return will be a retval message on the listener
 sub hide timer           - stop seeing timer messages (just see the retval.#)
 order list               - list your open order tickets
 }}}
@@ -761,6 +772,7 @@ class CmdLineApp(Cmd):
         self.vError("Unrecognized rabbit command: " + str(oArgs) +'\n' +__doc__)
 
     def postloop(self):
+        # post loop gets called when you load a file
         self.vDebug("atexit")
         if self.oListenerThread is not None:
             if True:

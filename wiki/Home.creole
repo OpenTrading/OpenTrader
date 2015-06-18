@@ -2,8 +2,8 @@ Welcome to the OpenTrader wiki!
 
 [[DocOTCmd2]] can be run from the command line to send commands
 to a OTMql4Pika enabled Metatrader. It will start a command loop to
-listen, send commands, based on the cmd2 REPL, or take commands from
-the standard input, or take commands ascommand-line arguments.
+listen, send commands, based on the [[Cmd2]] read-eval-print, or take
+commands from the standard input, a file, or as command-line arguments.
 
 Use the Wiki to start topics for discussion; it's better to use the
 wiki for knowledge capture, and then we can pull pages back into the
@@ -17,14 +17,14 @@ Please file any bugs in the
 * [[TitleIndex]]
 
 * [[Installation]]
+* [[Architecture]]
+* [[RoadMap]]
 * [[Testing]]
 
 * [[DocOTCmd2]]
 * [[DocOTBackTest]]
 * [[DocOTPpnAmgc]]
 
-* [[Architecture]]
-* [[RoadMap]]
 
 
 ----

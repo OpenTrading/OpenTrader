@@ -10,5 +10,10 @@ There is a plotting plugin to ViTables:
 ViTables is clean code, more-or-less supported, and it gives us an immediate
 GUI exploring our saved backtest files, what we call [[Omlettes]].
 
+In the future, the log window in ViTables could be replaced by a
+[[Cmd2]] read-eval-print (REPL) window, which would embed OpenTrader in ViTables.
+Then the plotting from [[OTCmd2|DocOTCmd2]]/ViTables could get wired up to display from
+pandas/matplotlib in VTPlot which uses PyQtGraph. See [[RoadMap]].
+
 ----
 Parent: [[Components]]

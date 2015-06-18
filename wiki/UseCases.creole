@@ -13,10 +13,13 @@ http://pythonhosted.org/behave/ and has a good page describing the philosophy of
 something we have strongly benefited from. Broader 
 Ideas are usually collected on the [[RoadMap]] before being elaborated into use-cases.
 
+Use-cases proceed to getting fleshed out as features. Features that are implemented
+as commands in [[OTCmd2|DocOTCmd2]] also have tests as examples: see [[UTestsExamples]].
+
 Our feature files can be found in the 
 [[tests/features/|https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/]]
-directory of the distribution.
-For the currently documented features, see [[TestsFeatures]].
+directory of the distribution. For the currently documented features,
+see [[TestsFeatures]].
 
 
 === Omlettes Use Cases
