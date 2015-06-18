@@ -1,9 +1,13 @@
 Welcome to the OpenTrader wiki!
 
-[[DocOTCmd2]] can be run from the command line to send commands
-to a OTMql4Pika enabled Metatrader. It will start a command loop to
-listen, send commands, based on the [[Cmd2]] read-eval-print, or take
-commands from the standard input, a file, or as command-line arguments.
+OpenTrader is an Open Source platform to communicate with on-line trading platforms,
+and includes the ability to:
+* write trading Recipes for multiple back-end testers (1 at the moment :-),
+* import data from CSV files or from the web for [[Backtesting]],
+* analyze the Backtesting with multiple back-end reviewers (1 at the moment :-),
+* save the backtests, along with their parameters in an HDF5 file,
+* send and receive data from multiple on-line trading platforms (1 at the moment :-).
+For more details, see the [[FrontPage]].
 
 Use the Wiki to start topics for discussion; it's better to use the
 wiki for knowledge capture, and then we can pull pages back into the

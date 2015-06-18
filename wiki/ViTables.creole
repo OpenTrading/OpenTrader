@@ -5,7 +5,7 @@
 It is capable of reading HDF5 files, the kind that pandas can read and write to.
 
 There is a plotting plugin to ViTables:
-[[VTPlot||github.com/alexey-naydenov/VTPlot]].
+[[VTPlot||https://github.com/alexey-naydenov/VTPlot]].
 
 ViTables is clean code, more-or-less supported, and it gives us an immediate
 GUI exploring our saved backtest files, what we call [[Omlettes]].

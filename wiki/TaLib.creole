@@ -55,3 +55,6 @@ Documentation for all functions:
 * [[Math Transform|TaLib_math_transform]]
 * [[Math Operators|TaLib_math_operators]]
 
+
+----
+Parent: [[Components]]

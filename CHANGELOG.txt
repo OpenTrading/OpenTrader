@@ -1,3 +1,9 @@
+commit 16a4582a051d0399b7b2f137ec10cc92063f364e
+Date:   Thu Jun 18 12:46:13 2015 +0300
+
+    Wired up backtest servings tabview reviews
+    and switch tabview to mdbartos feat branch - it handles timeseries.
+
 commit 5f1c6ffee1e47bd957cf154348e559c7c76f5409
 Date:   Thu Jun 18 00:27:39 2015 +0300
 

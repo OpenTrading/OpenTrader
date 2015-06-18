@@ -39,8 +39,8 @@ see [[TaLib]].
 In order to interact with Metatrader, you will need to
 install the OTMql4AMQP, OTMql4Py and OTMql4Lib projects from
 https://github.com/OpenTrading/ into the Python called by your Metatrader:
-* OTMql4AMQP https://github.com/OpenTrading/OTMql4AMQP/,
-* OTMql4Py https://github.com/OpenTrading/OTMql4Py/, and
+* [[OTMql4AMQP]] https://github.com/OpenTrading/OTMql4AMQP/,
+* [[OTMql4Py]] https://github.com/OpenTrading/OTMql4Py/, and
 * OTMql4Lib https://github.com/OpenTrading/OTMql4Lib/
 
 One day we will make installers for shrink-wrapped distributions, but
@@ -51,7 +51,6 @@ into that directory. Then recursively copy the contents of each of the three
 
 You must have a AMQP server running, such as [[RabbitMQ]], by default with the
 default guest account: see http://rabbitmq.org 
-
 
 Attach the
 [[OTPyTestPikaEA.mq4|https://github.com/OpenTrading/OTMql4AMQP/raw/master/MQL4/Experts/OTMql4/OTPyTestPikaEA.mq4]]
@@ -82,4 +81,4 @@ to create the 3 scripts:
 
 
 ----
-Parent: [Home]
+Parent: [[Home]]

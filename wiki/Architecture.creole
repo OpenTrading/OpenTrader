@@ -21,8 +21,8 @@ There are many steps to making a good Omlette:
 Think of OpenTrader as a //sommelier// for hungry pandas :-)
 
 The architecture is designed to be modular:
-* there should be many recipes using the many Ingredients of [[TaLib]]
-* different Recipes should work with different Chefs
+* there should be many recipes using the many Ingredients of [[TaLib]],
+* different Recipes should work with different Chefs,
 * all the Servings should be able to be reviewed by different Reviewers.
 
 
@@ -41,8 +41,8 @@ scripts as functional tests: see [[TestsExamples]]. It uses [[TabView]]
 to present multi-line tabular data, and {{{matplotlib}}} to plot the underlying
 pandas objects.
 
-The normal usage of the OTCmd2 script is to talk to an
-OTMql4AMQP enabled Metatrader is:
+The normal usage of the OTCmd2 script to talk to an
+[[OTMql4AMQP]] enabled Metatrader is:
 {{{
 sub run timer# retval.#  - start a thread listening for messages: timer and retval
 pub cmd AccountBalance   - to send a command to OTMql4AMQP,

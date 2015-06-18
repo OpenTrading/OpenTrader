@@ -51,4 +51,4 @@ The order should be approximately that of importance.
 
 
 ----
-Parent: [Home]
+Parent: [[Home]]
