@@ -2,6 +2,8 @@
 
 Subscribe to messages from RabbitMQ on a given topic:
 {{{
+  sub set [TARGET]      - set the target for subscribe, or to see the current target
+  sub config            - configure the current target for subscribe: [KEY [VAL]]
   sub topics            - shows topics subscribed to.
   sub run TOPIC1 ...    - start a thread to listen for messages,
                           TOPIC is one or more Rabbit topic patterns.
@@ -12,6 +14,7 @@ Subscribe to messages from RabbitMQ on a given topic:
                           with 0 - off, 1 - on, no argument - current value
   sub thread info       - info on the thread listening for messages.
   sub thread stop       - stop a thread listening for messages.
+  sub thread enumerate  - enumerate all threads
 }}}
 
 Common RabbitMQ topic patterns are:
@@ -35,6 +38,7 @@ Options:
   -c SCHARTID, --chart=SCHARTID
                         the target chart to subscribe to
 
+DEBUG: atexit
 }}}
 
 ----

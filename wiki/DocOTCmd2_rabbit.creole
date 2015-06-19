@@ -22,6 +22,7 @@ Options:
                         the TCP port of the HTTP rabbitmq_management plugin
                         (default 15672)
 
+DEBUG: atexit
 }}}
 
 ----

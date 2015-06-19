@@ -2,6 +2,8 @@
 
 Publish a message via RabbitMQ to a given chart on a OTMql4Py enabled terminal:
 {{{
+  pub set [TARGET]          - set the target for publish, or to see the current target
+  pub config                - configure the current target for publish: [KEY [VAL]]
   pub cmd  COMMAND ARG1 ... - publish a Mql command to Mt4,
       the command should be a single string, with a space seperating arguments.
   pub wait COMMAND ARG1 ... - publish a Mql command to Mt4 and wait for the result,
@@ -24,6 +26,7 @@ Options:
   -c SCHARTID, --chart=SCHARTID
                         the target chart to publish to (or: ANY ALL NONE)
 
+DEBUG: atexit
 }}}
 
 ----

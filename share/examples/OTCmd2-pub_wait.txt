@@ -3,6 +3,10 @@
 # the Experts/OTMql4/OTPyTestPikaEA.mq4 attached to a chart in it, and
 # the RabbitMQ server configured and running.
 set echo True
+# set the on-line target to be the default from OTCmd2.ini
+sub set
+# set the on-line target to be the only one that works right now :-)
+sub set RabbitMQ
 # We need a listener thread running, subscribed to retval.#
 sub run retval.# timer.#
 py import time
@@ -37,3 +41,4 @@ py assert type(self._G) == int and type(self._G) > 0
 ##? void pub wait WindowRedraw
 pub wait WindowsTotal
 py assert type(self._G) == int and type(self._G) > 0
+exit

@@ -35,5 +35,10 @@ you can just read the scripts and run the commands from a command-line window.
 Perhaps someone can contribute the {{{.bat}}} script equivalents, even
 simplified versions.
 
+You can also run the test suite with different configurations by giving
+it different {{{.ini}}} files, for example under Msys or Unix, like this:
+{{{
+OTCmd2 -c /tmp/My.ini -P "/c/Program Files/MetaTrader"  < share/examples/OTCmd2-sub.txt
+}}}
 
 === Current Examples

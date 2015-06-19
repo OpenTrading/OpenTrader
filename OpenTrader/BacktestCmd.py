@@ -189,6 +189,8 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
 
     lArgs = oArgs.split()
     sDo = lArgs[0]
+    
+    # An omlette is an HDF5 file that saves all the data from a backtest
     if sDo == 'omlette':
         # is this a backtest command or should it move up
         # leave it here for now, and move it up later
@@ -246,6 +248,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
         self.vError("Unrecognized omlette command: " + str(oArgs) +'\n' +__doc__)
         return
 
+    # Create feeds (pandas DataFrames) from CSV OHLCV files
     if sDo == 'feed':
         __doc__ = sBACfeed__doc__
         #? rename delete
@@ -411,7 +414,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
             nDates = matplotlib.dates.date2num(mFeedOhlc.index.to_pydatetime())
             nVolume = 1000*np.random.normal(size=len(mFeedOhlc))
 
-            self.vWarn("This may take minutes to display depending on your computer's speed")
+            self.vInfo("This may take minutes to display depending on your computer's speed")
             vGraphData(sSymbol, nDates,
                        mFeedOhlc.C.values, mFeedOhlc.H.values, mFeedOhlc.L.values, mFeedOhlc.O.values,
                        nVolume,
@@ -421,6 +424,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
         self.vError("Unrecognized feed command: " + str(oArgs) +'\n' +__doc__)
         return
 
+    # Set the recipe that the chef will use, and make the ingredients from the feeds
     if sDo == 'recipe':
         __doc__ = sBACrecipe__doc__
         from .Omlettes import lKnownRecipes
@@ -444,27 +448,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
         
         if sCmd == 'config':
             oRecipe = oEnsureRecipe(self, oOpts)
-            
-            if len(lArgs) == 2:
-                self.poutput(pformat(self.G(oRecipe.oConfig())))
-            elif len(lArgs) == 3 and str(lArgs[2]) == 'tabview':
-                l = lConfigToList(oRecipe.oConfig())
-                iMax = max(map(len, l.keys()))
-                tabview.view(l, column_widths=[iMax, 60 - iMax])
-            elif len(lArgs) == 3:
-                sSect = str(lArgs[2])
-                self.poutput(repr(self.G(oRecipe.oConfig(sSect))))
-            elif len(lArgs) == 4:
-                sSect = str(lArgs[2])
-                sKey = str(lArgs[3])
-                self.poutput(repr(self.G(oRecipe.oConfig(sSect, sKey))))
-            elif len(lArgs) == 5:
-                sSect = str(lArgs[2])
-                sKey = str(lArgs[3])
-                sVal = str(lArgs[5])
-                oType = type(oRecipe.oConfig(sSect, sKey))
-                gRetval = oRecipe.oConfig(sSect, sKey, oType(sVal))
-                self.poutput(repr(setf.G(gRetval)))
+            self.vConfigOp(lArgs, oRecipe.oConfig)
             return
         
         if sCmd == 'set':
@@ -502,6 +486,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
         self.vError("Unrecognized recipe command: " + str(oArgs) +'\n' +__doc__)
         return
 
+    # Set the chef that we will use, and cook from the ingredients and the feeds
     if sDo == 'chef':
         __doc__ = sBACchef__doc__
         from .Omlettes import lKnownChefs
@@ -568,6 +553,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
     oRecipe = oEnsureRecipe(self, oOpts)
     oChefModule = oEnsureChef(self, oOpts)
 
+    # List the servings the chef has cooked, and dish out the servings
     if sDo == 'servings':
         __doc__ = sBACservings__doc__
         if not hasattr(oOm, 'oBt') or not oOm.oBt:
@@ -655,6 +641,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
         self.vError("Unrecognized servings command: " + str(oArgs) +'\n' +__doc__)
         return
 
+    # Plot the servings the chef has cooked, using matplotlib
     if sDo == 'plot':
         __doc__ = sBACplot__doc__
         _lCmds = ['show', 'trades', 'equity']

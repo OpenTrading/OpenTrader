@@ -3,7 +3,7 @@
 # You dont need to have a listener thread running
 # These tests will only work if you have created a CSV file /tmp/EURUSD60-2014.csv
 set echo True
-back omlette open /tmp/EURUSD60-2014.hdf
+back omlette open tmp/EURUSD60-2014.hdf
 back omlette check
 # read a CSV file from Mt4
 back feed read_mt4_csv tmp/EURUSD60-2014.csv EURUSD 60 2014
@@ -35,4 +35,5 @@ back servings reviews
 back omlette display
 # close and save the HDF file
 back omlette close
-py assert os.path.isfile('/tmp/EURUSD60-2014.hdf')
+py assert os.path.isfile('tmp/EURUSD60-2014.hdf')
+exit

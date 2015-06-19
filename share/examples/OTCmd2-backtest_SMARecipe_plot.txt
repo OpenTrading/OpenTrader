@@ -33,3 +33,4 @@ back servings reviews
 # FixMe: cant test tabview
 back plot trades
 back plot equity
+exit

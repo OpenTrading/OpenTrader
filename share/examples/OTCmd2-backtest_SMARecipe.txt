@@ -32,4 +32,4 @@ back servings equity
 back servings trade_price
 back servings reviews
 # FixMe: cant test tabview
-
+exit

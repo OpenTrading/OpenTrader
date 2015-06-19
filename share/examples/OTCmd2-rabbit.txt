@@ -13,3 +13,4 @@ rabbit get connections
 py assert len(self._G) > 0
 rabbit get queues
 py assert len(self._G) > 0
+exit

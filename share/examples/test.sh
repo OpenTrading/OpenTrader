@@ -27,12 +27,16 @@ if [ ! -f setup.py -o -f test.sh ] ; then
     cd ../..
 fi
 
+[ -d tmp/logs ] || mkdir -p tmp/logs
+
 # we put the output in tmp/logs
 if [ -z "$OTLOG_DIR" ] ; then
     export OTLOG_DIR="tmp/logs"
   fi
 [ -d "$OTLOG_DIR" ] || mkdir "$OTLOG_DIR" || exit 4
 
+# we dont include to plot tests which require manual intervention
+# is there a matplotlib command that solves this?
 sh share/examples/test_rabbitmq_running.sh || exit 10
 sh share/examples/test_backtest.sh || exit 11
 sh share/examples/test_mt4_rabbitmq_running.sh || exit 12

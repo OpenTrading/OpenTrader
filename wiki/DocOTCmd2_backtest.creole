@@ -99,6 +99,7 @@ Options:
   -R SRECIPE, --recipe=SRECIPE
                         recipe to backtest (one of SMARecipe
 
+DEBUG: atexit
 }}}
 
 ----

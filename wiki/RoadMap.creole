@@ -1,7 +1,7 @@
 == Road Map
 
 There are a lot of directions we can take this project, and a lot
-of tings we can do. The Road Map is ideas that when they are accepted,
+of things we can do. The Road Map is ideas that when they are accepted,
 proceed to getting fleshed out as [[UseCases]].
 
 The order should be approximately that of importance.
@@ -10,7 +10,7 @@ The order should be approximately that of importance.
 
 * Elaborate the [[TestsFeatures]] to ensure coverage.
 
-* Speed up the round-trip time with OTMql4AMQP.
+* Speed up the round-trip time with OTMql4AMQP - try [[Rabbit4Mt4]].
 
 * Speed up the Python initial load time of [[OTCmd2|DocOTCmd2]].
 

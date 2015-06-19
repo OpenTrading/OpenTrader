@@ -15,28 +15,31 @@ from OTMql427 import SimpleFormat
 class PikaListenerThread(threading.Thread, PikaListener.PikaMixin):
 
     def __init__(self, sChartId, lTopics, **dArgs):
+        if not lTopics:
+            self.lTopics = ['#']
+        else:
+            self.lTopics = lTopics
+        self.sQueueName = dArgs['sQueueName']
+        
         dThreadArgs = {'name': sChartId, 'target': self.run}
         PikaListener.PikaMixin.__init__(self, sChartId, **dArgs)
         threading.Thread.__init__(self, **dThreadArgs)
         self.oLocal = threading.local()
+        self._running = threading.Event()
+        
         self.lCharts = []
         self.jLastRetval = []
         self.jLastTick = []
         self.jLastBar = []
         self.gLastTimer = []
-        self._running = threading.Event()
         self.dRetvals = {}
-        if not lTopics:
-            self.lTopics = ['#']
-        else:
-            self.lTopics = lTopics
         self.bPprint = False
         self.lHide = []
-        # eBindBlockingListener
-        self.vPyRecvOnListener('listen-for-ticks', self.lTopics)
-        self._running.set()
 
     def run(self):
+        # eBindBlockingListener
+        self.vPyRecvOnListener(self.sQueueName, self.lTopics)
+        self._running.set()
         while self._running.is_set() and len(self.oListenerChannel._consumers):
             try:
                 self.oListenerChannel.connection.process_data_events()
@@ -110,6 +113,7 @@ class PikaListenerThread(threading.Thread, PikaListener.PikaMixin):
                 self.lCharts.append(sChart)
 
             if sMsgType == 'retval':
+                # gRetvalToPython requires 
                 try:
                     gPayload = gRetvalToPython(lArgs)
                 except Exception, e:
@@ -159,9 +163,13 @@ def gRetvalToPython(lElts):
     global dPENDING
 
     sType = lElts[4]
-    sVal = lElts[5]
-    if sVal == "":
+    if sType == 'string' and len(lElts) <= 5:
+        # warn?
         return ""
+    
+    assert len(lElts) > 5, "nothing to convert: " + repr(lElts)
+    sVal = lElts[5]
+    
     if sType == 'string':
         gRetval = sVal
     elif sType == 'error':
@@ -185,6 +193,7 @@ def gRetvalToPython(lElts):
     elif sType == 'none':
         gRetval = None
     elif sType == 'void':
+        # This is now unused
         gRetval = None
     else:
         sys.stdout.write("WARN: unknown type %s in %r\n" % (sType, lElts,))

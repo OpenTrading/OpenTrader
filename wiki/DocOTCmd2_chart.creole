@@ -18,6 +18,7 @@ Usage: chart [options] command
 Options:
   -h, --help  show this help message and exit
 
+DEBUG: atexit
 }}}
 
 ----

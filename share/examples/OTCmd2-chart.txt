@@ -2,6 +2,10 @@
 # the Experts/OTMql4/OTPyTestPikaEA.mq4 attached to a chart in it, and
 # the RabbitMQ server configured and running.
 set echo True
+# set the on-line target to be the default from OTCmd2.ini
+sub set
+# set the on-line target to be the only one that works right now :-)
+sub set RabbitMQ
 # We need a listener thread running, subscribed to retval.#
 sub run retval.# timer.#
 py import time
@@ -14,4 +18,4 @@ chart set
 # get the default chart to be published or subscribed to
 chart get
 py assert type(self._G) == str and len(self._G) > 0
-
+exit

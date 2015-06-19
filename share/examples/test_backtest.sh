@@ -42,5 +42,6 @@ ${OTCMD2} -P "$OTMT4_DIR" < share/examples/OTCmd2-backtest_SMARecipe.txt \
 ${OTCMD2} -P "$OTMT4_DIR" < share/examples/OTCmd2-backtest_recipe.txt \
 	  2>&1|tee "$OTLOG_DIR"/OTCmd2-backtest_recipe.log
 
+[ -f tmp/EURUSD60-2014.hdf ] && rm -f tmp/EURUSD60-2014.hdf
 ${OTCMD2} -P "$OTMT4_DIR" < share/examples/OTCmd2-backtest_omlette.txt \
 	  2>&1|tee "$OTLOG_DIR"/OTCmd2-backtest_omlette.log

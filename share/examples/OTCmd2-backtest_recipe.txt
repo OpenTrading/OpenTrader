@@ -27,3 +27,4 @@ py assert len(self._G) > 0
 py assert 'mFeedOhlc' in self._G
 py assert 'rShortMa' in self._G
 py assert 'rLongMa' in self._G
+exit

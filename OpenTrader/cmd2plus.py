@@ -1320,7 +1320,7 @@ class Cmd(cmd.Cmd):
         else:
             if not self.run_commands_at_invocation(callargs):
                 self._cmdloop()
-
+    
 class HistoryItem(str):
     listformat = '[%d] %s\n'
     def __init__(self, instr):

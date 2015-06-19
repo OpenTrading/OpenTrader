@@ -23,6 +23,7 @@ Options:
   -c SCHARTID, --chart=SCHARTID
                         the target chart to order with (or: ANY ALL NONE)
 
+DEBUG: atexit
 }}}
 
 ----
