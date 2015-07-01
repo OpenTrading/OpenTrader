@@ -2,11 +2,14 @@
 
 Subscribe to messages from RabbitMQ on a given topic:
 {{{
-  sub set [TARGET]      - set the target for subscribe, or to see the current target
+  sub get               - get the current target for subscribe; defaults to:
+                        the first value of default['lOnlineTargets'] in OTCmd2.ini
+  sub set TARGET        - set the target for subscribe, must be one of:
+                        the values of default['lOnlineTargets'] in OTCmd2.ini
   sub config            - configure the current target for subscribe: [KEY [VAL]]
-  sub topics            - shows topics subscribed to.
   sub run TOPIC1 ...    - start a thread to listen for messages,
                           TOPIC is one or more Rabbit topic patterns.
+  sub topics            - shows topics subscribed to.
   sub hide TOPIC        - stop seeing TOPIC messages (e.g. tick - not a pattern)
   sub show              - list the message topics that are being hidden
   sub show TOPIC        - start seeing TOPIC messages (e.g. tick - not a pattern)
@@ -34,9 +37,7 @@ section of the {{{OTCmd2.ini}}} file; see the {{{-c/--config}}} command-line opt
 Usage: subscribe [options] command
 
 Options:
-  -h, --help            show this help message and exit
-  -c SCHARTID, --chart=SCHARTID
-                        the target chart to subscribe to
+  -h, --help  show this help message and exit
 
 DEBUG: atexit
 }}}

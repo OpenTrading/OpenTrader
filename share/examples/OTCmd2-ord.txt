@@ -3,16 +3,16 @@
 # the RabbitMQ server configured and running.
 set echo True
 # set the on-line target to be the default from OTCmd2.ini
-sub set
+sub get
 # set the on-line target to be the only one that works right now :-)
 sub set RabbitMQ
 # We need a listener thread running, subscribed to retval.#
-sub set
-pub set
+sub get
 sub run retval.# timer.#
 py import time
 py time.sleep(15)
 chart set
+pub set
 # list the details of current orders
 order list
 # list the details of closed orders

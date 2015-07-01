@@ -10,6 +10,9 @@ or the configuration parameters when you attach the
 EA to a chart in
 [[OTMql4AMQP|https://github.com/OpenTrading/OTMql4AMQP/MQL4/]]
 
+It may be possible to speed up the round-trip time with [[OTMql4AMQP]] by using
+[[Rabbit4Mt4|https://github.com/OpenTrading/OTMql4AMQP/wiki/Rabbit4Mt4]].
+
 You can run Metatrader under Wine on Linux, and have OpenTrader under Linux
 use the standard RabbitMQ that is supplied with your distribution.
 

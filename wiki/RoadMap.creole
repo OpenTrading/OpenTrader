@@ -10,16 +10,25 @@ The order should be approximately that of importance.
 
 * Elaborate the [[TestsFeatures]] to ensure coverage.
 
-* Speed up the round-trip time with OTMql4AMQP - try [[Rabbit4Mt4]].
+* Document [[Omlettes]] and make them reloadable.
+
+* Speed up the round-trip time with OTMql4AMQP - try
+  [[Rabbit4Mt4|https://github.com/OpenTrading/OTMql4AMQP/wiki/Rabbit4Mt4]].
+  If the compiled DLL version of it works, we would greatly simplify distribution.
 
 * Speed up the Python initial load time of [[OTCmd2|DocOTCmd2]].
+
+* Extend the network communication to use ZeroMQ via
+  [[OTMql4Zmq|https://github.com/OpenTrading/OTMql4Zmq]].
+  If the compiled DLL version of it gets fixed, we would greatly simplify distribution.
 
 * Extend the Feed parsing to be able to read Mt HST files.
 
 * Extend the Feed parsing to be able update a CSV file with recent bars
   of the same chart that are currently in a live Mt4.
 
-* Look at integrating pandas_datareaders_unofficial with caching.
+* Add the ability of compare the reviews of different omletttes: see
+  [[ComparingOmeletteReviews]].
 
 * Break out the metrics from the Chefs and have interchangable Reviewers.
 
@@ -27,27 +36,27 @@ The order should be approximately that of importance.
 
 * Hook up [[Recipes]] to live-trading on Metatrader from recipes and chefs.
 
-* Add recipes to abstract what [[OTCmd2|DocOTCmd2]] needs from a recipe specification.
+* Add Recipes to abstract what [[OTCmd2|DocOTCmd2]] needs from a recipe specification.
 
-* Add chefs to be able to compare chefs on the same recipes.
+* Add Chefs to be able to compare chefs on the same recipes.
 
-* Add the ability of compare the reviews of different omletttes: see
-  [[ComparingOmeletteReviews]]
+* Look at integrating {{{pandas_datareaders_unofficial}}} with caching.
 
 * Explore ViTables as a tool to compare the reviews of different omletttes:
 
   # It should be extended to provide GUI editing of the dictionary stored
   in the metadata slot of pandas objects.
-
-  # The log window in ViTables could be replaced by a [[OTCmd2|DocOTCmd2]] read-evel-print window,
-  which would embed OpenTrader in ViTables. Then the plotting from [[OTCmd2|DocOTCmd2]] under
-  ViTables could get wired up to display {{{pandas.plot()}}} in VTPlot/PyQtGraph.
   
+  # The log window in ViTables could be replaced by a [[OTCmd2|DocOTCmd2]]
+  read-evel-print window,   which would embed OpenTrader in ViTables.
+  Then the plotting from [[OTCmd2|DocOTCmd2]] under ViTables could get wired up to
+  display {{{pandas.plot()}}} in [[VTPlot|http://github.com/VTPlot/alexey-naydenov]]
+  using PyQtGraph.
+    
 * Reduce the amount of syntax needed for [[Recipes]] by adding syntactic sugar.
 
 * Rationalize our syntactic sugar with other <<haute cuisine>> establishments.
 
-* Add the ability to round-trip with ZeroMQ/OTMql4Zmq: 
 
 
 ----

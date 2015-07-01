@@ -79,7 +79,7 @@ class ChefsOven(object):
     _lSignalFieldsInt = ('Buy', 'Sell', 'Short', 'Cover')
     _lPriceFieldsInt = ('BuyPrice', 'SellPrice', 'ShortPrice', 'CoverPrice')
     # these are the results you can get back from this Chef
-    
+
     def __init__(self, mOhlc, dDataDict, name='Unknown',
                  signal_fields=None,
                  price_fields=('buyprice', 'sellprice', 'shortprice',
@@ -110,6 +110,7 @@ class ChefsOven(object):
 
 
         """
+        self.sName = 'pybacktest'
         self._mOhlc = mOhlc
         self.name = name
         self.open_label = open_label
@@ -126,7 +127,7 @@ class ChefsOven(object):
         assert len(signal_fields) == len(price_fields)
         self._lSignalFieldsExt = signal_fields
         self._lPriceFieldsExt = price_fields
-        
+
         self.run_time = time.strftime('%Y-%d-%m %H:%M %Z', time.localtime())
         self.stats = StatEngine(lambda: self.equity)
         # make things explicit with a functional programming style too
@@ -135,7 +136,7 @@ class ChefsOven(object):
         self._rPositions = False
         self._mTrades = False
         self._rEquity = False
-        
+
     def __repr__(self):
         return "Backtest(%s, %s)" % (self.name, self.run_time)
 

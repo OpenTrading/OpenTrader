@@ -1,4 +1,5 @@
 usage: OTCmd2.py [-h] [-v IVERBOSE] [-t] [-c SCONFIGFILE] [-P SMT4DIR]
+                 [-T SONLINETARGET] [-R IRETVALTIMEOUT]
                  [lArgs [lArgs ...]]
 
 This script can be run from the command line to send commands
@@ -42,6 +43,11 @@ optional arguments:
                         Config file for OTCmd2 options
   -P SMT4DIR, --mt4dir SMT4DIR
                         directory for the installed Metatrader
+  -T SONLINETARGET, --target SONLINETARGET
+                        ini section name with the routing and target
+  -R IRETVALTIMEOUT, --timeout IRETVALTIMEOUT
+                        Timeout for waiting for a retval from publishing to
+                        Mt4
 }}}
 
 ----

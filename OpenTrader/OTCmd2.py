@@ -35,11 +35,14 @@ Useful cmd2 subcommands are:
 sUSAGE_MAYBE__doc__ = """
 The normal usage is:
 {{{
-sub run timer# retval.#  - start a thread listening for messages: timer,tick,retval
-pub cmd AccountBalance   - to send a command to OTMql4Pika,
+sub get                   - get the current target to publish to; defaults to:
+                            the first value of default['lOnlineTargets'] in OTCmd2.ini
+sub run [timer# ...]      - start a thread listening for messages: defaults to:
+                          all messages, or use: timer.# and/or bar.# tick.# retval.#
+pub cmd AccountBalance    - to send a command such as AccountBalance to OTMql4Pika,
                            the return will be a retval message on the listener
-sub hide timer           - stop seeing timer messages (just see the retval.#)
-order list               - list your open order tickets
+sub hide timer            - stop seeing timer messages (just see the retval.#)
+order list                - list your open order tickets
 }}}
 """
 
@@ -58,7 +61,8 @@ Set and query the chart in Metatrader that the messages are sent to:
 {{{
   list   - all the charts the listener has heard of,
            iff you have already started a listener with "sub run"
-  get    - get the default chart to be published or subscribed to.
+  get    - get the default chart to be published or subscribed to; defaults to:
+           the last chart the listener has heard of.
   set ID - set the default chart ID to be published or subscribed to.
   set    - set the default chart to be the last chart the listener has heard of,
            iff you have already started a listener with "sub run"
@@ -70,11 +74,14 @@ The chart ID will look something like: oChart_EURGBP_240_93ACD6A2_1
 sSUB__doc__ = """
 Subscribe to messages from RabbitMQ on a given topic:
 {{{
-  sub set [TARGET]      - set the target for subscribe, or to see the current target
+  sub get               - get the current target for subscribe; defaults to:
+                        the first value of default['lOnlineTargets'] in OTCmd2.ini
+  sub set TARGET        - set the target for subscribe, must be one of:
+                        the values of default['lOnlineTargets'] in OTCmd2.ini
   sub config            - configure the current target for subscribe: [KEY [VAL]]
-  sub topics            - shows topics subscribed to.
   sub run TOPIC1 ...    - start a thread to listen for messages,
                           TOPIC is one or more Rabbit topic patterns.
+  sub topics            - shows topics subscribed to.
   sub hide TOPIC        - stop seeing TOPIC messages (e.g. tick - not a pattern)
   sub show              - list the message topics that are being hidden
   sub show TOPIC        - start seeing TOPIC messages (e.g. tick - not a pattern)
@@ -102,7 +109,9 @@ section of the {{{OTCmd2.ini}}} file; see the {{{-c/--config}}} command-line opt
 sPUB__doc__ = """
 Publish a message via RabbitMQ to a given chart on a OTMql4Py enabled terminal:
 {{{
-  pub set [TARGET]          - set the target for publish, or to see the current target
+  pub get                   - get the current target for publish; defaults to:
+                            the first value of default['lOnlineTargets'] in OTCmd2.ini
+  pub set TARGET            - set the target for publish, 
   pub config                - configure the current target for publish: [KEY [VAL]]
   pub cmd  COMMAND ARG1 ... - publish a Mql command to Mt4,
       the command should be a single string, with a space seperating arguments.
@@ -252,9 +261,10 @@ class CmdLineApp(Cmd):
         self.oBt = None
         self._G = None
 
-        # we may need to add to import PikaChart
-        if self.oOptions.sMt4Dir:
-            sMt4Dir = os.path.expanduser(os.path.expandvars(self.oOptions.sMt4Dir))
+        # we will need to add to import PikaChart
+        sMt4Dir = oConfig['default']['sMt4Dir']
+        if sMt4Dir:
+            sMt4Dir = os.path.expanduser(os.path.expandvars(sMt4Dir))
             if not os.path.isdir(sMt4Dir):
                 self.vWarn("sMt4Dir not found: " + sMt4Dir)
             else:
@@ -341,9 +351,9 @@ class CmdLineApp(Cmd):
         
         _lCmds = ['url', 'resample'] # read plot?
         lArgs = oArgs.split()
-        assert len(lArgs) > 1, "ERROR: " +sDo +" " +str(_lCmds)
         sDo = lArgs[0]
-        assert sDo in _lCmds, "ERROR: " +sDo +" choose one of: " +str(_lCmds)
+        assert len(lArgs) > 1 and sDo in _lCmds, \
+               "ERROR: " +sDo +" choose one of: " +str(_lCmds)
         
         # o oConfig sHistoryDir:
 
@@ -381,6 +391,8 @@ class CmdLineApp(Cmd):
              )
     def do_chart(self, oArgs, oOpts=None):
         __doc__ = sCHART__doc__
+
+        _lCmds = ['get', 'set', 'list']
         if not oArgs:
             self.vOutput("Chart operations are required\n" + __doc__)
             return
@@ -388,23 +400,6 @@ class CmdLineApp(Cmd):
         sDo = lArgs[0]
 
         # get the default chart to be published or subscribed to.
-        if sDo == 'get':
-            self.vOutput(self.G(self.sDefaultChart))
-            self.vOutput("The default chart is: " +self.sDefaultChart)
-            return
-
-        # set the default chart ID to be published or subscribed to.
-        if sDo == 'set':
-            if len(lArgs) > 1:
-                self.sDefaultChart = self.G(lArgs[1])
-                self.vOutput("The default chart is set to: " +lArgs[1])
-            elif self.oListenerThread and self.oListenerThread.lCharts:
-                self.sDefaultChart = self.G(self.oListenerThread.lCharts[-1])
-                self.vOutput("The default chart is: " +self.sDefaultChart)
-            else:
-                self.vWarn("No default charts available; do 'sub run' first")
-            return
-
         # all the charts the listener has heard of,
         if sDo == 'list':
             if self.oListenerThread is None:
@@ -413,53 +408,62 @@ class CmdLineApp(Cmd):
                 self.vOutput(repr(self.G(self.oListenerThread.lCharts)))
             return
         
+        if sDo == 'get' or (sDo == 'set' and len(lArgs) == 1):
+            if self.sDefaultChart:
+                self.vOutput("The default chart is: " +self.sDefaultChart)
+            elif self.oListenerThread and self.oListenerThread.lCharts:
+                self.sDefaultChart = self.G(self.oListenerThread.lCharts[-1])
+                self.vOutput("The default chart is: " +self.sDefaultChart)
+            else:
+                self.vWarn("No default charts available; do 'sub run' first")
+                return
+            self.G(self.sDefaultChart)
+            return
+
+        assert len(lArgs) > 1, \
+            "ERROR: Commands to chart (and arguments) are required"
+        
+        # set the default chart ID to be published or subscribed to.
+        if sDo == 'set':
+            self.sDefaultChart = self.G(lArgs[1])
+            self.vOutput("The default chart is set to: " +lArgs[1])
+            return
+        
         self.vError("Unrecognized chart command: " + str(oArgs) +'\n' +__doc__)
 
     ## subscribe
-    @options([make_option("-c", "--chart",
-                            dest="sChartId",
-                            help="the target chart to subscribe to"),
-              ],
+    @options([],
              arg_desc="command",
              usage=sSUB__doc__,
              )
     def do_subscribe(self, oArgs, oOpts=None):
         __doc__ = sSUB__doc__
+        _lCmds = ['get', 'set', 'config', 'topics', 'run', 'thread'', hide', 'show', 'pprint']
+        
         if not oArgs:
-            self.vOutput("Commands to subscribe (and arguments) are required\n" + __doc__)
-            return
-        
-        lArgs = oArgs.split()
-        sDo = lArgs[0]
-        
-        # set the target for subscribe, or to see the current target
-        if sDo == 'set':
-            # Set the target for subscribe - call without args to see the current target
-            if self.oCurrentSubTarget is None:
-                assert self.oConfig['default']['lOnlineTargets'], \
-                       "ERROR: empty self.oConfig['default']['lOnlineTargets']"
-            
-            if len(lArgs) == 1:
-                if self.oCurrentSubTarget is None:
-                    sCurrentSubTarget = self.oConfig['default']['lOnlineTargets'][0]
-                    assert sCurrentSubTarget in self.oConfig.keys(), \
-                           "ERROR: sCurrentSubTarget not found: " + sCurrentSubTarget
-                    self.oCurrentSubTarget = self.oConfig[sCurrentSubTarget]
-                    self.oCurrentSubTarget.name = sCurrentSubTarget
-                else:
-                    sCurrentSubTarget = self.oCurrentSubTarget.name
-                self.vOutput("The current subscribe target is: " +sCurrentSubTarget)
-                return
-            sTarget = lArgs[1]
-            assert sTarget in self.oConfig['default']['lOnlineTargets'], \
-                  "ERROR: " +sTarget +" not in " +repr(self.oConfig['default']['lOnlineTargets'])
-            assert sTarget in self.oConfig.keys(), \
-                   "ERROR: " +sTarget +" not in " +repr(self.oConfig.keys())
-            self.oCurrentSubTarget = self.oConfig[sTarget]
-            self.oCurrentSubTarget.name = sTarget
-            self.vOutput("Set target to: " + repr(self.G(sTarget)))
+            self.vOutput("Commands to subscribe (and arguments) are required\n")
             return
 
+        lArgs = oArgs.split()
+        sDo = lArgs[0]
+               
+        # set the target for subscribe, or to see the current target
+        if self.oCurrentSubTarget is None:
+            assert self.oConfig['default']['lOnlineTargets'], \
+                   "ERROR: empty self.oConfig['default']['lOnlineTargets']"
+
+        if sDo == 'get' or (sDo == 'set' and len(lArgs) == 1):
+            if self.oCurrentSubTarget is None:
+                sCurrentSubTarget = self.oConfig['default']['lOnlineTargets'][0]
+                assert sCurrentSubTarget in self.oConfig.keys(), \
+                       "ERROR: ini section not found: " + sCurrentSubTarget
+                self.oCurrentSubTarget = self.oConfig[sCurrentSubTarget]
+                self.oCurrentSubTarget.name = sCurrentSubTarget
+            else:
+                sCurrentSubTarget = self.oCurrentSubTarget.name
+            self.vOutput("The current subscribe online target is: " +sCurrentSubTarget)
+            return
+            
         # configure the current target for subscribe: [KEY [VAL]]
         if sDo == 'config':
             # configure the current target for subscribe:  [KEY [VAL]]
@@ -480,12 +484,6 @@ class CmdLineApp(Cmd):
                 self.vOutput("Default lTopics: " + repr(self.G(self.lTopics)))
             return
 
-        # remove thos opt?
-        if oOpts and oOpts.sChartId:
-            sChartId = oOpts.sChartId
-        else:
-            sChartId = self.sDefaultChart
-
         if self.oCurrentSubTarget is None:
             self.vOutput("Use \"sub set\" to set the current target")
             return
@@ -493,6 +491,7 @@ class CmdLineApp(Cmd):
         assert 'sOnlineRouting' in self.oCurrentSubTarget.keys(), \
                "ERROR: " +sOnlineRouting + " not in " +repr(self.oCurrentSubTarget.keys())
         sOnlineRouting = self.oCurrentSubTarget['sOnlineRouting']
+        sChartId = self.sDefaultChart
         if sOnlineRouting == 'RabbitMQ':
             try:
                 # PikaListenerThread needs PikaMixin
@@ -510,6 +509,7 @@ class CmdLineApp(Cmd):
 
         # start a thread to listen for messages,
         if sDo == 'run':
+            from pika import exceptions
             
             if self.oListenerThread is not None:
                 self.vWarn("ListenerThread already listening to: " + repr(self.oListenerThread.lTopics))
@@ -517,7 +517,8 @@ class CmdLineApp(Cmd):
             try:
                 if len(lArgs) > 1:
                     self.lTopics = lArgs[1:]
-                self.vInfo("Starting ListenerThread listening to: " + repr(self.lTopics))
+                else:
+                    self.lTopics = ['']
                 dConfig = self.oConfig['RabbitMQ']
                 assert 'sQueueName' in dConfig, \
                        "ERROR: sQueueName not in dConfig"
@@ -525,9 +526,26 @@ class CmdLineApp(Cmd):
                                                                          self.lTopics,
                                                                          **dConfig)
                 self.oListenerThread.start()
+            except exceptions.AMQPConnectionError, e:
+                self.vError("Is the RabbitMQ server running?\n" +str(e))
+                raise
             except Exception, e:
                 self.vError(traceback.format_exc(10))
                 raise
+            return
+
+        assert len(lArgs) > 1, \
+            "ERROR: " +"Commands to subscribe (and arguments) are required"
+        
+        if sDo == 'set':
+            sTarget = lArgs[1]
+            assert sTarget in self.oConfig['default']['lOnlineTargets'], \
+                  "ERROR: " +sTarget +" not in " +repr(self.oConfig['default']['lOnlineTargets'])
+            assert sTarget in self.oConfig.keys(), \
+                   "ERROR: " +sTarget +" not in " +repr(self.oConfig.keys())
+            self.oCurrentSubTarget = self.oConfig[sTarget]
+            self.oCurrentSubTarget.name = sTarget
+            self.vOutput("Set target to: " + repr(self.G(sTarget)))
             return
 
         # thread info       - info on the thread listening for messages.
@@ -617,6 +635,7 @@ class CmdLineApp(Cmd):
              )
     def do_publish(self, oArgs, oOpts=None):
         __doc__ = sPUB__doc__
+        _lCmds = ['get', 'set', 'config', 'wait', 'cmd',] # 'eval', 'json'
         if not oArgs:
             self.vOutput("Commands to publish (and arguments) are required\n" + __doc__)
             return
@@ -624,22 +643,40 @@ class CmdLineApp(Cmd):
         lArgs = oArgs.split()
         sDo = lArgs[0]
 
+        if self.oCurrentPubTarget is None:
+            assert self.oConfig['default']['lOnlineTargets'], \
+                "ERROR: empty self.oConfig['default']['lOnlineTargets']"
+            
         # Set the target for subscribe - call without args to see the current target
-        if sDo == 'set':            
+        if sDo == 'get' or (sDo == 'set' and len(lArgs) == 1):
+            if self.oCurrentPubTarget is None:
+                sCurrentPubTarget = self.oConfig['default']['lOnlineTargets'][0]
+                assert sCurrentPubTarget in self.oConfig.keys(), \
+                       "ERROR: sCurrentPubTarget not in self.oConfig: " + sCurrentPubTarget
+                self.oCurrentPubTarget = self.oConfig[sCurrentPubTarget]
+                self.oCurrentPubTarget.name = sCurrentPubTarget
+            else:
+                sCurrentPubTarget = self.oCurrentPubTarget.name
+            self.vOutput("The current publish target is: " +sCurrentPubTarget)
+            return
+        
+        # configure the current target for subscribe:  [KEY [VAL]]
+        if sDo == 'config':
             if self.oCurrentPubTarget is None:
                 assert self.oConfig['default']['lOnlineTargets'], \
                        "ERROR: empty self.oConfig['default']['lOnlineTargets']"
-            if len(lArgs) == 1:
-                if self.oCurrentPubTarget is None:
-                    sCurrentPubTarget = self.oConfig['default']['lOnlineTargets'][0]
-                    assert sCurrentPubTarget in self.oConfig.keys(), \
-                           "ERROR: sCurrentPubTarget not in self.oConfig"
-                    self.oCurrentPubTarget = self.oConfig[sCurrentPubTarget]
-                    self.oCurrentPubTarget.name = sCurrentPubTarget
-                else:
-                    sCurrentPubTarget = self.oCurrentPubTarget.name
-                self.vOutput("The current publish target is: " +sCurrentPubTarget)
+                l = self.oConfig['default']['lOnlineTargets']
+                self.vOutput("Use \"pub set\" to set the current target to one of: " + repr(l))
                 return
+            # do I need to dict this or make an ConfigObj version?
+            self.vConfigOp(lArgs, self.oCurrentPubTarget)
+            return
+
+        # everything beyond here requires an argument
+        assert len(lArgs) > 1, \
+            "ERROR: pub " +sDo +" COMMAND ARG1..."
+        
+        if sDo == 'set':            
             sTarget = lArgs[1]
             assert sTarget in self.oConfig['default']['lOnlineTargets'], \
                    "ERROR: " +sTarget +" not in self.oConfig['default']['lOnlineTargets']"
@@ -650,20 +687,6 @@ class CmdLineApp(Cmd):
             self.vOutput("Set publish target to: " + repr(self.G(sTarget)))
             return
 
-        # configure the current target for subscribe:  [KEY [VAL]]
-        if sDo == 'config':
-            if self.oCurrentPubTarget is None:
-                assert self.oConfig['default']['lOnlineTargets'], \
-                       "ERROR: empty self.oConfig['default']['lOnlineTargets']"
-                l = self.oConfig['default']['lOnlineTargets']
-                self.vOutput("Use \"sub set\" to set the current target to one of: " + repr(l))
-                return
-            # do I need to dict this or make an ConfigObj version?
-            self.vConfigOp(lArgs, self.oCurrentPubTarget)
-            return
-
-        # everything beyond here requires an argument
-        assert len(lArgs) > 1, "ERROR: pub " +sDo +" COMMAND ARG1..."
         # sMark is a simple timestamp: unix time with msec.
         sMark = sMakeMark()
         if oOpts and oOpts.sChartId:
@@ -710,31 +733,29 @@ class CmdLineApp(Cmd):
     do_pub = do_publish
 
     ## order
-    @options([make_option("-c", "--chart",
-                          dest="sChartId",
-                          help="the target chart to order with (or: ANY ALL NONE)"),
-              ],
+    @options([],
              arg_desc="command",
              usage=sORD__doc__,
              )
     def do_order(self, oArgs, oOpts=None):
         __doc__ = sORD__doc__
+        _lCmds = ['list', 'trades', 'history', 'info', 'exposure', 'close', 'but', 'sell']
         if not oArgs:
-            self.vOutput("Commands to order (and arguments) are required\n" + __doc__)
+            self.vOutput("Commands to order (and arguments) are required\n" + _lCmds)
             return
+        
         if self.oListenerThread is None:
-            self.vError("ListenerThread not started; use 'sub run ...'")
+            self.vError("ListenerThread not started; use 'sub run retval.#'")
             return
 
-        if oOpts and oOpts.sChartId:
-            sChartId = oOpts.sChartId
-        else:
-            sChartId = self.sDefaultChart
+        sChartId = self.sDefaultChart
         # sMark is a simple timestamp: unix time with msec.
         sMark = sMakeMark()
 
         lArgs = oArgs.split()
         sDo = lArgs[0]
+        assert sDo in _lCmds, \
+               "ERROR: choose one of: " +str(_lCmds)
         
         if sDo == 'list' or sDo == 'tickets':
             sMsgType = 'cmd' # Mt4 command
@@ -839,6 +860,8 @@ class CmdLineApp(Cmd):
              )
     def do_backtest(self, oArgs, oOpts=None):
         __doc__ = sBAC__doc__
+        _lCmds = ['omlette', 'feed', 'recipe', 'chef', 'servings', 'plot']
+ 
         # might let it import to list recipes and chefs?
         try:
             import pybacktest
@@ -850,6 +873,11 @@ class CmdLineApp(Cmd):
         if not oArgs:
             self.vOutput("Commands to backtest (and arguments) are required\n" + __doc__)
             return
+        lArgs = oArgs.split()
+        sDo = lArgs[0]
+        assert len(lArgs) > 1 and sDo in _lCmds, \
+               "ERROR: " +sDo +" choose one of: " +str(_lCmds)
+        
         try:
             # use ConfigObj update
             if oOpts.sRecipe:
@@ -995,9 +1023,18 @@ def oParseOptions():
     oArgParser.add_argument('-c', '--config',
                             dest='sConfigFile', default="OTCmd2.ini",
                             help='Config file for OTCmd2 options')
+    #? as a convenience we let arguments from the [default] section
+    #? of the ini file be overridden from the command line
+    #? we default these to "" so that the config file takes precedence
     oArgParser.add_argument("-P", "--mt4dir", action="store",
                             dest="sMt4Dir", default="",
                             help="directory for the installed Metatrader")
+    oArgParser.add_argument("-T", "--target", action="store",
+                            dest="sOnlineTarget", default="",
+                            help="ini section name with the routing and target")
+    oArgParser.add_argument("-R", "--timeout", action="store",
+                            dest="iRetvalTimeout", type=int, default=0,
+                            help="Timeout for waiting for a retval from publishing to Mt4")
     #? sOmlettesDir
     #? matplotlib_use?
     oArgParser.add_argument('lArgs', action="store",
@@ -1015,8 +1052,28 @@ def oParseConfig(sConfigFile):
         assert os.path.isfile(sConfigFile), "Configuration file not found: " + sConfigFile
     return ConfigObj(sConfigFile, unrepr=True)
 
+def oMergeConfig(oConfig, oOptions):
+    """
+    # FixMe: merge the arguments into the [OTCmd2] section of the configFile
+    #? If so use update on the config object with the options.__dict__
+    """
+    # do it manually for now
+    for sKey in ['sMt4Dir', 'sOnlineTarget', 'iRetvalTimeout']:
+        if hasattr(oOptions, sKey):
+            gValue = getattr(oOptions, sKey)
+            # skip null values for now
+            if not gValue: continue
+            if sKey == 'sOnlineTarget':
+                oConfig['default']['lOnlineTargets'] = [gValue]
+            else:
+                oConfig['default'][sKey] = gValue
+            # del?
+        else:
+            print "WARN: unrecognized oConfig key: " +sKey
+    return oConfig
+
+
 def iMain():
-    from pika import exceptions
 
     oArgParser = oParseOptions()
     oOptions = oArgParser.parse_args()
@@ -1027,12 +1084,12 @@ def iMain():
         unittest.main()
         return 0
 
-    # FixMe: merge the arguments into the [OTCmd2] section of the configFile
     sConfigFile = oOptions.sConfigFile
 
     oApp = None
     try:
         oConfig = oParseConfig(sConfigFile)
+        oConfig = oMergeConfig(oConfig, oOptions)
         oApp = CmdLineApp(oConfig, oOptions, lArgs)
         if lArgs:
             initial_command = ' '.join(lArgs)
@@ -1049,6 +1106,7 @@ def iMain():
         
         # failsafe
         if hasattr(oApp, 'oChart') and oApp.oChart:
+            from pika import exceptions
             try:
                 sys.stdout.write("DEBUG: Waiting for message queues to flush...\n")
                 oApp.oChart.bCloseConnectionSockets()
@@ -1059,7 +1117,7 @@ def iMain():
                 pass
         l = threading.enumerate()
         if len(l) > 1:
-            print "Threads still running: %r" % (l,)
+            print "WARN: Threads still running: %r" % (l,)
 
 if __name__ == '__main__':
     iMain()

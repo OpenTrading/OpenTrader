@@ -4,7 +4,7 @@
 # the RabbitMQ server configured and running.
 set echo True
 # set the on-line target to be the default from OTCmd2.ini
-sub set
+sub get
 # set the on-line target to be the only one that works right now :-)
 sub set RabbitMQ
 # We need a listener thread running, subscribed to retval.#
