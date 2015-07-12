@@ -87,8 +87,8 @@ class SMARecipe(Recipe):
         assert isinstance(rShortMa, pandas.Series) and len(rShortMa)
         assert isinstance(rLongMa, pandas.Series) and len(rLongMa)
 
-        sys.stdout.write('>  Data MA length %d\n' % len(rShortMa))
-        sys.stdout.write('>  Date from: %s to: %s\n' % ( str(rShortMa.index[0]), str(rShortMa.index[-1]),))
+        self.oFd.write('INFO: Data MA length %d\n' % len(rShortMa))
+        self.oFd.write('INFO: Date from: %s to: %s\n' % ( str(rShortMa.index[0]), str(rShortMa.index[-1]),))
 
         rBuy = rCover = (rShortMa > rLongMa) & (rShortMa.shift() < rLongMa.shift())  # ma cross up
         rSell = rShort = (rShortMa < rLongMa) & (rShortMa.shift() > rLongMa.shift())  # ma cross down

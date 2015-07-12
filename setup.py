@@ -7,7 +7,12 @@ import sys
 import glob
 
 from setuptools import setup, find_packages
-
+try:
+# http://stackoverflow.com/questions/21698004/python-behave-integration-in-setuptools-setup-py
+    from setuptools_behave import behave_test
+except ImportError:
+    behave_test = None
+    
 dirname = os.path.dirname(__file__)
 
 long_description = (
@@ -41,6 +46,8 @@ setup(
     extras_require={'plotting': ["matplotlib"],
                     'pybacktest': ["pybacktest"],
                     'rabbit': ["pyrabbit"],
+                    'bdd': ["behave"],
+                    'zmq': ["zmq"],
                     },
     data_files=[('', ['README.md']),
                 ('OpenTrader', glob.glob('OpenTrader/*.ini')),
@@ -52,7 +59,8 @@ setup(
             "OTPpnAmgc = OpenTrader.OTPpnAmgc:iMain",
         ]
     },
-    tests_require=["pytest-bdd"],
+    tests_require=["behave>=1.2.4"],
+    cmdclass=behave_test and {"behave_test": behave_test,} or {},
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,

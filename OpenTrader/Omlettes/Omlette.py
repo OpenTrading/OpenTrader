@@ -15,7 +15,7 @@ import os
 from collections import OrderedDict
 import pandas
 
-from PandasMt4 import oReadMt4Csv
+from OpenTrader.PandasMt4 import oReadMt4Csv
 
 class Omlette(object):
     __fOmleteVersion__ = 1.0
@@ -66,7 +66,8 @@ class Omlette(object):
         return dFeedParams
     
     def oAddRecipe(self, sRecipe):
-        OmlettesPkg = __import__('Omlettes.'+sRecipe)
+        OpenTraderPkg = __import__('OpenTrader.Omlettes.'+sRecipe)
+        OmlettesPkg = getattr(OpenTraderPkg, 'Omlettes')
         RecipeModule = getattr(OmlettesPkg, sRecipe)
         RecipeKlass = getattr(RecipeModule, sRecipe)
         self.oRecipe = RecipeKlass()
@@ -78,7 +79,8 @@ class Omlette(object):
         return self.oRecipe
     
     def oAddChef(self, sChef):
-        OmlettesPkg = __import__('Omlettes.'+sChef)
+        OpenTraderPkg = __import__('OpenTrader.Omlettes.'+sChef)
+        OmlettesPkg = getattr(OpenTraderPkg, 'Omlettes')
         self.oChefModule = getattr(OmlettesPkg, sChef)
         # self.sChef = sChef
         self.oChefModule.sChef = sChef

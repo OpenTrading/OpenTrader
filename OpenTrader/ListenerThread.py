@@ -109,10 +109,12 @@ class ListenerThread(threading.Thread):
                 sys.stdout.write("WARN: vCallbackOnListener unrecognized sMsgType: %r\n" % (sBody, ))
                 return
 
-            # may need more info here - chart and sMark
+            # may need to print more info here - chart and sMark
             if sMsgType == 'retval':
-                # you really need sMark for retval
-                self.vPprint(sMsgType, gPayload, "INFO: [" +sMark +"] ")
+                # FixMe: not sure where these None are coming from
+                if gPayload is not None:
+                    # you really need sMark for retval
+                    self.vPprint(sMsgType, gPayload, "INFO: [" +sMark +"] ")
             else:
                 self.vPprint(sMsgType, gPayload)
         except Exception, e:

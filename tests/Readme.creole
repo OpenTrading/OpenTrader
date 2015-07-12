@@ -2,10 +2,75 @@
 
 [[UseCases]] are the starting point for our Behaviour Driven Development (BDD).
 The use cases are elaborated into required feature need to fulfil
-the use case, which are turned into BDD test features and scenarios using
-[[py-bdd|https://github.com/pytest-dev/pytest-bdd/]].
+the use case, which are turned into BDD test features and scenarios.
 
 The currently documented features can be found in the 
 [[tests/features/|https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/]]
 directory of the distribution.
 
+We have been using [[py-bdd|https://github.com/pytest-dev/pytest-bdd/]]; from
+the top-level directory of the distribution, you could run the {{{py-bdd}}} tests with
+{{{
+py.test -v tests/
+}}}
+
+But we are having "issues" with {{{py-bdd}}}, including:
+* no real documentation, just a README file;
+* the code contradicts the documentation, about not reusing paraterized steps;
+* the automatic generation of fixtures from step implmentations is too "magical"
+  for our tastes - we would like fixtures to be explicitly declared with a decorator;
+* it is inspired by {{{behave}}}, but with a number of design decisions that differ,
+  such as enforcing a step type with the name, which are largely undocumented;
+
+We will stay with [[behave|https://github.com/behave/behave]] as our BDD system
+and watch the evolution of the two projects. Behave is stable, not overengineered,
+evolving well, and the code is easy to money-patch or experiment with new features.
+The most important thing is to have the BDD use-case decision process for development,
+and to use the BDD feature files to document the implementation of the use-cases.
+We additionally use them to generate our examples, and our wiki pages: triple use!
+
+From the top-level directory of the distribution, you could run the {{{behave}}} BDD
+tests with:
+{{{
+behave -v --capture tests/
+}}}
+({{{--capture}}} is enabled by default, but you can't use {{{--no-capture}}}.)
+
+This will create a directory at the top-level directory of the distribution
+called {{{tmp}}} where the BDD tests generate the scripts in {{{share/examples}}}.
+We generate our example scripts from the BDD documentation, and the generated
+example scripts should be identical with the scripts in {{{share/examples}}}.
+
+We no longer run the tests with {{{pytest-bdd}}} so there may be problems
+running them now, but the systems are so similar, it is usually easy to bring
+implementations from {{{behave}}} to {{{pytest-bdd}}}. All Features that did
+run with {{{pytest-bdd}}} are marked with the {{{@pytest}}} tag, and should still run,
+but new features and scenari may not be picked up by the {{{pytest-bdd}}} runner.
+
+=== Features Test Tags
+
+Features are tagged with these tags, that may have the preconditions:
+
+* @rabbitctl - requires you have pyrabbit installed:
+    http://pypi.python.org/pypi/pyrabbit
+    and have the 'rabbitmq_management' plugin to rabbitmq enabled,
+    and the rabbitmq server running.
+* @examples  - generates share/examples files
+
+* @pybacktest - should run under {{{pytest-bdd}}} as well as behave.
+
+* @Mt4Running - tests will only work if you have an OTMql4AMQP enabled Metatrader running,
+
+* @OTMql4AMQP - tests will only work if you have an OTMql4AMQP enabled Metatrader running,
+    the Experts/OTMql4/OTPyTestPikaEA.mq4 attached to a chart in it, and
+    the RabbitMQ server configured and running.
+
+* @Mt4Connected -  all of the above AND the Mt4 is logged in and connected.
+
+* @examples - generates examples script files
+
+* @pytest - should run under {{{pytest-bdd}}} as well as behave.
+
+* @wip        - work-in-progress - may or may not work
+* @fixme      - work-in-progress - probably won't not work
+* @broken     - work-in-progress - won't not work

@@ -28,7 +28,7 @@ class PikaListenerThread(ListenerThread, PikaListener.PikaMixin):
     def run(self):
         from pika import exceptions
 
-        sys.stdout.write("Starting ListenerThread listening to: " + repr(self.lTopics) +"\n")
+        sys.stdout.write("Starting Pika ListenerThread listening to: " + repr(self.lTopics) +"\n")
         # eBindBlockingListener
         self.vPyRecvOnListener(self.sQueueName, self.lTopics)
         self._running.set()
@@ -73,3 +73,4 @@ if __name__ == '__main__':
         if o:
             o.stop()
             o.join()
+        print threading.enumerate()

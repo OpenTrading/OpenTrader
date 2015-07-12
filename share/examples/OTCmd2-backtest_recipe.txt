@@ -1,14 +1,17 @@
+# See the description in tests/features/OTCmd2-backtest_recipe.txt
 # These tests will only work if you have pybacktest installed:
 # https://github.com/ematvey/pybacktest
-# You dont need to have a listener thread running
+# echo the commands from the script so that we can watch the progress
 set echo True
 # list the known recipes
 back recipe list
 py assert len(self._G) > 0
 # show the current recipe
 back recipe set
+py assert len(self._G) > 0
 # set the current recipe
 back recipe set SMARecipe
+py assert len(self._G) > 0
 # show the current recipe config
 back recipe config
 py assert len(self._G) > 0
@@ -22,6 +25,7 @@ py assert 'fRecipeVersion' in self._G
 py assert 'lRequiredFeedParams' in self._G
 py assert 'lRequiredDishesParams' in self._G
 py assert 'lRequiredIngredientsParams' in self._G
+# show the current recipe config sections
 back recipe config
 py assert len(self._G) > 0
 py assert 'mFeedOhlc' in self._G

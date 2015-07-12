@@ -1,9 +1,15 @@
+# See the description in tests/features/OTCmd2-backtest_omlette.txt
 # These tests will only work if you have pybacktest installed:
 # https://github.com/ematvey/pybacktest
 # You dont need to have a listener thread running
+#
 # These tests will only work if you have created a CSV file /tmp/EURUSD60-2014.csv
+# echo the commands from the script so that we can watch the progress
 set echo True
+py assert os.path.exists("tmp/EURUSD60-2014.csv")
+# save the results of this backtest
 back omlette open tmp/EURUSD60-2014.hdf
+# check that the omlette HDF5 file is valid
 back omlette check
 # read a CSV file from Mt4
 back feed read_mt4_csv tmp/EURUSD60-2014.csv EURUSD 60 2014
@@ -23,13 +29,20 @@ back chef set PybacktestChef
 back recipe ingredients
 # cook the recipe by the chef
 back chef cook
-# This should be done in this order
+# This should be done in this order:
+# show the list of servings
 back servings list
+# show the signals
 back servings signals
+# show the trades
 back servings trades
+# show the positions
 back servings positions
+# show the equity
 back servings equity
+# show the trade_price
 back servings trade_price
+# show the reviews
 back servings reviews
 # display gives a complete listing of the contents of the HDF file
 back omlette display

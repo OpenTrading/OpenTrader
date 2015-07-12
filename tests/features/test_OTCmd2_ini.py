@@ -4,7 +4,6 @@ from pytest_bdd import scenario, given, when, then
 from pytest_bdd.parsers import parse as p
 from pytest_bdd.parsers import cfparse as cf
 
-import OpenTrader
 from OpenTrader import OTCmd2
 
 @scenario('OTCmd2_ini.feature', 'Settings for OTCmd2 are in a configobj .ini file')

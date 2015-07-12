@@ -1,28 +1,35 @@
-#  These are some simple examples of commands that dont need any
-#  arguments, and return their results in JSON
-#
+# See the description in tests/features/OTCmd2-pub_wait-jOT.txt
 # These tests will only work if you have an OTMql4AMQP enabled Metatrader running,
 # the Experts/OTMql4/OTPyTestPikaEA.mq4 attached to a chart in it, and
 # the RabbitMQ server configured and running.
+# echo the commands from the script so that we can watch the progress
 set echo True
-# set the on-line target to be the default from OTCmd2.ini
+# show the on-line targets from OTCmd2.ini
 sub get
-# set the on-line target to be the only one that works right now :-)
+# set the on-line target
 sub set RabbitMQ
 # We need a listener thread running, subscribed to retval.#
 sub run retval.# timer.#
+# load the python time module
 py import time
+# sleep for 15 seconds
 py time.sleep(15)
 # get the list of charts we have seen because of listening to the timer
 chart list
 py assert type(self._G) == list and len(self._G) > 0
 # set the default chart to the first of list of charts we have seen
 chart set
-# check the default chart 
+# check the default chart
 chart get
 py assert type(self._G) == str and len(self._G) > 0
+# set the on-line speaker target
+pub set RabbitMQ
+# wait for the retval from Mt4
 pub wait jOTAccountInformation
+# wait for the retval from Mt4
 pub wait jOTOrdersTickets
+# wait for the retval from Mt4
 pub wait jOTOrdersHistory
+# wait for the retval from Mt4
 pub wait jOTOrdersTrades
 exit

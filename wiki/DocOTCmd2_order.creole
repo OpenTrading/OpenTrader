@@ -1,27 +1,8 @@
 === OTCmd2 order
-
-Manage orders in an OTMql4AQMp enabled Metatrader:
-{{{
-  ord list          - list the ticket numbers of current orders.
-  ord info iTicket  - list the current order information about iTicket.
-  ord trades        - list the details of current orders.
-  ord history       - list the details of closed orders.
-  ord close iTicket [fPrice iSlippage]            - close an order;
-                    Without the fPrice and iSlippage it will be a market order.
-  ord buy|sell sSymbol fVolume [fPrice iSlippage] - send an order to open;
-                    Without the fPrice and iSlippage it will be a market order.
-  ord stoploss
-  ord trail
-  ord exposure      - total exposure of all orders, worst case scenario
-}}}
-
-{{{
-Usage: order [options] command
-
-Options:
-  -h, --help            show this help message and exit
-  -c SCHARTID, --chart=SCHARTID
-                        the target chart to order with (or: ANY ALL NONE)
+Traceback (most recent call last):
+  File "OpenTrader/OTCmd2.py", line 1140, in iMain
+    oApp.onecmd_plus_hooks(' '.join(lArgs) +'\n')
+NameError: global name 'lArgs' is not defined
 
 DEBUG: atexit
 }}}

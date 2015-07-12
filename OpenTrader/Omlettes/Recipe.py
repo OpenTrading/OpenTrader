@@ -145,7 +145,7 @@ class Recipe(object):
             mSignals.index).ffill().shift().fillna(value=0)
         p = p[p != p.shift()]
         assert p.index.tz == rTradePrice.index.tz, \
-               "Cant operate on signals and prices " + \
+               "ERROR: Cant operate on signals and prices " + \
                "indexed as of different timezones"
         mTrades = pandas.DataFrame({'pos': p})
         mTrades['price'] = rTradePrice

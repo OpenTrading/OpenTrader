@@ -3,15 +3,15 @@
 Use-cases are the starting point for our Behaviour Driven Development (BDD).
 The use-cases are elaborated into required feature need to fulfil
 the use-case, which are turned into BDD test features and scenarios using
-[[py-bdd|https://github.com/pytest-dev/pytest-bdd/]], and is well documented at:
-https://readthedocs.org/projects/pytest-bdd/
-
-{{{pytest-bdd}}} is inspired by [[behave|http://pypi.python.org/pypi/behave]],
-and uses similar conventions in writing feature files. Behave is well documented at:
+[[behave|http://pypi.python.org/pypi/behave]]. {{{behave}}} is well documented at:
 http://pythonhosted.org/behave/ and has a good page describing the philosophy of 
 [[behavior-driven development|http://pythonhosted.org/behave/philosophy.html]],
 something we have strongly benefited from. Broader 
 Ideas are usually collected on the [[RoadMap]] before being elaborated into use-cases.
+
+We also have tried [[py-bdd|https://github.com/pytest-dev/pytest-bdd/]] which
+is inspired by {{{behave}}} and uses similar conventions in writing feature files,
+but we are having some issues with {{{pytest-bdd}}}: see [[Testing]].
 
 Use-cases proceed to getting fleshed out as features. Features that are implemented
 as commands in [[OTCmd2|DocOTCmd2]] also have tests as examples: see [[TestsExamples]].

@@ -261,7 +261,7 @@ class CmdLineApp(Cmd):
         self.oBt = None
         self._G = None
 
-        # we will need to add to import PikaChart
+        # we will need to add to import PikaChart or ZmqChart
         sMt4Dir = oConfig['default']['sMt4Dir']
         if sMt4Dir:
             sMt4Dir = os.path.expanduser(os.path.expandvars(sMt4Dir))
@@ -302,7 +302,6 @@ class CmdLineApp(Cmd):
         
     def eSendMessage(self, sMsgType, sMark, sChartId, *lArgs):
         sMsg = sFormatMessage(sMsgType, sMark, sChartId, *lArgs)
-        self.vInfo("Publishing: " +sMsg)
         e = self.eSendOnSpeaker(sChartId, sMsgType, sMsg)
         self.dLastCmd[sChartId] = sMsg
         return e
@@ -314,7 +313,7 @@ class CmdLineApp(Cmd):
 
         Raising an error lets us return None as a return value.
         The protocol talking to Mt4 has the void return type,
-        which gRetvalToPython in PikaListenerThread.py returns as None.
+        which gRetvalToPython returns as None.
         """
         self.eSendMessage(sMsgType, sMark, sChartId, *lArgs)
         i = 0
@@ -332,13 +331,31 @@ class CmdLineApp(Cmd):
         raise Mt4Timeout("No retval returned in " +str(iTimeout) +" seconds")
 
     def eSendOnSpeaker(self, sChartId, sMsgType, sMsg):
-        from OTMql427 import PikaListener
-        if self.oListenerThread is None:
+        if sMsgType == 'cmd' and self.oListenerThread is None:
             self.vWarn("ListenerThread not started; you will not see the retval")
+        if self.oCurrentPubTarget is None:
+            sErr = "PubTarget not set; use \"pub set\""
+            self.vError(sErr)
+            return sErr
+        
+        # self.oCurrentPubTarget is a ConfigObj section: disctionary-like
+        assert 'sOnlineRouting' in self.oCurrentPubTarget
+        assert self.oCurrentPubTarget['sOnlineRouting']
+        sOnlineRouting = self.oCurrentPubTarget['sOnlineRouting']
         if not self.oChart:
-            # FixMe: refactor for multiple charts
-            self.oChart = PikaListener.PikaMixin(sChartId, **self.oConfig['RabbitMQ'])
-        # if sMsgType == 'cmd': warn if not Mt4 connected?
+            if sOnlineRouting == 'RabbitMQ':
+                from OTMql427 import PikaListener
+                # FixMe: refactor for multiple charts
+                self.oChart = PikaListener.PikaMixin(sChartId, **self.oCurrentPubTarget)
+            elif sOnlineRouting == 'ZeroMQ':
+                from OTMql427 import ZmqListener
+                # FixMe: refactor for multiple charts
+                self.oChart = ZmqListener.ZmqMixin(sChartId, **self.oCurrentPubTarget)
+            else:
+                raise RuntimeError("sOnlineRouting value in %s section of Cmd2.ini not supported" % (
+                    sOnlineRouting,))
+
+        self.vInfo("Publishing via " +sOnlineRouting +": " +sMsg)
         return(self.oChart.eSendOnSpeaker(sMsgType, sMsg))
 
     ## csv
@@ -454,9 +471,14 @@ class CmdLineApp(Cmd):
 
         if sDo == 'get' or (sDo == 'set' and len(lArgs) == 1):
             if self.oCurrentSubTarget is None:
-                sCurrentSubTarget = self.oConfig['default']['lOnlineTargets'][0]
-                assert sCurrentSubTarget in self.oConfig.keys(), \
-                       "ERROR: ini section not found: " + sCurrentSubTarget
+                l = self.oConfig['default']['lOnlineTargets']
+                for sElt in l:
+                    assert sElt in self.oConfig.keys(), \
+                           "ERROR: ini section not found: " + sCurrentSubTarget
+                if len(l) > 1:
+                    self.vOutput("The subscribe online targets available are: " +repr(l))
+                    return
+                sCurrentSubTarget = l[0]
                 self.oCurrentSubTarget = self.oConfig[sCurrentSubTarget]
                 self.oCurrentSubTarget.name = sCurrentSubTarget
             else:
@@ -471,7 +493,7 @@ class CmdLineApp(Cmd):
                 assert self.oConfig['default']['lOnlineTargets'], \
                        "ERROR: empty self.oConfig['default']['lOnlineTargets']"
                 l = self.oConfig['default']['lOnlineTargets']
-                self.vOutput("Use \"sub set\" to set the current target to one of: " + repr(l))
+                self.vError("Use \"sub set\" to set the current target to one of: " + repr(l))
                 return
             self.vConfigOp(lArgs, self.oCurrentSubTarget)
             return
@@ -484,60 +506,9 @@ class CmdLineApp(Cmd):
                 self.vOutput("Default lTopics: " + repr(self.G(self.lTopics)))
             return
 
-        if self.oCurrentSubTarget is None:
-            self.vOutput("Use \"sub set\" to set the current target")
-            return
-        
-        assert 'sOnlineRouting' in self.oCurrentSubTarget.keys(), \
-               "ERROR: " +sOnlineRouting + " not in " +repr(self.oCurrentSubTarget.keys())
-        sOnlineRouting = self.oCurrentSubTarget['sOnlineRouting']
-        sChartId = self.sDefaultChart
-        if sOnlineRouting == 'RabbitMQ':
-            try:
-                # PikaListenerThread needs PikaMixin
-                import PikaListenerThread as ListenerThread
-            except ImportError, e:
-                self.vError("Cant import PikaChart: add the MQL4/Python directory to PYTHONPATH? " +str(e))
-                raise
-            except Exception, e:
-                self.vError(traceback.format_exc(10))
-                raise
-            sQueueName = self.oCurrentSubTarget['sQueueName']
-        else:
-            raise RuntimeError("sOnlineRouting value in %s section of Cmd2.ini not supported" % (
-                        sOnlineRouting,))
-
-        # start a thread to listen for messages,
-        if sDo == 'run':
-            from pika import exceptions
-            
-            if self.oListenerThread is not None:
-                self.vWarn("ListenerThread already listening to: " + repr(self.oListenerThread.lTopics))
-                return
-            try:
-                if len(lArgs) > 1:
-                    self.lTopics = lArgs[1:]
-                else:
-                    self.lTopics = ['']
-                dConfig = self.oConfig['RabbitMQ']
-                assert 'sQueueName' in dConfig, \
-                       "ERROR: sQueueName not in dConfig"
-                self.oListenerThread = ListenerThread.PikaListenerThread(sChartId,
-                                                                         self.lTopics,
-                                                                         **dConfig)
-                self.oListenerThread.start()
-            except exceptions.AMQPConnectionError, e:
-                self.vError("Is the RabbitMQ server running?\n" +str(e))
-                raise
-            except Exception, e:
-                self.vError(traceback.format_exc(10))
-                raise
-            return
-
-        assert len(lArgs) > 1, \
-            "ERROR: " +"Commands to subscribe (and arguments) are required"
-        
         if sDo == 'set':
+            assert len(lArgs) > 1, \
+                   "ERROR: " +"Commands to subscribe (and arguments) are required"
             sTarget = lArgs[1]
             assert sTarget in self.oConfig['default']['lOnlineTargets'], \
                   "ERROR: " +sTarget +" not in " +repr(self.oConfig['default']['lOnlineTargets'])
@@ -621,6 +592,57 @@ class CmdLineApp(Cmd):
                 self.oListenerThread.vPprint('set', bool(lArgs[1]))
             return
 
+        if self.oCurrentSubTarget is None:
+            self.vError("Use \"sub set\" to set the current target")
+            return
+        
+        assert 'sOnlineRouting' in self.oCurrentSubTarget.keys(), \
+               "ERROR: " +sOnlineRouting + " not in " +repr(self.oCurrentSubTarget.keys())
+        assert self.oCurrentSubTarget['sOnlineRouting']
+        sOnlineRouting = self.oCurrentSubTarget['sOnlineRouting']
+        sChartId = self.sDefaultChart
+        if sOnlineRouting == 'RabbitMQ':
+            try:
+                # PikaListenerThread needs PikaMixin
+                import PikaListenerThread as ListenerThread
+            except ImportError, e:
+                self.vError("Cant import PikaChart: add the MQL4/Python directory to PYTHONPATH? " +str(e))
+                raise
+            except Exception, e:
+                self.vError(traceback.format_exc(10))
+                raise
+            sQueueName = self.oCurrentSubTarget['sQueueName']
+        else:
+            raise RuntimeError("sOnlineRouting value in %s section of Cmd2.ini not supported" % (
+                        sOnlineRouting,))
+
+        # start a thread to listen for messages,
+        if sDo == 'run':
+            from pika import exceptions
+            
+            if self.oListenerThread is not None:
+                self.vWarn("ListenerThread already listening to: " + repr(self.oListenerThread.lTopics))
+                return
+            try:
+                if len(lArgs) > 1:
+                    self.lTopics = lArgs[1:]
+                else:
+                    self.lTopics = ['']
+                dConfig = self.oConfig['RabbitMQ']
+                assert 'sQueueName' in dConfig, \
+                       "ERROR: sQueueName not in dConfig"
+                self.oListenerThread = ListenerThread.PikaListenerThread(sChartId,
+                                                                         self.lTopics,
+                                                                         **dConfig)
+                self.oListenerThread.start()
+            except exceptions.AMQPConnectionError, e:
+                self.vError("Is the RabbitMQ server running?\n" +str(e))
+                raise
+            except Exception, e:
+                self.vError(traceback.format_exc(10))
+                raise
+            return
+
         self.vError("Unrecognized subscribe command: " + str(oArgs) +'\n' +__doc__)
 
     do_sub = do_subscribe
@@ -650,14 +672,19 @@ class CmdLineApp(Cmd):
         # Set the target for subscribe - call without args to see the current target
         if sDo == 'get' or (sDo == 'set' and len(lArgs) == 1):
             if self.oCurrentPubTarget is None:
-                sCurrentPubTarget = self.oConfig['default']['lOnlineTargets'][0]
-                assert sCurrentPubTarget in self.oConfig.keys(), \
-                       "ERROR: sCurrentPubTarget not in self.oConfig: " + sCurrentPubTarget
+                l = self.oConfig['default']['lOnlineTargets']
+                for sElt in l:
+                    assert sElt in self.oConfig.keys(), \
+                           "ERROR: ini section not found: " + sCurrentPubTarget
+                if len(l) > 1:
+                    self.vOutput("The publish online targets available are: " +repr(l))
+                    return
+                sCurrentPubTarget = l[0]
                 self.oCurrentPubTarget = self.oConfig[sCurrentPubTarget]
                 self.oCurrentPubTarget.name = sCurrentPubTarget
             else:
                 sCurrentPubTarget = self.oCurrentPubTarget.name
-            self.vOutput("The current publish target is: " +sCurrentPubTarget)
+            self.vOutput("The current publish online target is: " +sCurrentPubTarget)
             return
         
         # configure the current target for subscribe:  [KEY [VAL]]
@@ -666,7 +693,7 @@ class CmdLineApp(Cmd):
                 assert self.oConfig['default']['lOnlineTargets'], \
                        "ERROR: empty self.oConfig['default']['lOnlineTargets']"
                 l = self.oConfig['default']['lOnlineTargets']
-                self.vOutput("Use \"pub set\" to set the current target to one of: " + repr(l))
+                self.vError("Use \"pub set\" to set the current target to one of: " + repr(l))
                 return
             # do I need to dict this or make an ConfigObj version?
             self.vConfigOp(lArgs, self.oCurrentPubTarget)
@@ -679,7 +706,8 @@ class CmdLineApp(Cmd):
         if sDo == 'set':            
             sTarget = lArgs[1]
             assert sTarget in self.oConfig['default']['lOnlineTargets'], \
-                   "ERROR: " +sTarget +" not in self.oConfig['default']['lOnlineTargets']"
+                   "ERROR: " +sTarget +" not in OTCmd2.ini['default']['lOnlineTargets']: " \
+                   +repr(self.oConfig['default']['lOnlineTargets'])
             assert sTarget in self.oConfig.keys(), \
                    "ERROR: sTarget not in self.oConfig.keys()"
             self.oCurrentPubTarget = self.oConfig[sTarget]
@@ -693,12 +721,11 @@ class CmdLineApp(Cmd):
             sChartId = oOpts.sChartId
         else:
             sChartId = self.sDefaultChart
-        assert sChartId, "No default chart set"
+        if not sChartId:
+            sChartId = 'oChart_ANY_0_FFFFFFFF_1'
+            self.vWarn("No default chart set; using: " +sChartId)
         
-        if self.oListenerThread is None:
-            self.vWarn("ListenerThread not started; do 'sub run retval.#'")
-
-        if sDo == 'wait' or sDo == 'sync':
+        if sDo == 'wait' or sDo == 'exec' or sDo == 'sync':
             sMsgType = 'cmd' # Mt4 command
             # Raises a Mt4Timeout error if there is no answer in 60 seconds
             gRetval = self.gWaitForMessage(sMsgType, sMark, sChartId, *lArgs[1:])
@@ -706,11 +733,15 @@ class CmdLineApp(Cmd):
             self.vOutput("Returned: " +repr(self.G(gRetval)))
             return
 
+        if self.oListenerThread is None:
+            self.vWarn("ListenerThread not started; do 'sub run retval.#'")
+
         if sDo == 'cmd' or sDo == 'async':
             sMsgType = 'cmd' # Mt4 command
             e = self.eSendMessage(sMsgType, sMark, sChartId, *lArgs[1:])
             return
 
+        # not ready
         if sDo == 'eval':
             sMsgType = 'eval'
             sInfo = str(lArgs[1]) # FixMe: how do we distinguish variable or thunk?
@@ -720,6 +751,7 @@ class CmdLineApp(Cmd):
             self.vOutput("Returned: " +repr(self.G(gRetval)))
             return
 
+        # not ready
         if sDo == 'json':
             sMsgType = 'json'
             # FixMe: broken but unused
@@ -962,20 +994,28 @@ class CmdLineApp(Cmd):
                 self.oListenerThread.bCloseConnectionSockets()
                 self.oListenerThread = None
         if self.oChart is not None:
-            # I think this is not needed
-            # There should be nothing to do in the main thread
-            if True:
-                # Ive seen it hang here
-                self.vInfo("oChart.bCloseConnectionSockets")
-                # FixMe: refactor for multiple charts
-                self.oChart.bCloseConnectionSockets()
+            # Ive seen it hang here - maybe fixed now
+            self.vInfo("oChart.bCloseConnectionSockets")
+            # FixMe: refactor for multiple charts
+            self.oChart.bCloseConnectionSockets()
             self.oChart = None
+        # failsafe
+        if hasattr(self, 'oChart') and self.oChart:
+            from pika import exceptions
+            try:
+                sys.stdout.write("DEBUG: Waiting for message queues to flush...\n")
+                self.oChart.bCloseConnectionSockets()
+                self.oChart = None
+                time.sleep(1.0)
+            except (KeyboardInterrupt, exceptions.ConnectionClosed):
+                # impatient
+                pass
 
     def vOutput(self, sMsg):
         self.poutput("OTPy: " +sMsg)
 
     def vError(self, sMsg):
-        self.poutput("ERROR: " +sMsg)
+        self.poutput("ERR!: " +sMsg)
 
     def vWarn(self, sMsg):
         self.poutput("WARN: " +sMsg)
@@ -985,6 +1025,8 @@ class CmdLineApp(Cmd):
 
     def vDebug(self, sMsg):
         self.pfeedback("DEBUG: " +sMsg)
+
+# FixMe: should do_exit call vAtexit ?
 
 def vNullifyLocalhostProxy(sHost):
     """
@@ -1026,7 +1068,7 @@ def oParseOptions():
     #? as a convenience we let arguments from the [default] section
     #? of the ini file be overridden from the command line
     #? we default these to "" so that the config file takes precedence
-    oArgParser.add_argument("-P", "--mt4dir", action="store",
+    oArgParser.add_argument('-P', "--mt4dir", action="store",
                             dest="sMt4Dir", default="",
                             help="directory for the installed Metatrader")
     oArgParser.add_argument("-T", "--target", action="store",
@@ -1072,28 +1114,30 @@ def oMergeConfig(oConfig, oOptions):
             print "WARN: unrecognized oConfig key: " +sKey
     return oConfig
 
-
-def iMain():
-
+def oMain(lCmdLine):
     oArgParser = oParseOptions()
-    oOptions = oArgParser.parse_args()
+    oOptions = oArgParser.parse_args(lCmdLine)
     lArgs = oOptions.lArgs
 
-    if oOptions.bUnittests:
+    sConfigFile = oOptions.sConfigFile
+    oConfig = oParseConfig(sConfigFile)
+    oConfig = oMergeConfig(oConfig, oOptions)
+    oApp = CmdLineApp(oConfig, oOptions, lArgs)
+    return oApp
+
+def iMain(lCmdLine):
+
+    if '--test' in lCmdLine:
+        # legacy - unused
         sys.argv = [sys.argv[0]]  # the --test argument upsets unittest.main()
         unittest.main()
         return 0
 
-    sConfigFile = oOptions.sConfigFile
-
     oApp = None
     try:
-        oConfig = oParseConfig(sConfigFile)
-        oConfig = oMergeConfig(oConfig, oOptions)
-        oApp = CmdLineApp(oConfig, oOptions, lArgs)
-        if lArgs:
-            initial_command = ' '.join(lArgs)
-            oApp.onecmd_plus_hooks(initial_command + '\n')
+        oApp = oMain(lCmdLine)
+        if oApp.oOptions.lArgs:
+            oApp.onecmd_plus_hooks(' '.join(lArgs) +'\n')
         else:
             oApp._cmdloop()
     except KeyboardInterrupt:
@@ -1104,22 +1148,11 @@ def iMain():
     if oApp:
         oApp.vAtexit()
         
-        # failsafe
-        if hasattr(oApp, 'oChart') and oApp.oChart:
-            from pika import exceptions
-            try:
-                sys.stdout.write("DEBUG: Waiting for message queues to flush...\n")
-                oApp.oChart.bCloseConnectionSockets()
-                oApp.oChart = None
-                time.sleep(1.0)
-            except (KeyboardInterrupt, exceptions.ConnectionClosed):
-                # impatient
-                pass
         l = threading.enumerate()
         if len(l) > 1:
             print "WARN: Threads still running: %r" % (l,)
 
 if __name__ == '__main__':
-    iMain()
+    iMain(sys.argv[1:])
 
 # grep '//0' ../../Libraries/OTMql4/OTLibMt4ProcessCmd.mq4 |sed -e 's/.*== "/pub /' -e 's/".*//' > OTCmd2-0.test

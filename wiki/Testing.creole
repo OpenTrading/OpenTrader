@@ -1,24 +1,24 @@
 == Testing
 
-[[UseCases]] proceed to getting fleshed out as features. 
-=== Features
-
-
-To run the BDD test features and scenarios, install
-[[py-bdd|https://github.com/pytest-dev/pytest-bdd/]].
-Make sure that {{{bdd}}} in your list of {{{py.test}}} plugins.
-
-
-In the main directory of the distribution, run
+[[UseCases]] proceed to getting fleshed out as Features. 
+Features are implemented as Gherkin feature files, and tested using
+[[behave|https://github.com/behave/behave]]. If you have installed
+{{{behave>=1.2.5}}} before installing OpenTrader, then you should be
+able to run the test suite from the top-level directory with:
 {{{
-python -v tests/
+python setup.py behave_test
 }}}
+YMMV :-)
+
+
+=== Features
 
 The features can be found in the 
 [[tests/features/|https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/]]
 directory of the distribution.
 
-For the currently documented features, see [[TestsFeatures]].
+For the details of our BDD testing, and the currently documented features, see
+[[TestsFeatures]].
 
 === Examples
 

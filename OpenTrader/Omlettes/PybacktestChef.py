@@ -22,8 +22,7 @@ import time
 from pandas.lib import cache_readonly
 
 import pandas
-import PYBTDailyPerformance
-
+from OpenTrader import PYBTDailyPerformance
 
 class StatEngine(object):
     def __init__(self, equity_fn):
@@ -213,7 +212,7 @@ class ChefsOven(object):
             self.signals.index).ffill().shift().fillna(value=0)
         p = p[p != p.shift()]
         tp = self.trade_price
-        assert p.index.tz == tp.index.tz, "Cant operate on signals and prices " \
+        assert p.index.tz == tp.index.tz, "ERROR: Cant operate on signals and prices " \
                                           "indexed as of different timezones"
         t = pandas.DataFrame({'pos': p})
         t['price'] = tp
