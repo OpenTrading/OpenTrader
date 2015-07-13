@@ -13,7 +13,7 @@ Feature: Send messages to a OTMql4AMQP enabled Mt4 about Account information.
     Then  Collect share/examples to "OTCmd2-pub_wait-Accounts.txt"
     
     Then  The "sub get" command will set the on-line target to be the default from OTCmd2.ini
-    Then  The "sub set RabbitMQ" command will set the on-line target to be the only one that works right now :-)
+    Then  The "sub set RabbitMQ" command will set the on-line target
     
     Then  The "sub run retval.# timer.#" command will give us a listener thread running, subscribed to retval.#
     

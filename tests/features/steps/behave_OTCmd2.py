@@ -9,7 +9,6 @@ from OpenTrader import OTCmd2
 
 from support import tools
 
-oMAIN = None
 lSHARE_EXAMPLES = None
 sSHARE_EXAMPLES = ""
 def vAddShareExamples(sStr):
@@ -51,25 +50,31 @@ def lCheckStdoutStdErr(oCtx):
 
 @step('Create the OTCmd2 instance')
 def vTestCreated(oCtx):
-    global oMAIN
-    sIni = os.path.join(os.path.dirname(OpenTrader.__file__), 'OTCmd2.ini')
-    lCmdLine = ['-c', sIni]
-    oMAIN = OTCmd2.oMain(lCmdLine)
+    lCmdLine = []
+    # Fixme: get command line arguments from oCtx.config.userdata
+    if oCtx.config.userdata:
+        for sKey, gVal in oCtx.config.userdata.items():
+            lCmdLine += ['--'+sKey, gVal]
+    else:
+        # I dont think this is needed anymore
+        # sIni = os.path.join(os.path.dirname(OpenTrader.__file__), 'OTCmd2.ini')    
+        # lCmdLine = ['-c', sIni]
+        pass
+    oCtx.userdata['oMain'] = OTCmd2.oMain(lCmdLine)
     # oMAIN.cmdqueue = ['help']
-    oMAIN.onecmd('set echo True')
+    oCtx.userdata['oMain'].onecmd('set echo True')
     sOut, sErr = lCheckStdoutStdErr(oCtx)
     assert sOut
     assert 'True' in sOut
 
 @step('Destroy the OTCmd2 instance')
-def vTestCreated(oCtx):
-    global oMAIN
-    oMAIN.vAtexit()
+def vTestDestroy(oCtx):
+    oCtx.userdata['oMain'].vAtexit()
     
 @step('The "{uCmd}" command stdout contains "{uStr}"')
 @step('The "{uCmd}" command output contains "{uStr}"')
 def vTestContains(oCtx, uCmd, uStr):
-    oMAIN.onecmd(uCmd)
+    oCtx.userdata['oMain'].onecmd(uCmd)
     sOut, sErr = lCheckStdoutStdErr(oCtx)
     assert sOut
     assert uStr in sOut
@@ -77,14 +82,14 @@ def vTestContains(oCtx, uCmd, uStr):
 @step('The "{uCmd}" command stderr contains "{uStr}"')
 @step('The "{uCmd}" command error contains "{uStr}"')
 def vTestContains(oCtx, uCmd, uStr):
-    oMAIN.onecmd(uCmd)
+    oCtx.userdata['oMain'].onecmd(uCmd)
     sOut, sErr = lCheckStdoutStdErr(oCtx)
     assert sErr
     assert uStr in sErr
     
 @step('The "{uCmd}" command will {uStr}')
 def vCommandWill(oCtx, uCmd, uStr):
-    oMAIN.onecmd(uCmd)
+    oCtx.userdata['oMain'].onecmd(uCmd)
     sOut, sErr = lCheckStdoutStdErr(oCtx)
     if sOut and bool(oCtx.config.verbose):
         tools.puts(oCtx, *sOut.split('\n'))
@@ -93,13 +98,15 @@ def vCommandWill(oCtx, uCmd, uStr):
 
 @step('The result will be a not-null list')
 def vThenNotNullList(oCtx):
-    assert len(oMAIN._G) > 0
+    self = oCtx.userdata['oMain']
+    assert len(self._G) > 0
     uStr = 'len(self._G) > 0'
     vAddShareExamples('py assert ' +uStr)
 
 @step('The result will be a not-null string')
 def vThenNotNullString(oCtx):
-    assert len(oMAIN._G) > 0
+    self = oCtx.userdata['oMain']
+    assert len(self._G) > 0
     uStr = 'len(self._G) > 0'
     vAddShareExamples('py assert ' +uStr)
 
@@ -109,7 +116,7 @@ def vComment(oCtx, uStr):
 
 @step('Assert {uStr}')
 def vTestAssert(oCtx, uStr):
-    self = oMAIN
+    self = oCtx.userdata['oMain']
     if not uStr: return
     assert eval(uStr)
     vAddShareExamples('py assert ' +uStr)

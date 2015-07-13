@@ -128,14 +128,19 @@ def gRetvalToPython(lElts):
         # warn?
         return ""
     
-    assert len(lElts) > 5, "nothing to convert: " + repr(lElts)
+    if not len(lElts) > 5:
+        sys.stdout.write("WARN: nothing to convert in %r\n" % (lElts,))
+        return None
+    
     sVal = lElts[5]
     
     if sType == 'string':
         gRetval = sVal
     elif sType == 'error':
+        sys.stdout.write("ERROR:  %s\n" % (sVal,))
         #? should I raise an error?
-        raise RuntimeError(sVal)
+        # raise RuntimeError()
+        return None
     elif sType == 'datetime':
         #? how do I convert this
         # I think it's epoch seconds as an int

@@ -993,14 +993,10 @@ class CmdLineApp(Cmd):
                 self.vDebug("oListenerThread.bCloseConnectionSockets")
                 self.oListenerThread.bCloseConnectionSockets()
                 self.oListenerThread = None
-        if self.oChart is not None:
-            # Ive seen it hang here - maybe fixed now
-            self.vInfo("oChart.bCloseConnectionSockets")
-            # FixMe: refactor for multiple charts
-            self.oChart.bCloseConnectionSockets()
-            self.oChart = None
-        # failsafe
         if hasattr(self, 'oChart') and self.oChart:
+            # Ive seen it hang here - maybe fixed now
+            self.vDebug("oChart.bCloseConnectionSockets")
+            # FixMe: refactor for multiple charts
             from pika import exceptions
             try:
                 sys.stdout.write("DEBUG: Waiting for message queues to flush...\n")
