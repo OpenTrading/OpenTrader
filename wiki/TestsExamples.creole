@@ -94,7 +94,6 @@ We need to know where you have your metatrader installed.
 * [[OTCmd2-ord.txt|https://github.com/OpenTrading/OpenTrader/raw/master/share/examples/OTCmd2-ord.txt]]
 
 * [[OTCmd2-pub_wait-Accounts.txt|https://github.com/OpenTrading/OpenTrader/raw/master/share/examples/OTCmd2-pub_wait-Accounts.txt]]
-  These test the Mt4 Account information commands.
 
 * [[OTCmd2-pub_wait-jOT.txt|https://github.com/OpenTrading/OpenTrader/raw/master/share/examples/OTCmd2-pub_wait-jOT.txt]]
 

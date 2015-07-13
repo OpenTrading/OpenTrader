@@ -29,7 +29,6 @@ def lCheckStdoutStdErr(oCtx):
     if hasattr(oCtx, 'stdout_capture'):
         sOut = oCtx.stdout_capture.getvalue().strip()
         iLen = len(sOut)
-        #? should be sErr
         if sOut and iLen > iLEN_STDOUT:
             sOut = sOut[iLEN_STDOUT:]
             iLEN_STDOUT = iLen
@@ -51,17 +50,11 @@ def lCheckStdoutStdErr(oCtx):
 @step('Create the OTCmd2 instance')
 def vTestCreated(oCtx):
     lCmdLine = []
-    # Fixme: get command line arguments from oCtx.config.userdata
+    # get command line arguments from oCtx.config.userdata
     if oCtx.config.userdata:
         for sKey, gVal in oCtx.config.userdata.items():
             lCmdLine += ['--'+sKey, gVal]
-    else:
-        # I dont think this is needed anymore
-        # sIni = os.path.join(os.path.dirname(OpenTrader.__file__), 'OTCmd2.ini')    
-        # lCmdLine = ['-c', sIni]
-        pass
     oCtx.userdata['oMain'] = OTCmd2.oMain(lCmdLine)
-    # oMAIN.cmdqueue = ['help']
     oCtx.userdata['oMain'].onecmd('set echo True')
     sOut, sErr = lCheckStdoutStdErr(oCtx)
     assert sOut

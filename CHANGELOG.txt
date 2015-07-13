@@ -1,3 +1,8 @@
+commit 196a20765aedb48e1178bab0e3cfc865262a2913
+Date:   Mon Jul 13 20:24:36 2015 +0300
+
+    Made behave exit the OTCmd2 threads properly if there was an error and you dropped into pdb
+
 commit 7922904fca84c3f64a725014f5550779acda1656
 Date:   Sun Jul 12 21:58:31 2015 +0300
 

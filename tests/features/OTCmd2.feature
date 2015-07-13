@@ -10,6 +10,6 @@ Feature: OTCmd2
 
     Given Create the OTCmd2 instance
     Then  The "help" command output contains "Documented commands"
-    Then  The "garbage" command error contains "ERR:"
+    Then  The "garbage" command output contains "ERR:"
     Then  Destroy the OTCmd2 instance
 
