@@ -53,6 +53,7 @@ def vTestCreated(oCtx):
     # get command line arguments from oCtx.config.userdata
     if oCtx.config.userdata:
         for sKey, gVal in oCtx.config.userdata.items():
+            # check the argparser instance
             lCmdLine += ['--'+sKey, gVal]
     oCtx.userdata['oMain'] = OTCmd2.oMain(lCmdLine)
     oCtx.userdata['oMain'].onecmd('set echo True')
