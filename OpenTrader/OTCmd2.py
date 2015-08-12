@@ -39,7 +39,7 @@ sub get                   - get the current target to publish to; defaults to:
                             the first value of default['lOnlineTargets'] in OTCmd2.ini
 sub run [timer# ...]      - start a thread listening for messages: defaults to:
                           all messages, or use: timer.# and/or bar.# tick.# retval.#
-pub cmd AccountBalance    - to send a command such as AccountBalance to OTMql4Pika,
+pub wait AccountBalance    - to send a command such as AccountBalance to OTMql4Pika,
                            the return will be a retval message on the listener
 sub hide timer            - stop seeing timer messages (just see the retval.#)
 order list                - list your open order tickets
@@ -113,8 +113,6 @@ Publish a message via RabbitMQ to a given chart on a OTMql4Py enabled terminal:
                             the first value of default['lOnlineTargets'] in OTCmd2.ini
   pub set TARGET            - set the target for publish,
   pub config                - configure the current target for publish: [KEY [VAL]]
-  pub cmd  COMMAND ARG1 ... - publish a Mql command to Mt4,
-      the command should be a single string, with a space seperating arguments.
   pub wait COMMAND ARG1 ... - publish a Mql command to Mt4 and wait for the result,
       the command should be a single string, with a space seperating arguments.
   pub eval COMMAND ARG1 ... - publish a Python command to the OTMql4Py,
@@ -127,6 +125,8 @@ You wont see the return value unless you have already done a:
 The RabbitMQ host and login information is set in the {{{[RabbitMQ]}}}
 section of the {{{OTCmd2.ini}}} file; see the {{{-c/--config}}} command-line options.
 """
+#   pub cmd  COMMAND ARG1 ... - publish a Mql command to Mt4,
+#      the command should be a single string, with a space seperating arguments.
 
 # should these all be of chart ANY
 sORD__doc__ = """
@@ -260,6 +260,39 @@ class CmdLineApp(Cmd):
             gRetval = dConfig(sSect, sKey, oType(sVal))
             self.vOutput(repr(setf.G(gRetval)))
 
+    def eSendOnSpeaker(self, sChartId, sMsgType, sMsg):
+        if sMsgType == 'cmd' and self.oListenerThread is None:
+            self.vWarn("ListenerThread not started; you will not see the retval")
+        if self.oCurrentPubTarget is None:
+            sErr = "PubTarget not set; use \"pub set\""
+            self.vError(sErr)
+            return sErr
+
+        # self.oCurrentPubTarget is a ConfigObj section: disctionary-like
+        assert 'sOnlineRouting' in self.oCurrentPubTarget
+        assert self.oCurrentPubTarget['sOnlineRouting']
+        sOnlineRouting = self.oCurrentPubTarget['sOnlineRouting']
+        if not self.oMixin:
+            if sOnlineRouting == 'RabbitMQ':
+                from OTMql427 import PikaListener
+                # FixMe: refactor for multiple charts
+                self.oMixin = PikaListener.PikaMixin(sChartId, **self.oCurrentPubTarget)
+            elif sOnlineRouting == 'ZeroMQ':
+                from OTMql427 import ZmqListener
+                # FixMe: refactor for multiple charts
+                self.oMixin = ZmqListener.ZmqMixin(sChartId, **self.oCurrentPubTarget)
+                self.oMixin.eConnectToReq()
+            else:
+                raise RuntimeError("sOnlineRouting value in %s section of Cmd2.ini not supported" % (
+                    sOnlineRouting,))
+
+        self.vInfo("Publishing via " +sOnlineRouting +": " +sMsg)
+        if sOnlineRouting == 'RabbitMQ':
+            return(self.oMixin.eSendOnSpeaker(sMsgType, sMsg))
+        elif sOnlineRouting == 'ZeroMQ':
+            return(self.oMixin.eSendOnReqRep(sMsgType, sMsg))
+        return ""
+    
     def eSendMessage(self, sMsgType, sChartId, sMark, *lArgs):
         from OTMql427.SimpleFormat import sFormatMessage, sMakeMark
         sMsg = sFormatMessage(sMsgType, sChartId, sMark, *lArgs)
@@ -276,50 +309,31 @@ class CmdLineApp(Cmd):
         The protocol talking to Mt4 has the void return type,
         which gRetvalToPython returns as None.
         """
+        from OTMql427.SimpleFormat import gRetvalToPython, lUnFormatMessage
         self.eSendMessage(sMsgType, sChartId, sMark, *lArgs)
         i = 0
         iTimeout = self.oConfig['default']['iRetvalTimeout']
+        self.vDebug("Waiting for: " +sMsgType +" " +sMark)
         while i < int(iTimeout):
-            # do I need a thread lock?
-            if sMark in self.oListenerThread.dRetvals.keys():
-                gRetval = self.oListenerThread.dRetvals[sMark]
-                del self.oListenerThread.dRetvals[sMark]
-                return self.G(gRetval)
+            if sMsgType == 'exec':
+                s = self.oMixin.sRecvReply()
+                if s != "":
+                    gRetval = gRetvalToPython(lUnFormatMessage(s))
+                    return self.G(gRetval)
+                # drop through
+            elif sMsgType == 'cmd':
+                if sMark in self.oListenerThread.dRetvals.keys():
+                    gRetval = self.oListenerThread.dRetvals[sMark]
+                    del self.oListenerThread.dRetvals[sMark]
+                    return self.G(gRetval)
+            else:
+                self.vError("Unrecognized sMsgType: " +sMsgType)
+                return None
             i += 5
             self.vDebug("Waiting: " +repr(i))
             time.sleep(5.0)
         self._G = None
         raise Mt4Timeout("No retval returned in " +str(iTimeout) +" seconds")
-
-    def eSendOnSpeaker(self, sChartId, sMsgType, sMsg):
-        if sMsgType == 'cmd' and self.oListenerThread is None:
-            self.vWarn("ListenerThread not started; you will not see the retval")
-        if self.oCurrentPubTarget is None:
-            sErr = "PubTarget not set; use \"pub set\""
-            self.vError(sErr)
-            return sErr
-
-        # self.oCurrentPubTarget is a ConfigObj section: disctionary-like
-        assert 'sOnlineRouting' in self.oCurrentPubTarget
-        assert self.oCurrentPubTarget['sOnlineRouting']
-        sOnlineRouting = self.oCurrentPubTarget['sOnlineRouting']
-        if not self.oMixin:
-            self.vInfo("Publishing via " +sOnlineRouting +": " +sMsg)
-            if sOnlineRouting == 'RabbitMQ':
-                from OTMql427 import PikaListener
-                # FixMe: refactor for multiple charts
-                self.oMixin = PikaListener.PikaMixin(sChartId, **self.oCurrentPubTarget)
-                return(self.oMixin.eSendOnSpeaker(sMsgType, sMsg))
-            elif sOnlineRouting == 'ZeroMQ':
-                from OTMql427 import ZmqListener
-                # FixMe: refactor for multiple charts
-                self.oMixin = ZmqListener.ZmqMixin(sChartId, **self.oCurrentPubTarget)
-                self.oMixin.eConnectToReq()
-                return(self.oMixin.eSendOnReqRep(sMsgType, sMsg))
-            else:
-                raise RuntimeError("sOnlineRouting value in %s section of Cmd2.ini not supported" % (
-                    sOnlineRouting,))
-
 
     ## csv
     @options([],
@@ -571,6 +585,7 @@ class CmdLineApp(Cmd):
                 import PikaListenerThread as ListenerThread
             except ImportError as e:
                 self.vError("Cant import PikaListenerThread: add the MQL4/Python directory to PYTHONPATH? " +str(e))
+                self.vError("sys.path is: " +repr(sys.path))
                 raise
             except Exception as e:
                 self.vError(traceback.format_exc(10))
@@ -648,7 +663,7 @@ class CmdLineApp(Cmd):
     def do_publish(self, oArgs, oOpts=None):
         from OTMql427.SimpleFormat import sFormatMessage, sMakeMark
         __doc__ = sPUB__doc__
-        _lCmds = ['get', 'set', 'config', 'wait', 'cmd',] # 'eval', 'json'
+        _lCmds = ['get', 'set', 'config', 'wait',] # , 'cmd' 'eval', 'json'
         if not oArgs:
             self.vOutput("Commands to publish (and arguments) are required\n" + __doc__)
             return
@@ -717,7 +732,7 @@ class CmdLineApp(Cmd):
             self.vWarn("No default chart set; using: " +sChartId)
 
         if sDo == 'wait' or sDo == 'exec' or sDo == 'sync':
-            sMsgType = 'cmd' # Mt4 command
+            sMsgType = 'exec' # Mt4 command
             # Raises a Mt4Timeout error if there is no answer in 60 seconds
             gRetval = self.gWaitForMessage(sMsgType, sChartId, sMark, *lArgs[1:])
 
@@ -728,6 +743,8 @@ class CmdLineApp(Cmd):
             self.vWarn("ListenerThread not started; do 'sub run retval.#'")
 
         if sDo == 'cmd' or sDo == 'async':
+            # I dont think this works, at least under ZeroMQ
+            # There is not handling of the null return message
             sMsgType = 'cmd' # Mt4 command
             e = self.eSendMessage(sMsgType, sChartId, sMark, *lArgs[1:])
             return
@@ -782,7 +799,7 @@ class CmdLineApp(Cmd):
                "ERROR: choose one of: " +str(_lCmds)
 
         if sDo == 'list' or sDo == 'tickets':
-            sMsgType = 'cmd' # Mt4 command
+            sMsgType = 'exec' # Mt4 command
             # FixMe: trailing |
             sInfo = 'jOTOrdersTickets'
             j = self.gWaitForMessage(sMsgType, sChartId, sMark, sInfo)
@@ -792,7 +809,7 @@ class CmdLineApp(Cmd):
             return
 
         if sDo == 'trades':
-            sMsgType = 'cmd' # Mt4 command
+            sMsgType = 'exec' # Mt4 command
             # FixMe: trailing |
             sInfo = 'jOTOrdersTrades'
             j = self.gWaitForMessage(sMsgType, sChartId, sMark, sInfo)
@@ -800,7 +817,7 @@ class CmdLineApp(Cmd):
             return
 
         if sDo == 'history':
-            sMsgType = 'cmd' # Mt4 command
+            sMsgType = 'exec' # Mt4 command
             # FixMe: trailing |
             sInfo = 'jOTOrdersHistory'
             j = self.gWaitForMessage(sMsgType, sChartId, sMark, sInfo)
@@ -808,7 +825,7 @@ class CmdLineApp(Cmd):
             return
 
         if sDo == 'info':
-            sMsgType = 'cmd' # Mt4 command
+            sMsgType = 'exec' # Mt4 command
             sCmd = 'jOTOrderInformationByTicket'
             assert len(lArgs) > 1, "ERROR: orders info iTicket"
             sInfo = str(lArgs[1])
@@ -817,7 +834,7 @@ class CmdLineApp(Cmd):
             return
 
         if sDo == 'exposure':
-            sMsgType = 'cmd' # Mt4 command
+            sMsgType = 'exec' # Mt4 command
             sCmd = 'fOTExposedEcuInMarket'
             sInfo = str(0)
             f = self.gWaitForMessage(sMsgType, sChartId, sMark, sCmd, sInfo)
@@ -825,7 +842,7 @@ class CmdLineApp(Cmd):
             return
 
         if sDo == 'close':
-            sMsgType = 'cmd' # Mt4 command
+            sMsgType = 'exec' # Mt4 command
             assert len(lArgs) >= 2, "ERROR: order close iTicket [fPrice iSlippage}"
             sTicket = lArgs[1]
             if len(lArgs) >= 3:
@@ -840,7 +857,7 @@ class CmdLineApp(Cmd):
             return
 
         if sDo == 'buy' or sDo == 'sell':
-            sMsgType = 'cmd' # Mt4 command
+            sMsgType = 'exec' # Mt4 command
             if sDo == 'buy':
                 iCmd = 0
             else:

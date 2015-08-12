@@ -14,7 +14,7 @@ Feature: Send messages to a OTMql4Zmq enabled Mt4 about JSON account information
     Then  The "sub get" command will show the on-line targets from OTCmd2.ini
     Then  The "sub set ZeroMQ" command will set the on-line target
     
-    Then  The "sub run retval.# timer.#" command will We need a listener thread running, subscribed to retval.#
+    Then  The "sub run retval timer" command will We need a listener thread running, subscribed to retval
     
     Then  The "py import time" command will load the python time module
     Then  The "py time.sleep(15)" command will sleep for 15 seconds

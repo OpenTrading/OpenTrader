@@ -11,9 +11,6 @@ see https://bitbucket.org/catherinedevlin/cmd2
 You must have {{{configobj}}} installed in the Python that runs these scripts.
 The up-to-date one is at https://github.com/DiffSK/configobj/
 
-In your Metatrader Python, you also must have installed {{{Pika}}}:
-https://pypi.python.org/pypi/pika/
-
 ===== Plotting Prerequisites
 
 You must have {{{pandas}}} installed in the Python that runs these scripts:
@@ -36,10 +33,13 @@ see [[TaLib]].
 
 ==== Metatrader Prerequisites
 
+
+In your Metatrader Python, you also must have installed {{{Pika}}}:
+https://pypi.python.org/pypi/pika/
+
 In order to interact with Metatrader, you will need to
 install the OTMql4AMQP, OTMql4Py and OTMql4Lib projects from
 https://github.com/OpenTrading/ into the Python called by your Metatrader:
-* [[OTMql4AMQP]] https://github.com/OpenTrading/OTMql4AMQP/,
 * [[OTMql4Py]] https://github.com/OpenTrading/OTMql4Py/, and
 * OTMql4Lib https://github.com/OpenTrading/OTMql4Lib/
 
@@ -48,6 +48,30 @@ for now, you must clone them from https://github.com and manually install.
 Make a directory anywhere called {{{OpenTrading}}}, and clone each of the above
 into that directory. Then recursively copy the contents of each of the three
 {{{MQL4}}} subdirectories into your Metatrader {{{MQL4}}} subdirectory.
+
+This project now works with ZeroMQ or RabbitMQ Messaging Protocols.
+The ZeroMQ protocol is preferred and all development is currently on it.
+
+===== Metatrader ZeroMQ
+
+For ZeroMq you will need to have installed
+* [[OTMql4Zmq]] https://github.com/OpenTrading/OTMql4Zmq/,
+
+Attach the
+[[OTZmqCmdEA.mq4|https://github.com/OpenTrading/OTMql4Zmq/raw/master/MQL4/Experts/OTMql4/OTZmqCmdEA.mq4]]
+EA in [[OTMql4AMQP|https://github.com/OpenTrading/OTMql4Zmq/MQL4/]]
+to a chart and make sure it's working; look at the Experts log in Mt4
+to see messages of success. With the EA loaded onto a chart, run the
+{{{OTCmd2}}} script ([[DocOTCmd2]]) from a command line, with the {{{-P}}}
+option to give the path to your Metatrader installation. Then give the
+commands {{{sub set}}} and  {{{sub run retval timer}}}.
+Within about 15 seconds you should see timer messages coming for your
+{{{OTMql4Zmq}}} enabled Metatrader.
+
+===== Metatrader RabbitMQ
+
+For RabbitMQ you will need to have installed:
+* [[OTMql4AMQP]] https://github.com/OpenTrading/OTMql4AMQP/,
 
 You must have a AMQP server running, such as [[RabbitMQ]], by default with the
 default guest account: see http://rabbitmq.org 
@@ -59,8 +83,9 @@ to a chart and make sure it's working; look at the Experts log in Mt4
 to see messages of success. With the EA loaded onto a chart, run the
 {{{OTCmd2}}} script ([[DocOTCmd2]]) from a command line, with the {{{-P}}}
 option to give the path to your Metatrader installation. Then give the
-command {{{sub run retval.# timer.#}}}. Within about 15 seconds you should
-see timer messages coming for your {{{OTMql4AMQP}}} enabled Metatrader.
+commands {{{sub set}}} and  {{{sub run retval.# timer.#}}}.
+Within about 15 seconds you should see timer messages coming for your
+{{{OTMql4AMQP}}} enabled Metatrader.
 
 
 ==== Setup

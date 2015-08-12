@@ -6,12 +6,14 @@ import json
 from pprint import pprint, pformat
 import threading
 import time
+import traceback
 
 import zmq
 
-from ZmqListener import ZmqMixin
+from OTMql427.ZmqListener import ZmqMixin
+from OTMql427.SimpleFormat import gRetvalToPython
 
-from ListenerThread import gRetvalToPython, ListenerThread
+from ListenerThread import ListenerThread
 
 class ZmqListenerThread(ListenerThread, ZmqMixin):
 
@@ -30,14 +32,19 @@ class ZmqListenerThread(ListenerThread, ZmqMixin):
 
         sys.stdout.write("Starting Zmq ListenerThread listening to: " + repr(self.lTopics) +"\n")
         if self.oSubPubSocket is None:
-            self.eConnectToSubPub(self.lTopics, iDir=zmq.SUB)
-
+            try:
+                self.eConnectToSub(self.lTopics)
+            except Exception as e:
+                sys.stdout.write("ERROR: starting listener thread eConnectToSub " +str(e))
+                sys.stderr.write(traceback.format_exc(10) +"\n")
+                return
+            
         self._running.set()
         while self._running.is_set():
             try:
                 #? 0 is blocking
                 sString = self.sRecvOnSubPub(iFlags=0)
-                if not sString: continue
+                if sString == "": continue
                 self.vCallbackOnListener(sString)
             except zmq.ZMQError as e:
                 # zmq4: iError = zmq.zmq_errno()

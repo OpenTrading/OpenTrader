@@ -1,6 +1,6 @@
 === OTCmd2 publish
 Traceback (most recent call last):
-  File "OpenTrader/OTCmd2.py", line 1140, in iMain
+  File "OpenTrader/OTCmd2.py", line 1143, in iMain
     oApp.onecmd_plus_hooks(' '.join(lArgs) +'\n')
 NameError: global name 'lArgs' is not defined
 
