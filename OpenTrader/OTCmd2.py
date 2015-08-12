@@ -1140,7 +1140,7 @@ def iMain(lCmdLine):
     try:
         oApp = oMain(lCmdLine)
         if oApp.oOptions.lArgs:
-            oApp.onecmd_plus_hooks(' '.join(lArgs) +'\n')
+            oApp.onecmd_plus_hooks(' '.join(oApp.oOptions.lArgs) +'\n')
         else:
             oApp._cmdloop()
     except KeyboardInterrupt:

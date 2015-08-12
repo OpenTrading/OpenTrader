@@ -52,7 +52,7 @@ the C coded implmentation of ZeroMQ for Metatrader:
 and requires that to be installed in your Metatrader Python as a pre-requisite.
 You also must have installed [[Pika|https://pypi.python.org/pypi/pika/]], which must be accessible to your
 [[OTMql4Py|https://github.com/OpenTrading/OTMql4Py/]]. You also must have
-installed and started a [[RabbitMQ server|http://rabbitmq.com]]
+installed and started a [[RabbitMQ server|http://rabbitmq.org]],
 which is not so easy under Windows.
 
 One day we will make installers for a shrink-wrapped distribution, but

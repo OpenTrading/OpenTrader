@@ -1,8 +1,23 @@
 === OTCmd2 chart
-Traceback (most recent call last):
-  File "OpenTrader/OTCmd2.py", line 1143, in iMain
-    oApp.onecmd_plus_hooks(' '.join(lArgs) +'\n')
-NameError: global name 'lArgs' is not defined
+
+Set and query the chart in Metatrader that the messages are sent to:
+{{{
+  list   - all the charts the listener has heard of,
+           iff you have already started a listener with "sub run"
+  get    - get the default chart to be published or subscribed to; defaults to:
+           the last chart the listener has heard of.
+  set ID - set the default chart ID to be published or subscribed to.
+  set    - set the default chart to be the last chart the listener has heard of,
+           iff you have already started a listener with "sub run"
+
+The chart ID will look something like: oChart_EURGBP_240_93ACD6A2_1
+}}}
+
+{{{
+Usage: chart [options] command
+
+Options:
+  -h, --help  show this help message and exit
 
 DEBUG: atexit
 }}}

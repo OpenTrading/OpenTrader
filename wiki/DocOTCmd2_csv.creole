@@ -1,8 +1,18 @@
 === OTCmd2 csv
-Traceback (most recent call last):
-  File "OpenTrader/OTCmd2.py", line 1143, in iMain
-    oApp.onecmd_plus_hooks(' '.join(lArgs) +'\n')
-NameError: global name 'lArgs' is not defined
+
+Download, resample and convert CSV files into pandas:
+{{{
+csv url PAIRSYMBOL       - show a URL where you can download  1 minute Mt HST data
+csv resample SRAW1MINFILE, SRESAMPLEDCSV, STIMEFRAME - Resample 1 minute CSV data,
+                                                       to a new timeframe
+                                                       and save it as CSV file
+}}}
+
+{{{
+Usage: csv [options] command
+
+Options:
+  -h, --help  show this help message and exit
 
 DEBUG: atexit
 }}}

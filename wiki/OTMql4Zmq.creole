@@ -1,0 +1,16 @@
+== OTMql4Zmq - ZeroMQ bindings for MQL4 Python
+
+https://github.com/OpenTrading/OTMql4Zmq/
+
+The OTMql4Zmq project allows the [[OpenTrading Metatrader-Python bridge|OTMql4Py]]
+to work with [[ZeroMQ|http://zeromq.org]].
+It builds on [[OTMql4Py]], and requires it as a pre-requisite.
+
+You also must have installed [[Python|http://www.python.org]], and the 
+[[OTMql4Py Python bridge|https://github.com/OpenTrading/OTMql4Py/]] and
+[[OTMql4Lib Metatrader library|https://github.com/OpenTrading/OTMql4Lib/]].
+OpenTrader runs fine with the C coded implmentation of ZeroMQ for Metatrader:
+[[OTZmqCmdEA.mq4|https://github.com/OpenTrading/OTMql4Zmq/raw/master/MQL4/Experts/OTMql4/OTZmqCmdEA.mq4]]
+
+----
+Parent: [[Components]]

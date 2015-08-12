@@ -61,19 +61,22 @@ Features are tagged with these tags, that may have the preconditions:
 
 * @Mt4Running - tests will only work if you have an OTMql4AMQP enabled Metatrader running,
 
+* @OTMql4Zmq - tests will only work if you have an OTMql4Zmq enabled Metatrader running,
+    the Experts/OTMql4/OTZmqCmdEA.mq4 attached to a chart in it.
+
 * @OTMql4AMQP - tests will only work if you have an OTMql4AMQP enabled Metatrader running,
     the Experts/OTMql4/OTPyTestPikaEA.mq4 attached to a chart in it, and
     the RabbitMQ server configured and running.
 
-* @Mt4Connected -  all of the above AND the Mt4 is logged in and connected.
+* @Mt4Connected -  the Metatrader is logged in and connected.
 
 * @examples - generates examples script files
 
 * @pytest - should run under {{{pytest-bdd}}} as well as behave.
 
 * @wip        - work-in-progress - may or may not work
-* @fixme      - work-in-progress - probably won't not work
-* @broken     - work-in-progress - won't not work
+* @fixme      - work-in-progress - probably won't work
+* @broken     - work-in-progress - won't work
 
 
 === OTCmd2-backtest_feed_plot
