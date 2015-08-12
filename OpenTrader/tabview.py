@@ -1107,7 +1107,7 @@ def process_data(data, enc=None, delim=None, **kwargs):
         else:
             data = [[str(j) for j in i] for i in pad_data(data)]
         return {'data' : data, 'header' : header}
-    
+
     elif process_type == 'pandas':
         # If data is from a pandas object.
         import numpy as np
@@ -1142,7 +1142,7 @@ def process_data(data, enc=None, delim=None, **kwargs):
         data[np.where(data == 'nan')] = ''
         if len(data.shape) == 1:
             data = np.array((data,))
-        header = [str(i) for i in range(data.shape[1])] 
+        header = [str(i) for i in range(data.shape[1])]
         data = data.tolist()
         return {'data': data, 'header': header}
 
@@ -1163,7 +1163,7 @@ def process_data(data, enc=None, delim=None, **kwargs):
             csv_obj = csv.reader(data, delimiter=delim)
             for row in csv_obj:
                 csv_data.append(row)
-        csv_data = [[str(j) for j in i] for i in pad_data(csv_data)] 
+        csv_data = [[str(j) for j in i] for i in pad_data(csv_data)]
         if len(csv_data) > 1:
             csv_header = csv_data[0]
             csv_data = csv_data[1:]
@@ -1219,7 +1219,7 @@ def input_type(data):
     Both - list of lists is just a list
 
     Returns: 'file' if data is from a file, 'list' if from a python list/tuple,
-    'dict' if from a python dictionary, 'numpy' if from a numpy ndarray, and 
+    'dict' if from a python dictionary, 'numpy' if from a numpy ndarray, and
     'pandas' if from a pandas Series, DataFrame or Panel.
 
     """

@@ -111,7 +111,7 @@ Publish a message via RabbitMQ to a given chart on a OTMql4Py enabled terminal:
 {{{
   pub get                   - get the current target for publish; defaults to:
                             the first value of default['lOnlineTargets'] in OTCmd2.ini
-  pub set TARGET            - set the target for publish, 
+  pub set TARGET            - set the target for publish,
   pub config                - configure the current target for publish: [KEY [VAL]]
   pub cmd  COMMAND ARG1 ... - publish a Mql command to Mt4,
       the command should be a single string, with a space seperating arguments.
@@ -184,7 +184,7 @@ sBAC__doc__ = ""
 try:
     import OpenTrader.OTBackTest as pybacktest
     from OpenTrader.BacktestCmd import sBAC__doc__
-except ImportError, e:
+except ImportError as e:
     sys.stdout.write("pybacktest not installed: " +str(e) +"\n")
 
 class MqlError(Exception):
@@ -193,51 +193,11 @@ class MqlError(Exception):
 class Mt4Timeout(RuntimeError):
     pass
 
-# FixMe:
-# The messaging to and from OTMql4Py is still being done with a
-# very simple format:
-#       sMsgType|sChartId|sIgnored|sMark|sPayload
-# where sMsgType is one of: cmd eval (outgoing), timer tick retval (incoming);
-#       sChartId is the Mt4 chart sChartId the message is to or from;
-#       sMark is a simple floating point timestamp, with milliseconds;
-# and   sPayload is command|arg1|arg2... (outgoing) or type|value (incoming),
-#       where type is one of: bool int double string json.
-# This breaks if the sPayload args or value contain a | -
-# we will probably replace this with json or pickled serialization, or kombu.
-def sFormatMessage(sMsgType, sMark, sChartId, *lArgs):
-    """
-    Just a very simple message format for now:
-    We are moving over to JSON so *lArgs will be replaced by sJson,
-    a single JSON list of [command, arg1, arg2,...]
-    """
-
-    # iIgnore is reserved for being a hash on the payload
-    iIgnore = 0
-    # We are moving over to JSON - for now a command is separated by |
-    sInfo = '|'.join(lArgs)
-    # fixme: what's python?
-    assert sMsgType in ['cmd', 'eval'], "ERROR: sMsgType not in ['cmd', 'eval']"
-    assert sChartId, "ERROR: sChartId is empty"
-    sMsg = "%s|%s|%d|%s|%s" % (sMsgType, sChartId, iIgnore, sMark, sInfo,)
-    return sMsg
-
-def lUnFormatMessage(sBody):
-    lArgs = sBody.split('|')
-    sCmd = lArgs[0]
-    sChart = lArgs[1]
-    sIgnore = lArgs[2]
-    sMark = lArgs[3]
-    return lArgs
-
-# should do something better if there are multiple clients
-def sMakeMark():
-    return "%15.5f" % time.time()
-
 class CmdLineApp(Cmd):
     multilineCommands = []
     testfiles = ['exampleSession.txt']
 
-    oChart = None
+    oMixin = None
     oListenerThread = None
     oRabbit = None
     prompt = 'OTPy> '
@@ -299,14 +259,15 @@ class CmdLineApp(Cmd):
             oType = type(dConfig(sSect, sKey))
             gRetval = dConfig(sSect, sKey, oType(sVal))
             self.vOutput(repr(setf.G(gRetval)))
-        
-    def eSendMessage(self, sMsgType, sMark, sChartId, *lArgs):
-        sMsg = sFormatMessage(sMsgType, sMark, sChartId, *lArgs)
+
+    def eSendMessage(self, sMsgType, sChartId, sMark, *lArgs):
+        from OTMql427.SimpleFormat import sFormatMessage, sMakeMark
+        sMsg = sFormatMessage(sMsgType, sChartId, sMark, *lArgs)
         e = self.eSendOnSpeaker(sChartId, sMsgType, sMsg)
         self.dLastCmd[sChartId] = sMsg
         return e
-    
-    def gWaitForMessage(self, sMsgType, sMark, sChartId, *lArgs):
+
+    def gWaitForMessage(self, sMsgType, sChartId, sMark, *lArgs):
         """
         Raises a Mt4Timeout error if there is no answer in
         oOptions['default']['iRetvalTimeout'] seconds.
@@ -315,7 +276,7 @@ class CmdLineApp(Cmd):
         The protocol talking to Mt4 has the void return type,
         which gRetvalToPython returns as None.
         """
-        self.eSendMessage(sMsgType, sMark, sChartId, *lArgs)
+        self.eSendMessage(sMsgType, sChartId, sMark, *lArgs)
         i = 0
         iTimeout = self.oConfig['default']['iRetvalTimeout']
         while i < int(iTimeout):
@@ -337,26 +298,28 @@ class CmdLineApp(Cmd):
             sErr = "PubTarget not set; use \"pub set\""
             self.vError(sErr)
             return sErr
-        
+
         # self.oCurrentPubTarget is a ConfigObj section: disctionary-like
         assert 'sOnlineRouting' in self.oCurrentPubTarget
         assert self.oCurrentPubTarget['sOnlineRouting']
         sOnlineRouting = self.oCurrentPubTarget['sOnlineRouting']
-        if not self.oChart:
+        if not self.oMixin:
+            self.vInfo("Publishing via " +sOnlineRouting +": " +sMsg)
             if sOnlineRouting == 'RabbitMQ':
                 from OTMql427 import PikaListener
                 # FixMe: refactor for multiple charts
-                self.oChart = PikaListener.PikaMixin(sChartId, **self.oCurrentPubTarget)
+                self.oMixin = PikaListener.PikaMixin(sChartId, **self.oCurrentPubTarget)
+                return(self.oMixin.eSendOnSpeaker(sMsgType, sMsg))
             elif sOnlineRouting == 'ZeroMQ':
                 from OTMql427 import ZmqListener
                 # FixMe: refactor for multiple charts
-                self.oChart = ZmqListener.ZmqMixin(sChartId, **self.oCurrentPubTarget)
+                self.oMixin = ZmqListener.ZmqMixin(sChartId, **self.oCurrentPubTarget)
+                self.oMixin.eConnectToReq()
+                return(self.oMixin.eSendOnReqRep(sMsgType, sMsg))
             else:
                 raise RuntimeError("sOnlineRouting value in %s section of Cmd2.ini not supported" % (
                     sOnlineRouting,))
 
-        self.vInfo("Publishing via " +sOnlineRouting +": " +sMsg)
-        return(self.oChart.eSendOnSpeaker(sMsgType, sMsg))
 
     ## csv
     @options([],
@@ -365,13 +328,13 @@ class CmdLineApp(Cmd):
              )
     def do_csv(self, oArgs, oOpts=None):
         __doc__ = sCSV__doc__
-        
+
         _lCmds = ['url', 'resample'] # read plot?
         lArgs = oArgs.split()
         sDo = lArgs[0]
         assert len(lArgs) > 1 and sDo in _lCmds, \
                "ERROR: " +sDo +" choose one of: " +str(_lCmds)
-        
+
         # o oConfig sHistoryDir:
 
         # show a URL where you can download  1 minute Mt HST data
@@ -397,10 +360,10 @@ class CmdLineApp(Cmd):
             oFd = sys.stdout
             vResample1Min(sRaw1MinFile, sResampledCsv, sTimeFrame, oFd)
             return
-        
+
         self.vError("Unrecognized csv command: " + str(oArgs) +'\n' +__doc__)
         return
-    
+
     ## charts
     @options([],
              arg_desc="command",
@@ -420,11 +383,12 @@ class CmdLineApp(Cmd):
         # all the charts the listener has heard of,
         if sDo == 'list':
             if self.oListenerThread is None:
-                self.vOutput(repr(self.G([])))
+                l = []
             else:
-                self.vOutput(repr(self.G(self.oListenerThread.lCharts)))
+                l = self.oListenerThread.lCharts
+            self.vOutput(repr(self.G(l)))
             return
-        
+
         if sDo == 'get' or (sDo == 'set' and len(lArgs) == 1):
             if self.sDefaultChart:
                 self.vOutput("The default chart is: " +self.sDefaultChart)
@@ -439,13 +403,13 @@ class CmdLineApp(Cmd):
 
         assert len(lArgs) > 1, \
             "ERROR: Commands to chart (and arguments) are required"
-        
+
         # set the default chart ID to be published or subscribed to.
         if sDo == 'set':
             self.sDefaultChart = self.G(lArgs[1])
             self.vOutput("The default chart is set to: " +lArgs[1])
             return
-        
+
         self.vError("Unrecognized chart command: " + str(oArgs) +'\n' +__doc__)
 
     ## subscribe
@@ -456,14 +420,14 @@ class CmdLineApp(Cmd):
     def do_subscribe(self, oArgs, oOpts=None):
         __doc__ = sSUB__doc__
         _lCmds = ['get', 'set', 'config', 'topics', 'run', 'thread'', hide', 'show', 'pprint']
-        
+
         if not oArgs:
             self.vOutput("Commands to subscribe (and arguments) are required\n")
             return
 
         lArgs = oArgs.split()
         sDo = lArgs[0]
-               
+
         # set the target for subscribe, or to see the current target
         if self.oCurrentSubTarget is None:
             assert self.oConfig['default']['lOnlineTargets'], \
@@ -485,7 +449,7 @@ class CmdLineApp(Cmd):
                 sCurrentSubTarget = self.oCurrentSubTarget.name
             self.vOutput("The current subscribe online target is: " +sCurrentSubTarget)
             return
-            
+
         # configure the current target for subscribe: [KEY [VAL]]
         if sDo == 'config':
             # configure the current target for subscribe:  [KEY [VAL]]
@@ -595,7 +559,7 @@ class CmdLineApp(Cmd):
         if self.oCurrentSubTarget is None:
             self.vError("Use \"sub set\" to set the current target")
             return
-        
+
         assert 'sOnlineRouting' in self.oCurrentSubTarget.keys(), \
                "ERROR: " +sOnlineRouting + " not in " +repr(self.oCurrentSubTarget.keys())
         assert self.oCurrentSubTarget['sOnlineRouting']
@@ -605,42 +569,68 @@ class CmdLineApp(Cmd):
             try:
                 # PikaListenerThread needs PikaMixin
                 import PikaListenerThread as ListenerThread
-            except ImportError, e:
-                self.vError("Cant import PikaChart: add the MQL4/Python directory to PYTHONPATH? " +str(e))
+            except ImportError as e:
+                self.vError("Cant import PikaListenerThread: add the MQL4/Python directory to PYTHONPATH? " +str(e))
                 raise
-            except Exception, e:
+            except Exception as e:
                 self.vError(traceback.format_exc(10))
                 raise
             sQueueName = self.oCurrentSubTarget['sQueueName']
+        elif sOnlineRouting == 'ZeroMQ':
+            try:
+                import ZmqListenerThread as ListenerThread
+            except ImportError as e:
+                self.vError("Cant import ZmqListenerThread: add the MQL4/Python directory to PYTHONPATH? " +str(e))
+                raise
+            except Exception as e:
+                self.vError(traceback.format_exc(10))
+                raise
         else:
             raise RuntimeError("sOnlineRouting value in %s section of Cmd2.ini not supported" % (
                         sOnlineRouting,))
 
         # start a thread to listen for messages,
         if sDo == 'run':
-            from pika import exceptions
-            
+
             if self.oListenerThread is not None:
                 self.vWarn("ListenerThread already listening to: " + repr(self.oListenerThread.lTopics))
                 return
-            try:
-                if len(lArgs) > 1:
-                    self.lTopics = lArgs[1:]
-                else:
-                    self.lTopics = ['']
-                dConfig = self.oConfig['RabbitMQ']
-                assert 'sQueueName' in dConfig, \
-                       "ERROR: sQueueName not in dConfig"
-                self.oListenerThread = ListenerThread.PikaListenerThread(sChartId,
-                                                                         self.lTopics,
-                                                                         **dConfig)
-                self.oListenerThread.start()
-            except exceptions.AMQPConnectionError, e:
-                self.vError("Is the RabbitMQ server running?\n" +str(e))
-                raise
-            except Exception, e:
-                self.vError(traceback.format_exc(10))
-                raise
+            if len(lArgs) > 1:
+                self.lTopics = lArgs[1:]
+            else:
+                self.lTopics = ['']
+            if sOnlineRouting == 'RabbitMQ':
+                from pika import exceptions
+                try:
+                    dConfig = self.oConfig['RabbitMQ']
+                    assert 'sQueueName' in dConfig, \
+                           "ERROR: sQueueName not in dConfig"
+                    self.oListenerThread = ListenerThread.PikaListenerThread(sChartId,
+                                                                             self.lTopics,
+                                                                             **dConfig)
+                    self.oListenerThread.start()
+                except exceptions.AMQPConnectionError as e:
+                    self.vError("Is the RabbitMQ server running?\n" +str(e))
+                    raise
+                except Exception as e:
+                    self.vError(traceback.format_exc(10))
+                    raise
+            elif sOnlineRouting == 'ZeroMQ':
+                import zmq
+                try:
+                    dConfig = self.oConfig['ZeroMQ']
+                    self.oListenerThread = ListenerThread.ZmqListenerThread(sChartId,
+                                                                             self.lTopics,
+                                                                             **dConfig)
+                    self.oListenerThread.start()
+                except zmq.ZMQError as e:
+                    # zmq4: iError = zmq.zmq_errno()
+                    iError = e.errno
+                    self.vWarn("run ZMQError in oListenerThread.start : %d %s" % (
+                        iError, zmq.strerror(iError),))
+                except Exception as e:
+                    self.vError(traceback.format_exc(10))
+                    raise
             return
 
         self.vError("Unrecognized subscribe command: " + str(oArgs) +'\n' +__doc__)
@@ -656,19 +646,20 @@ class CmdLineApp(Cmd):
              usage=sPUB__doc__,
              )
     def do_publish(self, oArgs, oOpts=None):
+        from OTMql427.SimpleFormat import sFormatMessage, sMakeMark
         __doc__ = sPUB__doc__
         _lCmds = ['get', 'set', 'config', 'wait', 'cmd',] # 'eval', 'json'
         if not oArgs:
             self.vOutput("Commands to publish (and arguments) are required\n" + __doc__)
             return
-        
+
         lArgs = oArgs.split()
         sDo = lArgs[0]
 
         if self.oCurrentPubTarget is None:
             assert self.oConfig['default']['lOnlineTargets'], \
                 "ERROR: empty self.oConfig['default']['lOnlineTargets']"
-            
+
         # Set the target for subscribe - call without args to see the current target
         if sDo == 'get' or (sDo == 'set' and len(lArgs) == 1):
             if self.oCurrentPubTarget is None:
@@ -686,7 +677,7 @@ class CmdLineApp(Cmd):
                 sCurrentPubTarget = self.oCurrentPubTarget.name
             self.vOutput("The current publish online target is: " +sCurrentPubTarget)
             return
-        
+
         # configure the current target for subscribe:  [KEY [VAL]]
         if sDo == 'config':
             if self.oCurrentPubTarget is None:
@@ -702,8 +693,8 @@ class CmdLineApp(Cmd):
         # everything beyond here requires an argument
         assert len(lArgs) > 1, \
             "ERROR: pub " +sDo +" COMMAND ARG1..."
-        
-        if sDo == 'set':            
+
+        if sDo == 'set':
             sTarget = lArgs[1]
             assert sTarget in self.oConfig['default']['lOnlineTargets'], \
                    "ERROR: " +sTarget +" not in OTCmd2.ini['default']['lOnlineTargets']: " \
@@ -724,11 +715,11 @@ class CmdLineApp(Cmd):
         if not sChartId:
             sChartId = 'oChart_ANY_0_FFFFFFFF_1'
             self.vWarn("No default chart set; using: " +sChartId)
-        
+
         if sDo == 'wait' or sDo == 'exec' or sDo == 'sync':
             sMsgType = 'cmd' # Mt4 command
             # Raises a Mt4Timeout error if there is no answer in 60 seconds
-            gRetval = self.gWaitForMessage(sMsgType, sMark, sChartId, *lArgs[1:])
+            gRetval = self.gWaitForMessage(sMsgType, sChartId, sMark, *lArgs[1:])
 
             self.vOutput("Returned: " +repr(self.G(gRetval)))
             return
@@ -738,7 +729,7 @@ class CmdLineApp(Cmd):
 
         if sDo == 'cmd' or sDo == 'async':
             sMsgType = 'cmd' # Mt4 command
-            e = self.eSendMessage(sMsgType, sMark, sChartId, *lArgs[1:])
+            e = self.eSendMessage(sMsgType, sChartId, sMark, *lArgs[1:])
             return
 
         # not ready
@@ -747,7 +738,7 @@ class CmdLineApp(Cmd):
             sInfo = str(lArgs[1]) # FixMe: how do we distinguish variable or thunk?
             if len(lArgs) > 2:
                 sInfo += '(' +str(','.join(lArgs[2:])) +')'
-            gRetval = self.gWaitForMessage(sMsgType, sMark, sChartId, sInfo)
+            gRetval = self.gWaitForMessage(sMsgType, sChartId, sMark, sInfo)
             self.vOutput("Returned: " +repr(self.G(gRetval)))
             return
 
@@ -756,7 +747,7 @@ class CmdLineApp(Cmd):
             sMsgType = 'json'
             # FixMe: broken but unused
             sInfo = json.dumps(str(' '.join(lArgs[1:])))
-            gRetval = self.gWaitForMessage(sMsgType, sMark, sChartId, sInfo)
+            gRetval = self.gWaitForMessage(sMsgType, sChartId, sMark, sInfo)
             self.vOutput("Returned: " +repr(self.G(gRetval)))
             return
 
@@ -770,12 +761,13 @@ class CmdLineApp(Cmd):
              usage=sORD__doc__,
              )
     def do_order(self, oArgs, oOpts=None):
+        from OTMql427.SimpleFormat import sFormatMessage, sMakeMark
         __doc__ = sORD__doc__
         _lCmds = ['list', 'trades', 'history', 'info', 'exposure', 'close', 'but', 'sell']
         if not oArgs:
             self.vOutput("Commands to order (and arguments) are required\n" + _lCmds)
             return
-        
+
         if self.oListenerThread is None:
             self.vError("ListenerThread not started; use 'sub run retval.#'")
             return
@@ -788,13 +780,13 @@ class CmdLineApp(Cmd):
         sDo = lArgs[0]
         assert sDo in _lCmds, \
                "ERROR: choose one of: " +str(_lCmds)
-        
+
         if sDo == 'list' or sDo == 'tickets':
             sMsgType = 'cmd' # Mt4 command
             # FixMe: trailing |
             sInfo = 'jOTOrdersTickets'
-            j = self.gWaitForMessage(sMsgType, sMark, sChartId, sInfo)
-            # jOTOrdersTickets 
+            j = self.gWaitForMessage(sMsgType, sChartId, sMark, sInfo)
+            # jOTOrdersTickets
             # pprint the json?
             self.vOutput(sInfo +": " +str(j))
             return
@@ -803,7 +795,7 @@ class CmdLineApp(Cmd):
             sMsgType = 'cmd' # Mt4 command
             # FixMe: trailing |
             sInfo = 'jOTOrdersTrades'
-            j = self.gWaitForMessage(sMsgType, sMark, sChartId, sInfo)
+            j = self.gWaitForMessage(sMsgType, sChartId, sMark, sInfo)
             self.vOutput(sInfo +": " +str(j))
             return
 
@@ -811,7 +803,7 @@ class CmdLineApp(Cmd):
             sMsgType = 'cmd' # Mt4 command
             # FixMe: trailing |
             sInfo = 'jOTOrdersHistory'
-            j = self.gWaitForMessage(sMsgType, sMark, sChartId, sInfo)
+            j = self.gWaitForMessage(sMsgType, sChartId, sMark, sInfo)
             self.vOutput(sInfo +": " +str(j))
             return
 
@@ -820,7 +812,7 @@ class CmdLineApp(Cmd):
             sCmd = 'jOTOrderInformationByTicket'
             assert len(lArgs) > 1, "ERROR: orders info iTicket"
             sInfo = str(lArgs[1])
-            j = self.gWaitForMessage(sMsgType, sMark, sChartId, sCmd, sInfo)
+            j = self.gWaitForMessage(sMsgType, sChartId, sMark, sCmd, sInfo)
             self.vOutput(sInfo +": " +str(j))
             return
 
@@ -828,7 +820,7 @@ class CmdLineApp(Cmd):
             sMsgType = 'cmd' # Mt4 command
             sCmd = 'fOTExposedEcuInMarket'
             sInfo = str(0)
-            f = self.gWaitForMessage(sMsgType, sMark, sChartId, sCmd, sInfo)
+            f = self.gWaitForMessage(sMsgType, sChartId, sMark, sCmd, sInfo)
             self.vOutput(sInfo +": " +str(f))
             return
 
@@ -840,10 +832,10 @@ class CmdLineApp(Cmd):
                 sPrice = lArgs[2]
                 sSlippage = lArgs[3]
                 sCmd = 'iOTOrderCloseFull'
-                self.gWaitForMessage(sMsgType, sMark, sChartId, sCmd, sTicket, sPrice, sSlippage)
+                self.gWaitForMessage(sMsgType, sChartId, sMark, sCmd, sTicket, sPrice, sSlippage)
             else:
                 sCmd = 'iOTOrderCloseMarket'
-                self.gWaitForMessage(sMsgType, sMark, sChartId, sCmd, sTicket)
+                self.gWaitForMessage(sMsgType, sChartId, sMark, sCmd, sTicket)
 
             return
 
@@ -863,10 +855,10 @@ class CmdLineApp(Cmd):
                 sPrice = lArgs[3]
                 sSlippage = lArgs[4]
                 sCmd = 'iOTOrderSend'
-                self.gWaitForMessage(sMsgType, sMark, sChartId, sCmd, sSymbol, sArg1, sVolume, sPrice, sSlippage)
+                self.gWaitForMessage(sMsgType, sChartId, sMark, sCmd, sSymbol, sArg1, sVolume, sPrice, sSlippage)
             else:
                 sCmd = 'iOTOrderSendMarket'
-                self.gWaitForMessage(sMsgType, sMark, sChartId, sCmd, sSymbol, sArg1, sVolume)
+                self.gWaitForMessage(sMsgType, sChartId, sMark, sCmd, sSymbol, sArg1, sVolume)
             return
 
         # (int iTicket, double fPrice, int iSlippage, color cColor=CLR_NONE)
@@ -893,11 +885,11 @@ class CmdLineApp(Cmd):
     def do_backtest(self, oArgs, oOpts=None):
         __doc__ = sBAC__doc__
         _lCmds = ['omlette', 'feed', 'recipe', 'chef', 'servings', 'plot']
- 
+
         # might let it import to list recipes and chefs?
         try:
             import pybacktest
-        except ImportError, e:
+        except ImportError as e:
             self.vError("pybacktest not installed: " +str(e))
             return
         from OpenTrader.BacktestCmd import vDoBacktestCmd
@@ -909,7 +901,7 @@ class CmdLineApp(Cmd):
         sDo = lArgs[0]
         assert len(lArgs) > 1 and sDo in _lCmds, \
                "ERROR: " +sDo +" choose one of: " +str(_lCmds)
-        
+
         try:
             # use ConfigObj update
             if oOpts.sRecipe:
@@ -923,7 +915,7 @@ class CmdLineApp(Cmd):
             vDoBacktestCmd(self, oArgs, oOpts)
         except KeyboardInterrupt:
             pass
-        except Exception, e:
+        except Exception as e:
             # This is still in the process of getting wired up and tested
             print(traceback.format_exc(10))
 
@@ -941,7 +933,7 @@ class CmdLineApp(Cmd):
              arg_desc="command",
              usage=sRABBIT__doc__
              )
-    
+
     def do_rabbit(self, oArgs, oOpts=None):
         __doc__ = sRABBIT__doc__
         try:
@@ -993,17 +985,15 @@ class CmdLineApp(Cmd):
                 self.vDebug("oListenerThread.bCloseConnectionSockets")
                 self.oListenerThread.bCloseConnectionSockets()
                 self.oListenerThread = None
-        if hasattr(self, 'oChart') and self.oChart:
+        if hasattr(self, 'oMixin') and self.oMixin:
             # Ive seen it hang here - maybe fixed now
-            self.vDebug("oChart.bCloseConnectionSockets")
             # FixMe: refactor for multiple charts
-            from pika import exceptions
             try:
                 sys.stdout.write("DEBUG: Waiting for message queues to flush...\n")
-                self.oChart.bCloseConnectionSockets()
-                self.oChart = None
+                self.oMixin.bCloseConnectionSockets()
+                self.oMixin = None
                 time.sleep(1.0)
-            except (KeyboardInterrupt, exceptions.ConnectionClosed):
+            except (KeyboardInterrupt,):
                 # impatient
                 pass
 
@@ -1138,12 +1128,12 @@ def iMain(lCmdLine):
             oApp._cmdloop()
     except KeyboardInterrupt:
         pass
-    except Exception, e:
+    except Exception as e:
         print(traceback.format_exc(10))
     # always reached
     if oApp:
         oApp.vAtexit()
-        
+
         l = threading.enumerate()
         if len(l) > 1:
             print "WARN: Threads still running: %r" % (l,)

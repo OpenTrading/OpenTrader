@@ -100,7 +100,7 @@ def lPullYahooToTxtfile(sSymbol):
                     if 'values' not in eachLine:
                         lStockLines.append(eachLine)
             return lStockLines
-        except Exception, e:
+        except Exception as e:
             print str(e), 'failed to organize pulled data.'
     except Exception,e:
         print str(e), 'failed to pull pricing data'

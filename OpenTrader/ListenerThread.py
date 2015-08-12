@@ -7,15 +7,15 @@ from pprint import pprint, pformat
 import threading
 import traceback
 
-from OTMql427 import SimpleFormat
+from OTMql427.SimpleFormat import lUnFormatMessage, gRetvalToPython
 
 class ListenerThread(threading.Thread):
-    
+
     def __init__(self, sChartId, **dArgs):
-        
+
         self.oLocal = threading.local()
         self._running = threading.Event()
-        
+
         self.lCharts = []
         self.jLastRetval = []
         self.jLastTick = []
@@ -24,7 +24,7 @@ class ListenerThread(threading.Thread):
         self.dRetvals = {}
         self.bPprint = False
         self.lHide = []
-        
+
     def vPprint(self, sMsgType, sMsg=None, sPrefix="INFO: "):
         if sMsgType == 'get':
             sys.stdout.write("INFO: bPprint" +repr(self.bPprint) + "\n")
@@ -53,8 +53,8 @@ class ListenerThread(threading.Thread):
             self.lHide.remove(sMsgType)
 
     def vCallbackOnListener(self, sBody):
-        
-        lArgs = SimpleFormat.lUnFormatMessage(sBody)
+
+        lArgs = lUnFormatMessage(sBody)
         sMsgType = lArgs[0]
         sChart = lArgs[1]
         sIgnore = lArgs[2] # should be a hash on the payload
@@ -70,10 +70,10 @@ class ListenerThread(threading.Thread):
                 self.lCharts.append(sChart)
 
             if sMsgType == 'retval':
-                # gRetvalToPython requires 
+                # gRetvalToPython requires
                 try:
                     gPayload = gRetvalToPython(lArgs)
-                except Exception, e:
+                except Exception as e:
                     sys.stdout.write("WARN: vCallbackOnListener error decoding to Python: %s\n%r" % (str(e), sBody, ))
                     return
 
@@ -117,52 +117,6 @@ class ListenerThread(threading.Thread):
                     self.vPprint(sMsgType, gPayload, "INFO: [" +sMark +"] ")
             else:
                 self.vPprint(sMsgType, gPayload)
-        except Exception, e:
+        except Exception as e:
             sys.stderr.write(traceback.format_exc(10) +"\n")
-    
-def gRetvalToPython(lElts):
-    # raises RuntimeError
-
-    sType = lElts[4]
-    if sType == 'string' and len(lElts) <= 5:
-        # warn?
-        return ""
-    
-    if not len(lElts) > 5:
-        sys.stdout.write("WARN: nothing to convert in %r\n" % (lElts,))
-        return None
-    
-    sVal = lElts[5]
-    
-    if sType == 'string':
-        gRetval = sVal
-    elif sType == 'error':
-        sys.stdout.write("ERROR:  %s\n" % (sVal,))
-        #? should I raise an error?
-        # raise RuntimeError()
-        return None
-    elif sType == 'datetime':
-        #? how do I convert this
-        # I think it's epoch seconds as an int
-        # but what TZ? TZ of the server?
-        # I'll treat it as a float like time.time()
-        # but probably better to convert it to datetime
-        gRetval = float(sVal)
-    elif sType == 'bool':
-        gRetval = bool(sVal)
-    elif sType == 'int':
-        gRetval = int(sVal)
-    elif sType == 'json':
-        gRetval = json.loads(sVal)
-    elif sType == 'double':
-        gRetval = float(sVal)
-    elif sType == 'none':
-        gRetval = None
-    elif sType == 'void':
-        # This is now unused
-        gRetval = None
-    else:
-        sys.stdout.write("WARN: unknown type %s in %r\n" % (sType, lElts,))
-        gRetval = None
-    return gRetval
 

@@ -9,7 +9,7 @@ import traceback
 
 from OTMql427 import PikaListener
 
-from ListenerThread import gRetvalToPython, ListenerThread
+from ListenerThread import ListenerThread
 
 class PikaListenerThread(ListenerThread, PikaListener.PikaMixin):
 
@@ -19,7 +19,7 @@ class PikaListenerThread(ListenerThread, PikaListener.PikaMixin):
         else:
             self.lTopics = lTopics
         self.sQueueName = dArgs['sQueueName']
-        
+
         PikaListener.PikaMixin.__init__(self, sChartId, **dArgs)
         ListenerThread.__init__(self, sChartId, **dArgs)
         dThreadArgs = {'name': sChartId, 'target': self.run}
@@ -35,20 +35,20 @@ class PikaListenerThread(ListenerThread, PikaListener.PikaMixin):
         while self._running.is_set() and len(self.oListenerChannel._consumers):
             try:
                 self.oListenerChannel.connection.process_data_events()
-            except exceptions.ConnectionClosed, e:
+            except exceptions.ConnectionClosed as e:
                 sys.stdout.write("DEBUG: stopping due to ConnectionClosed " +str(e) +"\n")
                 self.stop()
-            except (exceptions.ConsumerCancelled, KeyboardInterrupt,), e:
+            except (exceptions.ConsumerCancelled, KeyboardInterrupt,) as e:
                 # Basic.Cancel
                 sys.stdout.write("DEBUG: stopping listener thread " +str(e) +"\n")
                 self.stop()
-            except Exception, e:
+            except Exception as e:
                 sys.stdout.write("WARN: unhandled error - stopping listener thread " +str(e) +"\n")
                 #? raise
                 self.stop()
         try:
             self.oListenerChannel.connection.close()
-        except Exception, e:
+        except Exception as e:
             sys.stdout.write("WARN: error closing listener thread connection" +str(e) +"\n")
         self.oListenerChannel = None
 
@@ -62,7 +62,7 @@ class PikaListenerThread(ListenerThread, PikaListener.PikaMixin):
         oChannel.basic_ack(delivery_tag=oMethod.delivery_tag)
         self.vCallbackOnListener(sBody)
 
-        
+
 if __name__ == '__main__':
     o = None
     try:

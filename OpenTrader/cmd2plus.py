@@ -448,7 +448,7 @@ class Cmd(cmd.Cmd):
                 if subprocess.Popen(['which', editor], stdout=subprocess.PIPE, stderr=subprocess.STDOUT).communicate()[0]:
                     break
 
-    colorcodes = dANSI_COLORS 
+    colorcodes = dANSI_COLORS
     colors = (platform.system() != 'Windows')
     def colorize(self, val, color):
         '''Given a string (``val``), returns that string wrapped in UNIX-style
@@ -772,7 +772,7 @@ class Cmd(cmd.Cmd):
     def postparsing_precmd(self, statement):
         stop = 0
         return stop, statement
-    
+
     def postparsing_postcmd(self, stop):
         return stop
 
@@ -787,7 +787,7 @@ class Cmd(cmd.Cmd):
                 if len(funcs) == 1:
                     result = 'do_' + funcs[0]
         return result
-    
+
     def onecmd_plus_hooks(self, line):
         # The outermost level of try/finally nesting can be condensed once
         # Python 2.4 support can be dropped.
@@ -1321,7 +1321,7 @@ class Cmd(cmd.Cmd):
         else:
             if not self.run_commands_at_invocation(callargs):
                 self._cmdloop()
-    
+
     def default(self, line):
         """Called on an input line when the command prefix is not recognized.
 
@@ -1503,15 +1503,15 @@ class OutputTrap(Borg):
         self.contents = ''
         self.old_stdout = sys.stdout
         sys.stdout = self
-        
+
     def write(self, txt):
         self.contents += txt
-        
+
     def read(self):
         result = self.contents
         self.contents = ''
         return result
-    
+
     def tearDown(self):
         sys.stdout = self.old_stdout
         self.contents = ''
@@ -1530,26 +1530,26 @@ class Cmd2TestCase(unittest.TestCase):
                 tfile.close()
         if not len(self.transcripts):
             raise StandardError("No test files found - nothing to test.")
-        
+
     def setUp(self):
         if self.CmdApp:
             self.outputTrap = OutputTrap()
             self.cmdapp = self.CmdApp()
             self.fetchTranscripts()
-            
+
     def runTest(self): # was testall
         if self.CmdApp:
             its = sorted(self.transcripts.items())
             for (fname, transcript) in its:
                 self._test_transcript(fname, transcript)
-                
+
     regexPattern = pyparsing.QuotedString(quoteChar=r'/', escChar='\\', multiline=True, unquoteResults=True)
     regexPattern.ignore(pyparsing.cStyleComment)
     notRegexPattern = pyparsing.Word(pyparsing.printables)
     notRegexPattern.setParseAction(lambda t: re.escape(t[0]))
     expectationParser = regexPattern | notRegexPattern
     anyWhitespace = re.compile(r'\s', re.DOTALL | re.MULTILINE)
-    
+
     def _test_transcript(self, fname, transcript):
         lineNum = 0
         finished = False

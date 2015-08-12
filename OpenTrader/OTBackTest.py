@@ -26,7 +26,7 @@ def oPyBacktestCook(dFeeds, oRecipe, oChefModule, oOm, oFd=sys.stdout):
     Returns an error message string on failure; a Cooker instance on success.
     """
     from collections import OrderedDict
-    
+
     dDishes = oRecipe.dApplyRecipe()
     rBuy = rCover = dDishes['rBuy']
     rSell = rShort = dDishes['rSell']
@@ -121,7 +121,7 @@ def oParseOptions(sUsage):
                             store the recipe and servings in an hdf5 store
     """
     from argparse import ArgumentParser
-    
+
     oArgParser = ArgumentParser(description=sUsage)
     oArgParser.add_argument('-P', '--plot_equity',
                             dest='bPlotEquity', action='store_true', default=False,
@@ -159,7 +159,7 @@ def oOmain(lArgv):
     sYear = lArgs[3] # '2014'
     # if not os.path.isfile(sCsvFile): vResampleFiles(sSymbol, sDir)
     assert os.path.isfile(sCsvFile)
-    
+
     oOm = Omlette.Omlette(sHdfStore=oOptions.sOmelette, oFd=oFd)
 
     oRecipe = oOm.oAddRecipe(oOptions.sRecipe)
@@ -223,10 +223,10 @@ def iMain():
     iRetval = 0
     oOm = None
     try:
-        oOm = oOmain(sys.argv[1:])        
+        oOm = oOmain(sys.argv[1:])
     except KeyboardInterrupt:
         pass
-    except Exception, e:
+    except Exception as e:
         sys.stderr.write("ERROR: " +str(e) +"\n" + \
                          traceback.format_exc(10) +"\n")
         sys.stderr.flush()

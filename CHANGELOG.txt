@@ -1,3 +1,8 @@
+commit 8afa82927f7b9a5837ff1bd840a2ddc577a69f7a
+Date:   Wed Jul 29 01:56:59 2015 +0300
+
+    Minor bug fixes
+
 commit 3106c1180b575030cfbf973883c97b786d7461e0
 Date:   Mon Jul 13 21:57:01 2015 +0300
 
