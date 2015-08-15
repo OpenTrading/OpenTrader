@@ -55,6 +55,7 @@ Features are tagged with these tags, that may have the preconditions:
     http://pypi.python.org/pypi/pyrabbit
     and have the 'rabbitmq_management' plugin to rabbitmq enabled,
     and the rabbitmq server running.
+    
 * @examples  - generates share/examples files
 
 * @pybacktest - should run under {{{pytest-bdd}}} as well as behave.

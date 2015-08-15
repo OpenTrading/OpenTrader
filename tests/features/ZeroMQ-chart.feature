@@ -11,7 +11,7 @@ Feature: Send messages to a OTMql4Zmq enabled Mt4 about charts
   Scenario: OTCmd2-chart.txt
 
     Given Create the OTCmd2 instance
-    Given Collect share/examples to "OTCmd2-chart.txt"
+    Given Collect share/examples to "ZeroMQ-chart.txt"
 
     Then  The "sub get" command will set the on-line target to be the default from OTCmd2.ini
     Then  The "sub set ZeroMQ" command will set the on-line target for listening

@@ -1,0 +1,18 @@
+# See the description in tests/features/OTCmd2-backtest_feed_plot.txt
+# These tests require matplotlib be installed, AND REQUIRE HUMAN INTERACTION
+# to close the plot once it is displayed.
+# These tests will only work if you have pybacktest installed:
+# https://github.com/ematvey/pybacktest
+# 
+# These tests will only work if you have created a CSV file tmp/EURUSD60-2014.csv
+# echo the commands from the script so that we can watch the progress
+set echo True
+# list the known recipes
+back recipe list
+# read the feed CSV data
+back feed read_mt4_csv tmp/EURUSD60-2014.csv EURUSD 60 2014
+# show info about the feed
+back feed info
+# plot the data using matplotlib
+back feed plot
+exit

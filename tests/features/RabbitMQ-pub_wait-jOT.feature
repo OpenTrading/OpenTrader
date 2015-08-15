@@ -10,7 +10,7 @@ Feature: Send messages to a OTMql4AMQP enabled Mt4 about JSON account informatio
   Scenario: OTCmd2-pub_wait-jOT.txt
 
     Given Create the OTCmd2 instance
-    Then  Collect share/examples to "OTCmd2-pub_wait-jOT.txt"
+    Then  Collect share/examples to "RabbitMQ-pub_wait-jOT.txt"
     
     Then  The "sub get" command will show the on-line targets from OTCmd2.ini
     Then  The "sub set RabbitMQ" command will set the on-line target

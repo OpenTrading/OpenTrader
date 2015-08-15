@@ -11,7 +11,7 @@ Feature: Subscribe to messages from RabbitMQ on a given topic
   Scenario: OTCmd2-sub.txt
 
     Given Create the OTCmd2 instance
-    Given Collect share/examples to "OTCmd2-sub.txt"
+    Given Collect share/examples to "RabbitMQ-sub.txt"
     Then  The "sub get" command will set the on-line target to be the default from OTCmd2.ini
     Then  The "sub set RabbitMQ" command will set the on-line target
     Then  The "sub run retval.# timer.#" command will start a listener thread running, subscribed to retval and timer topics

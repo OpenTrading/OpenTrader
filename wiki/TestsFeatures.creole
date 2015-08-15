@@ -55,6 +55,7 @@ Features are tagged with these tags, that may have the preconditions:
     http://pypi.python.org/pypi/pyrabbit
     and have the 'rabbitmq_management' plugin to rabbitmq enabled,
     and the rabbitmq server running.
+    
 * @examples  - generates share/examples files
 
 * @pybacktest - should run under {{{pytest-bdd}}} as well as behave.
@@ -284,7 +285,7 @@ Features are tagged with these tags, that may have the preconditions:
 {{{
 
     Given Create the OTCmd2 instance
-    Given Collect share/examples to "OTCmd2-chart.txt"
+    Given Collect share/examples to "RabbitMQ-chart.txt"
 
     Then  The "sub get" command will set the on-line target to be the default from OTCmd2.ini
     Then  The "sub set RabbitMQ" command will set the on-line target for listening
@@ -318,7 +319,7 @@ Features are tagged with these tags, that may have the preconditions:
 {{{
 
     Given Create the OTCmd2 instance
-    Given Collect share/examples to "OTCmd2-ord.txt"
+    Given Collect share/examples to "RabbitMQ-ord.txt"
     Then  The "sub get" command will set the on-line target to be the default from OTCmd2.ini
     Then  The "sub set RabbitMQ" command will set the on-line target for listening
     
@@ -353,7 +354,7 @@ Features are tagged with these tags, that may have the preconditions:
 {{{
 
     Given Create the OTCmd2 instance
-    Then  Collect share/examples to "OTCmd2-pub_wait-Accounts.txt"
+    Then  Collect share/examples to "RabbitMQ-pub_wait-Accounts.txt"
     
     Then  The "sub get" command will set the on-line target to be the default from OTCmd2.ini
     Then  The "sub set RabbitMQ" command will set the on-line target
@@ -418,7 +419,7 @@ Features are tagged with these tags, that may have the preconditions:
 {{{
 
     Given Create the OTCmd2 instance
-    Then  Collect share/examples to "OTCmd2-pub_wait-jOT.txt"
+    Then  Collect share/examples to "RabbitMQ-pub_wait-jOT.txt"
     
     Then  The "sub get" command will show the on-line targets from OTCmd2.ini
     Then  The "sub set RabbitMQ" command will set the on-line target
@@ -460,7 +461,7 @@ Features are tagged with these tags, that may have the preconditions:
 {{{
 
     Given Create the OTCmd2 instance
-    Then  Collect share/examples to "OTCmd2-pub_wait.txt"
+    Then  Collect share/examples to "RabbitMQ-pub_wait.txt"
     Then  The "sub get" command will get the on-line targets from OTCmd2.ini
     
     Then  The "sub set RabbitMQ" command will set the on-line listener target
@@ -521,7 +522,7 @@ Features are tagged with these tags, that may have the preconditions:
 {{{
 
     Given Create the OTCmd2 instance
-    Given Collect share/examples to "OTCmd2-sub.txt"
+    Given Collect share/examples to "RabbitMQ-sub.txt"
     Then  The "sub get" command will set the on-line target to be the default from OTCmd2.ini
     Then  The "sub set RabbitMQ" command will set the on-line target
     Then  The "sub run retval.# timer.#" command will start a listener thread running, subscribed to retval and timer topics
@@ -557,7 +558,7 @@ Features are tagged with these tags, that may have the preconditions:
 {{{
 
     Given Create the OTCmd2 instance
-    Given Collect share/examples to "OTCmd2-chart.txt"
+    Given Collect share/examples to "ZeroMQ-chart.txt"
 
     Then  The "sub get" command will set the on-line target to be the default from OTCmd2.ini
     Then  The "sub set ZeroMQ" command will set the on-line target for listening
@@ -590,7 +591,7 @@ Features are tagged with these tags, that may have the preconditions:
 {{{
 
     Given Create the OTCmd2 instance
-    Given Collect share/examples to "OTCmd2-ord.txt"
+    Given Collect share/examples to "ZeroMQ-ord.txt"
     Then  The "sub get" command will set the on-line target to be the default from OTCmd2.ini
     Then  The "sub set ZeroMQ" command will set the on-line target for listening
     
@@ -624,7 +625,7 @@ Features are tagged with these tags, that may have the preconditions:
 {{{
 
     Given Create the OTCmd2 instance
-    Then  Collect share/examples to "OTCmd2-pub_wait-Accounts.txt"
+    Then  Collect share/examples to "ZeroMQ-pub_wait-Accounts.txt"
     
     Then  The "sub get" command will set the on-line target to be the default from OTCmd2.ini
     Then  The "sub set ZeroMQ" command will set the on-line target
@@ -688,7 +689,7 @@ Features are tagged with these tags, that may have the preconditions:
 {{{
 
     Given Create the OTCmd2 instance
-    Then  Collect share/examples to "OTCmd2-pub_wait-jOT.txt"
+    Then  Collect share/examples to "ZeroMQ-pub_wait-jOT.txt"
     
     Then  The "sub get" command will show the on-line targets from OTCmd2.ini
     Then  The "sub set ZeroMQ" command will set the on-line target
@@ -729,7 +730,7 @@ Features are tagged with these tags, that may have the preconditions:
 {{{
 
     Given Create the OTCmd2 instance
-    Then  Collect share/examples to "OTCmd2-pub_wait.txt"
+    Then  Collect share/examples to "ZeroMQ-pub_wait.txt"
     Then  The "sub get" command will get the on-line targets from OTCmd2.ini
     
     Then  The "sub set ZeroMQ" command will set the on-line listener target
@@ -789,7 +790,7 @@ Features are tagged with these tags, that may have the preconditions:
 {{{
 
     Given Create the OTCmd2 instance
-    Given Collect share/examples to "OTCmd2-sub.txt"
+    Given Collect share/examples to "ZeroMQ-sub.txt"
     Then  The "sub get" command will set the on-line target to be the default from OTCmd2.ini
     Then  The "sub set ZeroMQ" command will set the on-line target
     Then  The "sub run retval timer" command will start a listener thread running, subscribed to retval and timer topics

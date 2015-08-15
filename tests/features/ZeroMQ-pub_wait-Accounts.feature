@@ -9,7 +9,7 @@ Feature: Send messages to a OTMql4Zmq enabled Mt4 about Account information.
   Scenario: OTCmd2-pub_wait-Accounts.txt
 
     Given Create the OTCmd2 instance
-    Then  Collect share/examples to "OTCmd2-pub_wait-Accounts.txt"
+    Then  Collect share/examples to "ZeroMQ-pub_wait-Accounts.txt"
     
     Then  The "sub get" command will set the on-line target to be the default from OTCmd2.ini
     Then  The "sub set ZeroMQ" command will set the on-line target

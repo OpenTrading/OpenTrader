@@ -35,11 +35,20 @@ if [ -z "$OTLOG_DIR" ] ; then
   fi
 [ -d "$OTLOG_DIR" ] || mkdir "$OTLOG_DIR" || exit 4
 
-# we dont include to plot tests which require manual intervention
+# use this if you have attached OTZmqCmdEA.mq4 to a chart (default)
+# or if you have attached OTPyTestZmqEA.ex4 to a chart  - should work the same
+sh share/examples/test_mt4_zeromq_running.sh || exit 10
+
+## use this if you have attached OTPyTestPikaEA.mq4 to a chart
+## sh share/examples/test_rabbitmq_running.sh || exit 11
+## sh share/examples/test_mt4_rabbitmq_running.sh || exit 12
+
+sh share/examples/test_backtest.sh || exit 13
+
+# we dont include the plot tests which require manual intervention
 # is there a matplotlib command that solves this?
-sh share/examples/test_rabbitmq_running.sh || exit 10
-sh share/examples/test_backtest.sh || exit 11
-sh share/examples/test_mt4_rabbitmq_running.sh || exit 12
+# sh share/examples/test_backtest_plot.sh || exit 14
+
 
 # There should be no AssertionError in the logs
 grep AssertionError "$OTLOG_DIR"/*log && exit 3

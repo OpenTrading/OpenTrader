@@ -10,7 +10,7 @@ Feature: Send messages to a OTMql4Zmq enabled Mt4 about orders
   Scenario: OTCmd2-ord.txt
 
     Given Create the OTCmd2 instance
-    Given Collect share/examples to "OTCmd2-ord.txt"
+    Given Collect share/examples to "ZeroMQ-ord.txt"
     Then  The "sub get" command will set the on-line target to be the default from OTCmd2.ini
     Then  The "sub set ZeroMQ" command will set the on-line target for listening
     

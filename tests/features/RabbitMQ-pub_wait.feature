@@ -11,7 +11,7 @@ Feature: Send messages to a OTMql4AMQP enabled Mt4 about the terminal.
   Scenario: OTCmd2-pub_wait.txt
 
     Given Create the OTCmd2 instance
-    Then  Collect share/examples to "OTCmd2-pub_wait.txt"
+    Then  Collect share/examples to "RabbitMQ-pub_wait.txt"
     Then  The "sub get" command will get the on-line targets from OTCmd2.ini
     
     Then  The "sub set RabbitMQ" command will set the on-line listener target
