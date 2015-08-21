@@ -2,6 +2,9 @@
 __pycache__/
 *.py[cod]
 
+# visual studio
+*.sdf
+
 # C extensions
 *.so
 

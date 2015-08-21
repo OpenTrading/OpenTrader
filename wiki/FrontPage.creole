@@ -5,7 +5,7 @@ https://github.com/OpenTrading/OpenTrader/
 OpenTrader is an Open Source platform to communicate with on-line trading platforms,
 and includes the ability to:
 * write trading Recipes for multiple back-end testers (1 at the moment :-),
-* import data from CSV files or from the web for [[Backtesting]],
+* import data from CSV files or from the web for Backtesting,
 * analyze the Backtesting with multiple back-end reviewers (1 at the moment :-),
 * save the backtests, along with their parameters in an HDF5 file,
 * send and receive data from multiple on-line trading platforms (1 at the moment :-).
@@ -13,18 +13,19 @@ and includes the ability to:
 This ia a work in progress but it has quite a lot in there already:
 * send most Mql4 commands and gets the return values as Python,
 * receive bar, tick and timer notifications, using the
-  [[Python bridge enabled MetaTrader|OTMql4AMQP]], or
-  [[ZeroMQ enabled MetaTrader|OTMql4Zmq]].
+  [[Python bridge enabled MetaTrader|https://github.com/OpenTrading/OTMql4AMQP]], or
+  [[ZeroMQ enabled MetaTrader|https://github.com/OpenTrading/OTMql4Zmq]].
 * send and query orders to Mt4, using a
-  [[better MQL4 trading library|https://github.com/OpenTrading/OTMql4]],
+  [[better MQL4 trading library|https://github.com/OpenTrading/OTMql4Lib]],
 * reads CSV and everything internally is pandas DataFrames or Series,
 * there's a backtester for trading recipes based on 
   [[pybacktest|https://github.com/ematvey/pybacktest/]],
-  using pandas with [[TaLib]], so it's quite fast.
+  using pandas with [[TaLib|https://github.com/OpenTrading/wiki/TaLib]],
+  so it's quite fast.
 * there's simple plotting of the CSV files and results using
   [[matplotlib|http://matplotlib.org]],
-* you can save recipes and backtest results as an HDF5 file (see [[Omlettes]]),
-  viewable by  [[ViTables]]
+* you can save recipes and backtest results as an HDF5 file,
+  viewable by  [[ViTables|https://github.com/OpenTrading/wiki/ViTables]]
 * if you have [[pyrabbit|http://pypi.python.org/packages/source/p/pyrabbit]]
   installed, you can query the AMQP server.
 
@@ -32,7 +33,7 @@ Coming **Real Soon Now(TM)** is:
 * wiring up the backtester so that it should soon support Recipes for
   live-trading on Metatrader from Recipes and Chefs.
 * there's an optimizer in the backtester, but it's not yet wired up.
-For our future directions, see the [[RoadMap]].
+For our future directions, see the [[RoadMap|https://github.com/OpenTrading/wiki/RoadMap]].
 
 === Messaging Protocols
 

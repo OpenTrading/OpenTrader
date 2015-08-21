@@ -2,7 +2,7 @@
 
 #  The calling of OTCmd2 may need to be customized for your setup.
 if [ -z "$OTPYTHON_EXE" ] ; then
-    export OTPYTHON_EXE="sh /c/bin/tpython.sh"
+    export OTPYTHON_EXE="sh /t/bin/tpython.sh"
 fi
 
 if [ -z "$OTCMD2" ] ; then

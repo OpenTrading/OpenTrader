@@ -1,3 +1,8 @@
+commit 8707d8f5bafc0993883045733e5de96e7a8f11ea
+Date:   Sat Aug 15 15:37:56 2015 +0300
+
+    Moved examples to using ZeroMQ
+
 commit bfe3381f968abe69474e9791c29919bd8d466437
 Date:   Wed Aug 12 23:12:09 2015 +0300
 
