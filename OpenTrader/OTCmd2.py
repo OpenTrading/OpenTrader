@@ -179,6 +179,12 @@ except ImportError:
     del sDIR
 from OpenTrader.cmd2plus import Cmd, options, make_option, Cmd2TestCase
 
+try:
+    import tabview
+except ImportError:
+    # depends on curses
+    tabview = None
+
 pybacktest = None
 sBAC__doc__ = ""
 try:
@@ -242,7 +248,7 @@ class CmdLineApp(Cmd):
     def vConfigOp(self, lArgs, dConfig):
         if len(lArgs) == 2:
             self.vOutput(pformat(self.G(dConfig())))
-        elif len(lArgs) == 3 and str(lArgs[2]) == 'tabview':
+        elif len(lArgs) == 3 and tabview and str(lArgs[2]) == 'tabview':
             l = lConfigToList(dConfig())
             tabview.view(l, column_width=max)
         elif len(lArgs) == 3:

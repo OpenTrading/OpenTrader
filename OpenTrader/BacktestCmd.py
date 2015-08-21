@@ -7,8 +7,12 @@ import sys
 import os
 from pprint import pprint, pformat
 
-import tabview
-
+try:
+    import tabview
+except ImportError:
+    # depends on curses
+    tabview = None
+    
 from OTUtils import sStripCreole, lConfigToList
 
 #? feed rename delete
@@ -563,7 +567,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
 
         # ['signals', 'trades', 'positions', 'equity', 'reviews', 'trade_price']
         _lCmds = oChefModule.lProducedServings[:]
-        if tabview not in _lCmds: _lCmds += ['tabview']
+        if tabview and tabview not in _lCmds: _lCmds += ['tabview']
 
         if len(lArgs) == 1 or lArgs[1] == 'list':
             self.poutput("Produced Servings: %r" % (oChefModule.lProducedServings,))

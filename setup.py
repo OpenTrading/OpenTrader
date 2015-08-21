@@ -16,7 +16,7 @@ except ImportError:
 dirname = os.path.dirname(__file__)
 
 long_description = (
-    codecs.open(os.path.join(dirname, "README.md"), encoding="utf-8").read() + "\n"
+    codecs.open(os.path.join(dirname, "README.creole"), encoding="utf-8").read() + "\n"
     )
 
 setup(
@@ -41,15 +41,18 @@ setup(
     install_requires=[
         "configobj",
         "pandas",
-        "pika",
+        # we'll make zmq default now
+        "zmq",
         ],
     extras_require={'plotting': ["matplotlib"],
                     'pybacktest': ["pybacktest"],
                     'rabbit': ["pyrabbit"],
                     'bdd': ["behave"],
-                    'zmq': ["zmq"],
+                    # we'll make zmq default now
+                    # 'zmq': ["zmq"],
+                    'amqp': ["pika"],
                     },
-    data_files=[('', ['README.md']),
+    data_files=[('', ['README.creole']),
                 ('OpenTrader', glob.glob('OpenTrader/*.ini')),
                 ('OpenTrader/Omlettes', glob.glob('OpenTrader/Omlettes/*.ini'))],
     entry_points={
