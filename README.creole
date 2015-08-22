@@ -13,7 +13,7 @@ and includes the ability to:
 This ia a work in progress but it has quite a lot in there already:
 * send most Mql4 commands and gets the return values as Python, using the
   Python bridge enabled MetaTrader (https://github.com/OpenTrading/OTMql4AMQP), or
-  ZeroMQ enabled MetaTrader (https://github.com/OpenTrading/OTMql4Zmq).
+  ZeroMQ enabled MetaTrader (https://github.com/OpenTrading/OTMql4Zmq) .
 * receive bar, tick and timer notifications,  
 * send and query orders to Mt4, using a
   better MQL4 trading library (https://github.com/OpenTrading/OTMql4Lib),
@@ -34,7 +34,7 @@ Coming **Real Soon Now(TM)** is:
 * wiring up the backtester so that it should soon support Recipes for
   live-trading on Metatrader from Recipes and Chefs.
 * there's an optimizer in the backtester, but it's not yet wired up.
-For our future directions, see the RoadMap (https://github.com/OpenTrading/wiki/RoadMap).
+For our future directions, see the RoadMap (https://github.com/OpenTrading/wiki/RoadMap) .
 
 === Messaging Protocols
 
@@ -45,7 +45,7 @@ The ZeroMQ protocol is preferred and all development is currently on it.
 and requires that to be installed in your Metatrader as a pre-requisite.
 You also must have installed Python and the 
 OTMql4Py Python bridge (https://github.com/OpenTrading/OTMql4Py/) and
-OTMql4Lib Metatrader library (https://github.com/OpenTrading/OTMql4Lib/).
+OTMql4Lib Metatrader library (https://github.com/OpenTrading/OTMql4Lib/) .
 OpenTrader runs fine with either the C coded or Python implmentations
 of ZeroMQ for Metatrader:
 OTZmqCmdEA.mq4 (https://github.com/OpenTrading/OTMql4Zmq/raw/master/MQL4/Experts/OTMql4/OTZmqCmdEA.mq4)
@@ -54,28 +54,28 @@ OTZmqCmdEA.mq4 (https://github.com/OpenTrading/OTMql4Zmq/raw/master/MQL4/Experts
 and requires that to be installed in your Metatrader Python as a pre-requisite.
 You also must have installed Python and the 
 OTMql4Py Python bridge (https://github.com/OpenTrading/OTMql4Py/) and
-OTMql4Lib Metatrader library (https://github.com/OpenTrading/OTMql4Lib/).
+OTMql4Lib Metatrader library (https://github.com/OpenTrading/OTMql4Lib/) .
 You also must have installed and started a
 RabbitMQ server (http://rabbitmq.org), which is not so easy under Windows.
 
 One day we will make installers for a shrink-wrapped distribution, but
 for now, you must clone from github.com and manually install.
-See Installation).
 
-OTCmd2 (DocOTCmd2) is a command line script to run send commands
-to a OTMql4Zmq) or [[OTMql4AMPQ]] enabled Metatrader. It will start
-a command loop to listen, send commands, based on the Cmd2) read-eval-print,
+{{{OTCmd2}}} is a command line script to run send commands
+to a OTMql4Zmq or OTMql4AMPQ enabled Metatrader. It will start
+a command loop to listen, send commands, based on the Cmd2 read-eval-print,
 or take commands from the standard input, a file, or as command-line arguments.
-You will have to call OTCmd2 (DocOTCmd2) with the{{{-P}}} option with the
+You will have to call OTCmd2 with the{{{-P}}} option with the
 path of your installed Metatrader (e.g. {{{c:\Program Files\Metatrader}}}),
-or add your installed OTMql4Py Python directory to the{{{PYTHONPATH}}}
-environment variable (e.g.{{{c:\Program Files\Metatrader\MQL4\Python}}}).
+or set the {{{default}}} {{{sMt4Dir}}} setting of the {{{OTCmd2.ini}}} file,
+or add your installed OTMql4Py Python directory to the {{{PYTHONPATH}}}
+environment variable (e.g. {{{c:\Program Files\Metatrader\MQL4\Python}}}).
 
 === Work in Progress
 
 **This is a work in progress - a developers' pre-release version.**
 It has been fully checked in, and there is a test-suite based on the
-examples that provides good coverage, but the internal APIs will change.
+examples that provides good coverage, but the internal APIs may change.
 
 The project wiki should be open for editing by anyone logged into GitHub:
 Please report any system it works or doesn't work on in the wiki:

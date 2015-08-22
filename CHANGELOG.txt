@@ -1,3 +1,8 @@
+commit 3f198812d5d8f2fe9b0425d09369aa9de8bdf776
+Date:   Sat Aug 22 02:25:54 2015 +0300
+
+    Change setup.py to require zmq
+
 commit 1e8a02543bf2ab89d6cd3be10cb09e0c081b00ff
 Date:   Fri Aug 21 22:42:28 2015 +0300
 

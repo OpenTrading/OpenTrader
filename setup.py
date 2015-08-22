@@ -19,6 +19,9 @@ long_description = (
     codecs.open(os.path.join(dirname, "README.creole"), encoding="utf-8").read() + "\n"
     )
 
+# Dependencies are automatically detected, but it might need fine tuning.
+build_exe_options = {"packages": ["zmq"], "excludes": ["tkinter"]}
+
 setup(
     name="OpenTrader",
     description="OpenTrader",
@@ -55,6 +58,8 @@ setup(
     data_files=[('', ['README.creole']),
                 ('OpenTrader', glob.glob('OpenTrader/*.ini')),
                 ('OpenTrader/Omlettes', glob.glob('OpenTrader/Omlettes/*.ini'))],
+
+    options = {"build_exe": build_exe_options},
     entry_points={
         "console_scripts": [
             "OTCmd2 = OpenTrader.OTCmd2:iMain",
