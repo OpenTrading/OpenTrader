@@ -20,6 +20,17 @@ import datetime
 from collections import OrderedDict
 import numpy as np
 import matplotlib
+# Problems when frozen: only matplotlib.backends._backend_agg.pyd is bundled
+
+#  File "OpenTrader\OTPpnAmgc.py", line 23, in <module>
+#  File "c:\Python27\lib\site-packages\matplotlib\pyplot.py", line 98, in <module
+#    >
+#        _backend_mod, new_figure_manager, draw_if_interactive, _show = pylab_setup()
+#
+#  File "c:\Python27\lib\site-packages\matplotlib\backends\__init__.py", line 28,
+#  in pylab_setup
+#               globals(),locals(),[backend_name],0)
+#  ImportError: No module named backend_qt4agg
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 from matplotlib.finance import candlestick

@@ -4,6 +4,9 @@ __pycache__/
 
 # visual studio
 *.sdf
+*.iss
+*.msys
+*.bat
 
 # C extensions
 *.so

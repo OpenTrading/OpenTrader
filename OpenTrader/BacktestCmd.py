@@ -258,7 +258,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
         #? rename delete
         _lCmds = ['dir', 'list', 'get', 'set',
                   'read_mt4_csv', 'read_yahoo_csv', 'info', 'plot', 'to_hdf']
-        assert len(lArgs) > 1, "ERROR: " +sDo +" " +str(_lCmds)
+        assert len(lArgs) > 1, "ERROR: " +sDo +" command required: " +str(_lCmds)
         sCmd = lArgs[1]
         assert lArgs[1] in _lCmds, "ERROR: " +sDo +" " +str(_lCmds)
 
@@ -351,6 +351,9 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
             return
 
         # The following all require that a feed has been loaded
+        if not sFEED_CACHE_KEY or sFEED_CACHE_KEY not in dFEED_CACHE:
+            self.vError("Run \"back read_*\" first to read a DataFrame")
+            return
         _dCurrentFeedFrame = dFEED_CACHE[sFEED_CACHE_KEY]
 
         if _dCurrentFeedFrame is None:
@@ -405,11 +408,11 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
         # 'download_hst_zip'
         if sCmd == 'plot':
             import matplotlib
-            import numpy as np
-            from OTPpnAmgc import vGraphData
             if 'matplotlib.rcParams' in self.oConfig:
                 for sKey, gVal in self.oConfig['matplotlib.rcParams'].items():
                     matplotlib.rcParams[sKey] = gVal
+            import numpy as np
+            from OTPpnAmgc import vGraphData
 
             from OTBackTest import oPreprocessOhlc
             mFeedOhlc = oPreprocessOhlc(mFeedOhlc)

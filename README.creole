@@ -19,14 +19,14 @@ This ia a work in progress but it has quite a lot in there already:
   better MQL4 trading library (https://github.com/OpenTrading/OTMql4Lib),
 * there's a backtester for trading recipes based on 
   pybacktest (https://github.com/ematvey/pybacktest/),
-  using pandas with TaLib (https://github.com/OpenTrading/wiki/TaLib),
+  using pandas with TaLib (https://github.com/OpenTrading/OpenTrader/wiki/TaLib),
   so it's quite fast.
 * reads CSV history files and treats everything internally in
   pandas DataFrames or Series,
 * there's simple plotting of the CSV files and results using
   matplotlib (http://matplotlib.org),
 * you can save recipes and backtest results as an HDF5 file,
-  viewable by  ViTables (https://github.com/OpenTrading/wiki/ViTables)
+  viewable by  ViTables (https://github.com/OpenTrading/OpenTrader/wiki/ViTables)
 * if you have pyrabbit (http://pypi.python.org/packages/source/p/pyrabbit)
   installed, you can query the AMQP server.
 
@@ -34,7 +34,7 @@ Coming **Real Soon Now(TM)** is:
 * wiring up the backtester so that it should soon support Recipes for
   live-trading on Metatrader from Recipes and Chefs.
 * there's an optimizer in the backtester, but it's not yet wired up.
-For our future directions, see the RoadMap (https://github.com/OpenTrading/wiki/RoadMap) .
+For our future directions, see the RoadMap (https://github.com/OpenTrading/OpenTrader/wiki/RoadMap) .
 
 === Messaging Protocols
 

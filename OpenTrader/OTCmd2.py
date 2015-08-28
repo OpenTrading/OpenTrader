@@ -169,14 +169,17 @@ import threading
 import time
 import unittest
 
-try:
-    import OpenTrader
-except ImportError:
-    # support running from source
-    sDIR = os.path.dirname(os.path.dirname(__file__))
-    if sDIR not in sys.path:
-        sys.path.insert(0, sDIR)
-    del sDIR
+if hasattr(sys, 'frozen') and sys.frozen:
+    __file__ = sys.executable
+else:
+    try:
+        import OpenTrader
+    except ImportError:
+        # support running from source
+        sDIR = os.path.dirname(os.path.dirname(__file__))
+        if sDIR not in sys.path:
+            sys.path.insert(0, sDIR)
+        del sDIR
 from OpenTrader.cmd2plus import Cmd, options, make_option, Cmd2TestCase
 
 try:

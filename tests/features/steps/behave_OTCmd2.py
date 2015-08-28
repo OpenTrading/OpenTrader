@@ -135,7 +135,7 @@ def vWriteShareExamples(oCtx):
     if not os.path.isdir('tmp'): os.mkdir('tmp')
     sFile = os.path.join('tmp', sSHARE_EXAMPLES)
     with open(sFile, 'w') as oFd:
-        oFd.write('\n'.join(lSHARE_EXAMPLES) +'\n')
+        oFd.write('\n'.join(lSHARE_EXAMPLES) +'\r\n')
     sys.stdout.write('\n' +"Wrote share/examples to " +sFile +'\n')
     
 @step('Collect share/examples to "OTCmd2-backtest_omlette.txt"')
