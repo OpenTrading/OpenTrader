@@ -1,3 +1,8 @@
+commit 6b9625ec2b672ba73f0b846913a3d52ae1f1b659
+Date:   Fri Aug 28 20:51:36 2015 +0300
+
+    Fixed broken url links
+
 commit a35f7ae4e728925084d5cc492104d7954a023e48
 Date:   Sat Aug 22 06:32:15 2015 +0300
 
