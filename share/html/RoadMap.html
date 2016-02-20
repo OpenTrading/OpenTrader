@@ -1,0 +1,72 @@
+<h2>Road Map</h2>
+
+<p>There are a lot of directions we can take this project, and a lot<br />
+of things we can do. The Road Map is ideas that when they are accepted,<br />
+proceed to getting fleshed out as <a href="UseCases">UseCases</a>.</p>
+
+<p>The order should be approximately that of importance.</p>
+
+<ul>
+	<li>Elaborate the <a href="UseCases">UseCases</a> to see what is important.</li>
+</ul>
+<ul>
+	<li>Elaborate the <a href="TestsFeatures">TestsFeatures</a> to ensure coverage.</li>
+</ul>
+<ul>
+	<li>Document <a href="Omlettes">Omlettes</a> and make them reloadable.</li>
+</ul>
+<ul>
+	<li>Speed up the round-trip time with OTMql4AMQP - try  <a href="Rabbit4Mt4">https://github.com/OpenTrading/OTMql4AMQP/wiki/Rabbit4Mt4</a>.  If the compiled DLL version of it works, we would greatly simplify distribution.</li>
+</ul>
+<ul>
+	<li>Speed up the Python initial load time of <a href="OTCmd2">DocOTCmd2</a>.</li>
+</ul>
+<ul>
+	<li>Extend the network communication to use ZeroMQ via  <a href="OTMql4Zmq">https://github.com/OpenTrading/OTMql4Zmq</a>.  If the compiled DLL version of it gets fixed, we would greatly simplify distribution.</li>
+</ul>
+<ul>
+	<li>Extend the Feed parsing to be able to read Mt HST files.</li>
+</ul>
+<ul>
+	<li>Extend the Feed parsing to be able update a CSV file with recent bars  of the same chart that are currently in a live Mt4.</li>
+</ul>
+<ul>
+	<li>Add the ability of compare the reviews of different omletttes: see  <a href="ComparingOmeletteReviews">ComparingOmeletteReviews</a>.</li>
+</ul>
+<ul>
+	<li>Break out the metrics from the Chefs and have interchangable Reviewers.</li>
+</ul>
+<ul>
+	<li>Add event driven Chefs to expand the range of <a href="Backtesting">Backtesting</a>.</li>
+</ul>
+<ul>
+	<li>Hook up <a href="Recipes">Recipes</a> to live-trading on Metatrader from recipes and chefs.</li>
+</ul>
+<ul>
+	<li>Add Recipes to abstract what <a href="OTCmd2">DocOTCmd2</a> needs from a recipe specification.</li>
+</ul>
+<ul>
+	<li>Add Chefs to be able to compare chefs on the same recipes.</li>
+</ul>
+<ul>
+	<li>Look at integrating <tt>pandas_datareaders_unofficial</tt> with caching.</li>
+</ul>
+<ul>
+	<li>Explore ViTables as a tool to compare the reviews of different omletttes:</li>
+</ul>
+<ol>
+	<li>It should be extended to provide GUI editing of the dictionary stored  in the metadata slot of pandas objects.</li>
+</ol>
+<ol>
+	<li>The log window in ViTables could be replaced by a <a href="OTCmd2">DocOTCmd2</a>  read-evel-print window,   which would embed OpenTrader in ViTables.  Then the plotting from <a href="OTCmd2">DocOTCmd2</a> under ViTables could get wired up to  display <tt>pandas.plot()</tt> in <a href="VTPlot">http://github.com/VTPlot/alexey-naydenov</a>  using PyQtGraph.</li>
+</ol>
+<ul>
+	<li>Reduce the amount of syntax needed for <a href="Recipes">Recipes</a> by adding syntactic sugar.</li>
+</ul>
+<ul>
+	<li>Rationalize our syntactic sugar with other [Error: Wrong macro arguments: "cuisine" for macro 'haute' (maybe wrong macro tag syntax?)]
+ establishments.</li>
+</ul>
+<hr />
+
+<p>Parent: <a href="Home">Home</a></p>

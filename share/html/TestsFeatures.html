@@ -1,0 +1,1233 @@
+<h2>Features Tests</h2>
+
+<p><a href="UseCases">UseCases</a> are the starting point for our Behaviour Driven Development (BDD).<br />
+The use cases are elaborated into required feature need to fulfil<br />
+the use case, which are turned into BDD test features and scenarios.</p>
+
+<p>The currently documented features can be found in the <br />
+<a href="tests/features/">https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/</a><br />
+directory of the distribution.</p>
+
+<p>We have been using <a href="py-bdd">https://github.com/pytest-dev/pytest-bdd/</a>; from<br />
+the top-level directory of the distribution, you could run the <tt>py-bdd</tt> tests with</p>
+<pre>
+py.test -v tests/
+</pre>
+
+<p>But we are having "issues" with <tt>py-bdd</tt>, including:</p>
+<ul>
+	<li>no real documentation, just a README file;</li>
+	<li>the code contradicts the documentation, about not reusing paraterized steps;</li>
+	<li>the automatic generation of fixtures from step implmentations is too "magical"  for our tastes - we would like fixtures to be explicitly declared with a decorator;</li>
+	<li>it is inspired by <tt>behave</tt>, but with a number of design decisions that differ,  such as enforcing a step type with the name, which are largely undocumented;</li>
+</ul>
+<p>We will stay with <a href="behave">https://github.com/behave/behave</a> as our BDD system<br />
+and watch the evolution of the two projects. Behave is stable, not overengineered,<br />
+evolving well, and the code is easy to money-patch or experiment with new features.<br />
+The most important thing is to have the BDD use-case decision process for development,<br />
+and to use the BDD feature files to document the implementation of the use-cases.<br />
+We additionally use them to generate our examples, and our wiki pages: triple use!</p>
+
+<p>From the top-level directory of the distribution, you could run the <tt>behave</tt> BDD<br />
+tests with:</p>
+<pre>
+behave -v --capture tests/
+</pre>
+<p>(<tt>--capture</tt> is enabled by default, but you can't use <tt>--no-capture</tt>.)</p>
+
+<p>This will create a directory at the top-level directory of the distribution<br />
+called <tt>tmp</tt> where the BDD tests generate the scripts in <tt>share/examples</tt>.<br />
+We generate our example scripts from the BDD documentation, and the generated<br />
+example scripts should be identical with the scripts in <tt>share/examples</tt>.</p>
+
+<p>We no longer run the tests with <tt>pytest-bdd</tt> so there may be problems<br />
+running them now, but the systems are so similar, it is usually easy to bring<br />
+implementations from <tt>behave</tt> to <tt>pytest-bdd</tt>. All Features that did<br />
+run with <tt>pytest-bdd</tt> are marked with the <tt>@pytest</tt> tag, and should still run,<br />
+but new features and scenari may not be picked up by the <tt>pytest-bdd</tt> runner.</p>
+
+<h3>Features Test Tags</h3>
+
+<p>Features are tagged with these tags, that may have the preconditions:</p>
+
+<ul>
+	<li>@rabbitctl - requires you have pyrabbit installed:    <a href="http://pypi.python.org/pypi/pyrabbit">http://pypi.python.org/pypi/pyrabbit</a>    and have the 'rabbitmq_management' plugin to rabbitmq enabled,    and the rabbitmq server running.</li>
+</ul>
+<ul>
+	<li>@examples  - generates share/examples files</li>
+</ul>
+<ul>
+	<li>@pybacktest - should run under <tt>pytest-bdd</tt> as well as behave.</li>
+</ul>
+<ul>
+	<li>@Mt4Running - tests will only work if you have an OTMql4AMQP enabled Metatrader running,</li>
+</ul>
+<ul>
+	<li>@OTMql4Zmq - tests will only work if you have an OTMql4Zmq enabled Metatrader running,    the Experts/OTMql4/OTZmqCmdEA.mq4 attached to a chart in it.</li>
+</ul>
+<ul>
+	<li>@OTMql4AMQP - tests will only work if you have an OTMql4AMQP enabled Metatrader running,    the Experts/OTMql4/OTPyTestPikaEA.mq4 attached to a chart in it, and    the RabbitMQ server configured and running.</li>
+</ul>
+<ul>
+	<li>@Mt4Connected -  the Metatrader is logged in and connected.</li>
+</ul>
+<ul>
+	<li>@examples - generates examples script files</li>
+</ul>
+<ul>
+	<li>@pytest - should run under <tt>pytest-bdd</tt> as well as behave.</li>
+</ul>
+<ul>
+	<li>@wip        - work-in-progress - may or may not work</li>
+	<li>@fixme      - work-in-progress - probably won't work</li>
+	<li>@broken     - work-in-progress - won't work</li>
+</ul>
+<h3>01_csv</h3>
+
+<p><strong><a href="01_csv.txt">https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/01_csv.feature</a></strong></p>
+
+<p><strong>Feature:</strong> csv command<br />
+Download, resample and convert CSV files into pandas:</p>
+<pre>
+csv url PAIRSYMBOL       - show a URL where you can download  1 minute Mt HST data
+csv resample SRAW1MINFILE, SRESAMPLEDCSV, STIMEFRAME - Resample 1 minute CSV data,
+                                                       to a new timeframe
+                                                       and save it as CSV file
+</pre>
+<p>For help on subcommands type: csv help &lt;sub&gt; </p>
+
+<p><strong>Scenario:</strong> csv url</p>
+<pre>
+For help on options type: help csv
+
+        Given We get help when we type "csv help url"
+        """csv url PAIRSYMBOL       
+                - show a URL where you can download  1 minute Mt HST data
+                
+        For help on options type: help csv
+        """
+
+
+**Scenario:** csv resample
+{{{
+For help on options type: help csv
+
+        Given We get help when we type "csv help resample"
+        """csv resample SRAW1MINFILE, SRESAMPLEDCSV, STIMEFRAME 
+                - Resample 1 minute CSV data, to a new timeframe and save it as CSV file
+                
+        For help on options type: help csv
+        """
+</pre>
+
+<h3>02_chart</h3>
+
+<p><strong><a href="02_chart.txt">https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/02_chart.feature</a></strong></p>
+
+<p><strong>Feature:</strong> chart command<br />
+chart<br />
+For help on subcommands type: chart help &lt;sub&gt; </p>
+
+<p><strong>Scenario:</strong> chart list</p>
+<pre>
+For help on options type: help chart
+
+        Given We get help when we type "chart help list"
+        """chart list
+                
+        For help on options type: help chart
+        """
+
+
+**Scenario:** chart get
+{{{
+For help on options type: help chart
+
+        Given We get help when we type "chart help get"
+        """chart get
+                
+        For help on options type: help chart
+        """
+
+
+**Scenario:** chart set
+{{{
+For help on options type: help chart
+
+        Given We get help when we type "chart help set"
+        """chart list
+                
+        For help on options type: help chart
+        """
+</pre>
+
+<h3>03_subscribe</h3>
+
+<p><strong><a href="03_subscribe.txt">https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/03_subscribe.feature</a></strong></p>
+
+<p><strong>Feature:</strong> subscribe command</p>
+
+<p>Subscribe to messages from RabbitMQ on a given topic:</p>
+<pre>
+  sub get               - get the current target for subscribe; defaults to:
+                        the first value of default['lOnlineTargets'] in OTCmd2.ini
+  sub set TARGET        - set the target for subscribe, must be one of:
+                        the values of default['lOnlineTargets'] in OTCmd2.ini
+  sub config            - configure the current target for subscribe: [KEY [VAL]]
+  sub run TOPIC1 ...    - start a thread to listen for messages,
+                          TOPIC is one or more Rabbit topic patterns.
+  sub topics            - shows topics subscribed to.
+  sub hide TOPIC        - stop seeing TOPIC messages (e.g. tick - not a pattern)
+  sub show              - list the message topics that are being hidden
+  sub show TOPIC        - start seeing TOPIC messages (e.g. tick - not a pattern)
+  sub pprint ?0|1       - seeing TOPIC messages with pretty-printing,
+                          with 0 - off, 1 - on, no argument - current value
+  sub thread info       - info on the thread listening for messages.
+  sub thread stop       - stop a thread listening for messages.
+  sub thread enumerate  - enumerate all threads
+</pre>
+
+<p>Common RabbitMQ topic patterns are:</p>
+<ul>
+	<li><tt>#</tt> for all messages,</li>
+	<li><tt>tick.#</tt> for ticks,</li>
+	<li><tt>timer.#</tt> for timer events,</li>
+	<li><tt>retval.#</tt> for return values.</li>
+</ul>
+<p>You can choose as specific chart with syntax like:</p>
+<pre>
+    tick.oChart.EURGBP.240.93ACD6A2.#
+</pre>
+<p>The RabbitMQ host and login information is set in the <tt>[RabbitMQ]</tt><br />
+section of the <tt>OTCmd2.ini</tt> file; see the <tt>-c/--config</tt> command-line options.<br />
+For help on subcommands type: subscribe help &lt;sub&gt; </p>
+
+<p><strong>Scenario:</strong> subscribe get</p>
+<pre>
+For help on options type: help subscribe
+
+        Given We get help when we type "subscribe help get"
+        """subscribe get
+                
+        For help on options type: help subscribe
+        """
+
+
+**Scenario:** subscribe config
+{{{
+For help on options type: help subscribe
+
+        Given We get help when we type "subscribe help config"
+        """subscribe config - configure the current target for subscribe:  [KEY [VAL]]
+                
+        For help on options type: help subscribe
+        """
+
+
+**Scenario:** subscribe topics
+{{{
+For help on options type: help subscribe
+
+        Given We get help when we type "subscribe help topics"
+        """subscribe topics: shows topics subscribed to
+                
+        For help on options type: help subscribe
+        """
+
+
+**Scenario:** subscribe set
+{{{
+For help on options type: help subscribe
+
+        Given We get help when we type "subscribe help set"
+        """subscribe set
+                
+        For help on options type: help subscribe
+        """
+
+
+**Scenario:** subscribe thread
+{{{
+For help on options type: help subscribe
+
+        Given We get help when we type "subscribe help thread"
+        """thread info       - info on the thread listening for messages.
+        thread stop       - stop a thread listening for messages.
+        For help on options type: help subscribe
+        """
+
+
+**Scenario:** subscribe hide
+{{{
+For help on options type: help subscribe
+
+        Given We get help when we type "subscribe help hide"
+        """subscribe hide: stop seeing TOPIC messages (e.g. tick - not a pattern)
+                
+        For help on options type: help subscribe
+        """
+
+
+**Scenario:** subscribe show
+{{{
+For help on options type: help subscribe
+
+        Given We get help when we type "subscribe help show"
+        """subscribe show
+        start seeing TOPIC messages (e.g. tick - not a pattern)
+                
+        For help on options type: help subscribe
+        """
+
+
+**Scenario:** subscribe pprint
+{{{
+For help on options type: help subscribe
+
+        Given We get help when we type "subscribe help pprint"
+        """subscribe pprint:
+        - seeing TOPIC messages with pretty-printing,
+        - with 0 - off, 1 - on, no argument - current value
+        For help on options type: help subscribe
+        """
+
+
+**Scenario:** subscribe run
+{{{
+For help on options type: help subscribe
+
+        Given We get help when we type "subscribe help run"
+        """subscribe run: start a thread to listen for messages,
+                
+        For help on options type: help subscribe
+        """
+
+
+**Scenario:** subscribe list
+{{{
+For help on options type: help subscribe
+
+        Given We get help when we type "subscribe help list"
+        """subscribe list
+                
+        For help on options type: help subscribe
+        """
+</pre>
+
+<h3>04_publish</h3>
+
+<p><strong><a href="04_publish.txt">https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/04_publish.feature</a></strong></p>
+
+<p><strong>Feature:</strong> publish command</p>
+
+<p>Publish a message via RabbitMQ to a given chart on a OTMql4Py enabled terminal:</p>
+<pre>
+</pre>
+<p>You wont see the return value unless you have already done a:</p>
+<pre>
+  sub run retval.#
+</pre>
+<p>The RabbitMQ host and login information is set in the <tt>[RabbitMQ]</tt><br />
+section of the <tt>OTCmd2.ini</tt> file; see the <tt>-c/--config</tt> command-line options.<br />
+For help on subcommands type: publish help &lt;sub&gt; </p>
+
+<p><strong>Scenario:</strong> publish get</p>
+<pre>
+For help on options type: help publish
+
+        Given We get help when we type "publish help get"
+        """pub get                   - get the current target for publish; defaults to:
+                                    the first value of default['lOnlineTargets'] in OTCmd2.ini
+                
+        For help on options type: help publish
+        """
+
+
+**Scenario:** publish config
+{{{
+For help on options type: help publish
+
+        Given We get help when we type "publish help config"
+        """pub config                - configure the current target for publish: [KEY [VAL]]
+                
+        For help on options type: help publish
+        """
+
+
+**Scenario:** publish set
+{{{
+For help on options type: help publish
+
+        Given We get help when we type "publish help set"
+        """  pub set TARGET            - set the target for publish,
+                
+        For help on options type: help publish
+        """
+
+
+**Scenario:** publish wait
+{{{
+For help on options type: help publish
+
+        Given We get help when we type "publish help wait"
+        """pub wait COMMAND ARG1 ... - publish a Mql command to Mt4 and wait for the result,
+              the command should be a single string, with a space seperating arguments.
+                
+        For help on options type: help publish
+        """
+
+
+**Scenario:** publish exec
+{{{
+For help on options type: help publish
+
+        Given We get help when we type "publish help exec"
+        """pub wait COMMAND ARG1 ... - publish a Mql command to Mt4 and wait for the result,
+              the command should be a single string, with a space seperating arguments.
+                
+        For help on options type: help publish
+        """
+
+
+**Scenario:** publish sync
+{{{
+For help on options type: help publish
+
+        Given We get help when we type "publish help sync"
+        """pub wait COMMAND ARG1 ... - publish a Mql command to Mt4 and wait for the result,
+              the command should be a single string, with a space seperating arguments.
+                
+        For help on options type: help publish
+        """
+
+
+**Scenario:** publish cmd
+{{{
+For help on options type: help publish
+
+        Given We get help when we type "publish help cmd"
+        """pub wait COMMAND ARG1 ... - publish a Mql command to Mt4 asyncronsly,
+              the command should be a single string, with a space seperating arguments.
+                
+        For help on options type: help publish
+        """
+
+
+**Scenario:** publish async
+{{{
+For help on options type: help publish
+
+        Given We get help when we type "publish help async"
+        """pub wait COMMAND ARG1 ... - publish a Mql command to Mt4 asyncronsly,
+              the command should be a single string, with a space seperating arguments.
+                
+        For help on options type: help publish
+        """
+
+
+**Scenario:** publish eval
+{{{
+For help on options type: help publish
+
+        Given We get help when we type "publish help eval"
+        """pub eval COMMAND ARG1 ... - publish a Python command to the OTMql4Py,
+        the command should be a single string, with a space seperating arguments.
+                
+        For help on options type: help publish
+        """
+
+
+**Scenario:** publish json
+{{{
+For help on options type: help publish
+
+        Given We get help when we type "publish help json"
+        """
+                
+        For help on options type: help publish
+        """
+</pre>
+
+<h3>05_backtest</h3>
+
+<p><strong><a href="05_backtest.txt">https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/05_backtest.feature</a></strong></p>
+
+<p><strong>Feature:</strong> backtest command</p>
+
+<p>Backtest recipes with chefs, and serve the results as metrics and plots.</p>
+
+<p>The subcommands are:</p>
+<ul>
+	<li>omlette   - An omlette is an HDF5 file that saves all the data from a backtest</li>
+	<li>feed      - Create feeds (pandas DataFrames) from CSV OHLCV files</li>
+	<li>recipe    - Set the recipe that the chef will use, and make the ingredients from the feeds</li>
+	<li>chef      - Set the chef that we will use, and cook from the ingredients and the feeds</li>
+	<li>servings  - List the servings the chef has cooked, and dish out the servings</li>
+	<li>plot      - Plot the servings the chef has cooked, using matplotlibFor help on subcommands type: backtest help &lt;sub&gt; </li>
+</ul>
+<p><strong>Scenario:</strong> backtest omlette</p>
+<pre>
+For help on options type: help backtest
+
+        Given We get help when we type "backtest help omlette"
+        """backtest omlette
+        An omlette is an HDF5 file that saves all the information from a backtest,
+        including the metadata: all of parameter values that were used in the recipe,
+        the parameters used by the cook, and the servings results.
+        You should open an omlette before you backtest giving it a filename,
+        and close it after the 'chef cook' and 'servings'.
+        {{{
+        back omlette open FILE           - open an HDF file to save all the backtest parts
+        back omlette check               - show the current omlette filename
+        back omlette display             - display the current omlette HDF sections
+        back omlette close               - close the HDF file saving the omlette
+        }}}
+        Real Soon Now you will be able to enjoy them more by reloading previously saved
+        omlettes, plotting the data or the results, and adding or editing comments.
+                
+        For help on options type: help backtest
+        """
+</pre>
+
+<h3>06_make</h3>
+
+<p><strong><a href="06_make.txt">https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/06_make.feature</a></strong></p>
+
+<p><strong>Feature:</strong> make command<br />
+The make command lets us make things that are useful, such as making<br />
+the feature files that will be used to run the tests. </p>
+
+<ul>
+	<li>make [--features_dir] features: will generate the test feature files to test the code.For help on subcommands type: make help &lt;sub&gt; </li>
+</ul>
+<p><strong>Scenario:</strong> make features</p>
+<pre>
+For help on options type: help make
+
+        Given We get help when we type "make help features"
+        """make [--features_dir] features will generate the test feature files
+        that are used to test the code from the code itself. This way, the
+        documentation in the feature files is drawn directly from the documentation
+        in the code, which makes it easier to keep it up-to-date with the code.
+        make features uses the --features_dir dir option to the make command to know what
+        directory the feature files will be written to. The directory must exist.
+        For help on options type: help make
+        """
+</pre>
+
+<h3>OTCmd2-backtest_feed_plot</h3>
+
+<p><strong><a href="OTCmd2-backtest_feed_plot.txt">https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/OTCmd2-backtest_feed_plot.feature</a></strong></p>
+
+<p>@matplotlib @examples<br />
+<strong>Feature:</strong> Load a feed from a CSV file and plot the chart of data</p>
+
+<p>  These tests require matplotlib be installed in your Python, <br />
+  AND REQUIRE HUMAN INTERACTION to close the plot once it is displayed.<br />
+  These tests will only work if you have pybacktest installed:<br />
+  <a href="https://github.com/ematvey/pybacktest">https://github.com/ematvey/pybacktest</a><br />
+  You dont need to have a listener thread running.</p>
+
+<p><strong>Scenario:</strong> OTCmd2-backtest_feed_plot.txt</p>
+<pre>
+    These tests will only work if you have created a CSV file tmp/EURUSD60-2014.csv
+
+    Given Create the OTCmd2 instance
+    Given Collect share/examples to "OTCmd2-backtest_feed_plot.txt"
+    Then  The "back recipe list" command will list the known recipes
+    Then  The "back feed read_mt4_csv tmp/EURUSD60-2014.csv EURUSD 60 2014" command will read the feed CSV data
+    Then  The "back feed info" command will show info about the feed
+    Then  The "back feed plot" command will plot the data using matplotlib
+    Then  Write the share/examples file
+    Then  Destroy the OTCmd2 instance
+</pre>
+
+<h3>OTCmd2-backtest_omlette</h3>
+
+<p><strong><a href="OTCmd2-backtest_omlette.txt">https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/OTCmd2-backtest_omlette.feature</a></strong></p>
+
+<p>@pytest @pybacktest @examples<br />
+<strong>Feature:</strong> OTCmd2-backtest_omlette</p>
+
+<p>  These tests will only work if you have pybacktest installed:<br />
+  <a href="https://github.com/ematvey/pybacktest">https://github.com/ematvey/pybacktest</a><br />
+  You dont need to have a listener thread running.</p>
+
+<p><strong>Scenario:</strong> OTCmd2-backtest_omlette.txt</p>
+<pre>
+    These tests will only work if you have created a CSV file tmp/EURUSD60-2014.csv
+
+    Given Create the OTCmd2 instance
+    Given Collect share/examples to "OTCmd2-backtest_omlette.txt"
+
+    When  Assert os.path.exists("tmp/EURUSD60-2014.csv")
+
+    Then  The "back omlette open tmp/EURUSD60-2014.hdf" command will save the results of this backtest
+    Then  The "back omlette check" command will check that the omlette HDF5 file is valid
+
+    Then  The "back feed read_mt4_csv tmp/EURUSD60-2014.csv EURUSD 60 2014" command will read a CSV file from Mt4
+    Then  The "back feed list" command will list the feeds we have read
+
+    Then  The "back recipe list" command will list the known recipes
+    Then  The "back recipe set SMARecipe" command will set the current recipe
+    Then  The "back recipe config" command will show the current recipe config
+
+    Then  The "back chef list" command will list the known chefs
+    Then  The "back chef set PybacktestChef" command will set the current chef
+    Then  The "back recipe ingredients" command will make the ingredients
+    Then  The "back chef cook" command will cook the recipe by the chef
+
+    Then  Comment This should be done in this order:
+    Then  The "back servings list" command will show the list of servings
+    Then  The "back servings signals" command will show the signals
+    Then  The "back servings trades" command will show the trades
+    Then  The "back servings positions" command will show the positions
+    Then  The "back servings equity" command will show the equity
+    Then  The "back servings trade_price" command will show the trade_price
+    Then  The "back servings reviews" command will show the reviews
+
+    Then  The "back omlette display" command will display gives a complete listing of the contents of the HDF file
+    Then  The "back omlette close" command will close and save the HDF file
+    Then  Assert os.path.isfile('tmp/EURUSD60-2014.hdf')
+    Then  Write the share/examples file
+    Then  Destroy the OTCmd2 instance
+</pre>
+
+<h3>OTCmd2-backtest_recipe</h3>
+
+<p><strong><a href="OTCmd2-backtest_recipe.txt">https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/OTCmd2-backtest_recipe.feature</a></strong></p>
+
+<p>@pytest @pybacktest @examples<br />
+<strong>Feature:</strong> OTCmd2-backtest_recipe</p>
+
+<p><strong>Scenario:</strong> OTCmd2-backtest_recipe.txt</p>
+<pre>
+    Given Create the OTCmd2 instance
+    Given Collect share/examples to "OTCmd2-backtest_recipe.txt"
+    Then  The "back recipe list" command will list the known recipes
+    Then  The result will be a not-null list
+    Then  The "back recipe set" command will show the current recipe
+    Then  The result will be a not-null list
+    Then  The "back recipe set SMARecipe" command will set the current recipe
+    Then  The result will be a not-null string
+    Then  The "back recipe config" command will show the current recipe config
+    Then  The result will be a not-null list
+
+    Then  The "back recipe config default" command will show the current recipe config default section
+    Then  Assert len(self._G) &gt; 0
+    Then  Assert len(self._G.keys()) &gt; 0
+    Then  Assert 'sName' in self._G
+    Then  Assert 'sDescription' in self._G
+    Then  Assert 'fRecipeVersion' in self._G
+    Then  Assert 'lRequiredFeedParams' in self._G
+    Then  Assert 'lRequiredDishesParams' in self._G
+    Then  Assert 'lRequiredIngredientsParams' in self._G
+    Then  The "back recipe config" command will show the current recipe config sections
+    Then  Assert len(self._G) &gt; 0
+    Then  Assert 'mFeedOhlc' in self._G
+    Then  Assert 'rShortMa' in self._G
+    Then  Assert 'rLongMa' in self._G
+    Then  Write the share/examples file
+    Then  Destroy the OTCmd2 instance
+</pre>
+
+<h3>OTCmd2-rabbit</h3>
+
+<p><strong><a href="OTCmd2-rabbit.txt">https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/OTCmd2-rabbit.feature</a></strong></p>
+
+<p>@rabbitctl @examples<br />
+<strong>Feature:</strong> OTCmd2-backtest_recipe</p>
+
+<p>  These tests will only work if you have pyrabbit installed:<br />
+  <a href="http://pypi.python.org/pypi/pyrabbit">http://pypi.python.org/pypi/pyrabbit</a><br />
+  and have the 'rabbitmq_management' plugin to rabbitmq enabled.<br />
+  See the OS command 'rabbitmq-plugins list' and make sure<br />
+  the 'rabbitmq_management' and 'rabbitmq_web_dispatch' plugins are enabled.<br />
+  You dont need to have a listener thread running.</p>
+
+<p><strong>Scenario:</strong> OTCmd2-rabbit.txt</p>
+<pre>
+    Given Create the OTCmd2 instance
+    Given Collect share/examples to "OTCmd2-rabbit.txt"
+    Then  The "rabbit get vhost_names" command will list the vhost_names
+    Then  Assert len(self._G) &gt; 0
+    Then  The "rabbit get channels" command will list the channels
+    Then  Assert len(self._G) &gt; 0
+    Then  The "rabbit get connections" command will list the connections
+    Then  Assert len(self._G) &gt; 0
+    Then  The "rabbit get queues" command will list the queues
+    Then  Assert len(self._G) &gt; 0
+    Then  Write the share/examples file
+    Then  Destroy the OTCmd2 instance
+</pre>
+
+<h3>OTCmd2</h3>
+
+<p><strong><a href="OTCmd2.txt">https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/OTCmd2.feature</a></strong></p>
+
+<p>@pytest<br />
+<strong>Feature:</strong> OTCmd2</p>
+
+<p>  You dont need to have a listener thread running.</p>
+
+<p><strong>Scenario:</strong> Load OTCmd2</p>
+<pre>
+    Given Create the OTCmd2 instance
+    Then  The "help" command output contains "Documented commands"
+    Then  The "garbage" command output contains "ERR:"
+    Then  Destroy the OTCmd2 instance
+
+</pre>
+
+<h3>OTCmd2_ini</h3>
+
+<p><strong><a href="OTCmd2_ini.txt">https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/OTCmd2_ini.feature</a></strong></p>
+
+<p>@pytest<br />
+<strong>Feature:</strong> OTCmd2</p>
+
+<p>  Settings for OTCmd2 are in a configobj .ini file that by default is<br />
+  found in the same place that the OTCmd2.py file is found, but you can<br />
+  use the OTCmd2.py <tt>-c</tt> or <tt>--config</tt> command-line option to specify<br />
+  an alternate location. It uses configobj with <tt>unrepr=True</tt><br />
+  so the values are Python, not just strings.</p>
+
+<p><strong>Scenario:</strong> Settings for OTCmd2 are in a configobj .ini file</p>
+<pre>
+    Given The configobj OTCmd2.ini exists
+    And   The configobj OTCmd2.ini is parseable
+</pre>
+
+<h3>RabbitMQ-chart</h3>
+
+<p><strong><a href="RabbitMQ-chart.txt">https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/RabbitMQ-chart.feature</a></strong></p>
+
+<p>@OTMql4AMQP @Mt4Running  @Mt4Connected @examples<br />
+<strong>Feature:</strong> Send messages to a OTMql4AMQP enabled Mt4 about charts</p>
+
+<p>  These tests will only work if you have an OTMql4AMQP enabled Metatrader running,<br />
+  the Experts/OTMql4/OTPyTestPikaEA.mq4 attached to a chart in it, and<br />
+  the RabbitMQ server configured and running.<br />
+  AND the Mt4 is logged in and connected.</p>
+
+<p><strong>Scenario:</strong> OTCmd2-chart.txt</p>
+<pre>
+    Given Create the OTCmd2 instance
+    Given Collect share/examples to "RabbitMQ-chart.txt"
+
+    Then  The "sub get" command will set the on-line target to be the default from OTCmd2.ini
+    Then  The "sub set RabbitMQ" command will set the on-line target for listening
+    
+    Then  The "sub run retval.# timer.#" command will start a listener thread running, subscribed to retval and timer topics
+    
+    Then  The "py import time" command will load the python time module
+    Then  The "py time.sleep(15)" command will sleep for 15 seconds
+    
+    Then  The "chart list" command will list all the charts the listener has heard of
+    Then  The "chart set" command will set the target chart to the last one weve seen
+    Then  The "chart get" command will show the target chart we have set
+    
+    Then  Write the share/examples file
+    Then  Comment if you dont exit properly, the test will hang
+    Then  Destroy the OTCmd2 instance
+</pre>
+
+<h3>RabbitMQ-ord</h3>
+
+<p><strong><a href="RabbitMQ-ord.txt">https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/RabbitMQ-ord.feature</a></strong></p>
+
+<p>@OTMql4AMQP @Mt4Running @examples<br />
+<strong>Feature:</strong> Send messages to a OTMql4AMQP enabled Mt4 about orders</p>
+
+<p>  These tests will only work if you have an OTMql4AMQP enabled Metatrader running,<br />
+  the Experts/OTMql4/OTPyTestPikaEA.mq4 attached to a chart in it, and<br />
+  the RabbitMQ server configured and running.</p>
+
+<p><strong>Scenario:</strong> OTCmd2-ord.txt</p>
+<pre>
+    Given Create the OTCmd2 instance
+    Given Collect share/examples to "RabbitMQ-ord.txt"
+    Then  The "sub get" command will set the on-line target to be the default from OTCmd2.ini
+    Then  The "sub set RabbitMQ" command will set the on-line target for listening
+    
+    Then  The "sub run retval.# timer.#" command will start a listener thread running, subscribed to retval and timer topics
+    
+    Then  The "py import time" command will load the python time module
+    Then  The "py time.sleep(15)" command will sleep for 15 seconds
+    
+    Then  The "chart set" command will set the target chart to the last one weve seen
+    Then  The "pub set RabbitMQ" command will set the on-line target for speaking
+    
+    Then  The "order list" command will list the details of current orders
+    Then  The "order history" command will list the details of closed orders
+    
+    Then  Write the share/examples file
+    Then  Comment if you dont exit properly, the test will hang
+    Then  Destroy the OTCmd2 instance
+</pre>
+
+<h3>RabbitMQ-pub_wait-Accounts</h3>
+
+<p><strong><a href="RabbitMQ-pub_wait-Accounts.txt">https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/RabbitMQ-pub_wait-Accounts.feature</a></strong></p>
+
+<p>@OTMql4AMQP @Mt4Running @Mt4Connected @examples<br />
+<strong>Feature:</strong> Send messages to a OTMql4AMQP enabled Mt4 about Account information.</p>
+
+<p>  These tests will only work if you have an OTMql4AMQP enabled Metatrader running,<br />
+  the Experts/OTMql4/OTPyTestPikaEA.mq4 attached to a chart in it, and<br />
+  the RabbitMQ server configured and running.</p>
+
+<p><strong>Scenario:</strong> OTCmd2-pub_wait-Accounts.txt</p>
+<pre>
+    Given Create the OTCmd2 instance
+    Then  Collect share/examples to "RabbitMQ-pub_wait-Accounts.txt"
+    
+    Then  The "sub get" command will set the on-line target to be the default from OTCmd2.ini
+    Then  The "sub set RabbitMQ" command will set the on-line target
+    
+    Then  The "sub run retval.# timer.#" command will give us a listener thread running, subscribed to retval.#
+    
+    Then  The "py import time" command will load the python time module
+    Then  The "py time.sleep(15)" command will sleep for 15 seconds
+    
+    Then  The "chart list" command will get the list of charts we have seen because of listening to the timer
+    Then  Assert type(self._G) == list and len(self._G) &gt; 0
+    Then  The "chart set" command will set the default chart to the first of list of charts we have seen
+    Then  The "chart get" command will check the default chart 
+    Then  Assert type(self._G) == str and len(self._G) &gt; 0
+    
+    Then  The "pub set RabbitMQ" command will set the on-line speaker target
+    
+    Then  The "pub wait AccountBalance" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == float and type(self._G) &gt; 0
+    Then  The "pub wait AccountCompany" command will wait for the retval from Mt4
+    Then  The "pub wait AccountCredit" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == float
+    Then  The "pub wait AccountCurrency" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == str and len(self._G) &gt;= 3
+    Then  The "pub wait AccountEquity" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == float
+    Then  The "pub wait AccountFreeMargin" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == float
+    Then  The "pub wait AccountFreeMarginMode" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == float
+    Then  The "pub wait AccountLeverage" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == int and self._G &gt; 0
+    Then  The "pub wait AccountMargin" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == float
+    Then  The "pub wait AccountName" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == str and len(self._G) &gt; 3
+    Then  The "pub wait AccountNumber" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == int and self._G &gt; 0
+    Then  The "pub wait AccountProfit" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == float
+    Then  The "pub wait AccountServer" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == str and len(self._G) &gt; 3
+    Then  The "pub wait AccountStopoutLevel" command will wait for the retval from Mt4
+    Then  The "pub wait AccountStopoutMode" command will wait for the retval from Mt4
+    Then  Write the share/examples file
+    Then  Comment if you dont exit properly, the test will hang
+    Then  Destroy the OTCmd2 instance
+</pre>
+
+<h3>RabbitMQ-pub_wait-jOT</h3>
+
+<p><strong><a href="RabbitMQ-pub_wait-jOT.txt">https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/RabbitMQ-pub_wait-jOT.feature</a></strong></p>
+
+<p>@OTMql4AMQP @Mt4Running @Mt4Connected @examples<br />
+<strong>Feature:</strong> Send messages to a OTMql4AMQP enabled Mt4 about JSON account information.</p>
+
+<p>  These tests will only work if you have an OTMql4AMQP enabled Metatrader running,<br />
+  the Experts/OTMql4/OTPyTestPikaEA.mq4 attached to a chart in it, and<br />
+  the RabbitMQ server configured and running.</p>
+
+<p><strong>Scenario:</strong> OTCmd2-pub_wait-jOT.txt</p>
+<pre>
+    Given Create the OTCmd2 instance
+    Then  Collect share/examples to "RabbitMQ-pub_wait-jOT.txt"
+    
+    Then  The "sub get" command will show the on-line targets from OTCmd2.ini
+    Then  The "sub set RabbitMQ" command will set the on-line target
+    
+    Then  The "sub run retval.# timer.#" command will We need a listener thread running, subscribed to retval.#
+    
+    Then  The "py import time" command will load the python time module
+    Then  The "py time.sleep(15)" command will sleep for 15 seconds
+    
+    Then  The "chart list" command will get the list of charts we have seen because of listening to the timer
+    Then  Assert type(self._G) == list and len(self._G) &gt; 0
+    Then  The "chart set" command will set the default chart to the first of list of charts we have seen
+    Then  The "chart get" command will check the default chart 
+    Then  Assert type(self._G) == str and len(self._G) &gt; 0
+    
+    Then  The "pub set RabbitMQ" command will set the on-line speaker target
+    
+    Then  The "pub wait jOTAccountInformation" command will wait for the retval from Mt4
+    Then  The "pub wait jOTOrdersTickets" command will wait for the retval from Mt4
+    Then  The "pub wait jOTOrdersHistory" command will wait for the retval from Mt4
+    Then  The "pub wait jOTOrdersTrades" command will wait for the retval from Mt4
+    Then  Write the share/examples file
+    Then  Comment if you dont exit properly, the test will hang
+    Then  Destroy the OTCmd2 instance
+</pre>
+
+<h3>RabbitMQ-pub_wait</h3>
+
+<p><strong><a href="RabbitMQ-pub_wait.txt">https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/RabbitMQ-pub_wait.feature</a></strong></p>
+
+<p>@OTMql4AMQP @Mt4Running @examples<br />
+<strong>Feature:</strong> Send messages to a OTMql4AMQP enabled Mt4 about the terminal.</p>
+
+<p>  These tests will only work if you have an OTMql4AMQP enabled Metatrader running,<br />
+  the Experts/OTMql4/OTPyTestPikaEA.mq4 attached to a chart in it, and<br />
+  the RabbitMQ server configured and running.</p>
+
+<p><strong>Scenario:</strong> OTCmd2-pub_wait.txt</p>
+<pre>
+    Given Create the OTCmd2 instance
+    Then  Collect share/examples to "RabbitMQ-pub_wait.txt"
+    Then  The "sub get" command will get the on-line targets from OTCmd2.ini
+    
+    Then  The "sub set RabbitMQ" command will set the on-line listener target
+    
+    Then  The "sub run retval.# timer.#" command will We need a listener thread running, subscribed to retval.#
+    
+    Then  The "py import time" command will load the python time module
+    Then  The "py time.sleep(15)" command will sleep for 15 seconds
+    
+    Then  The "chart list" command will get the list of charts we have seen because of listening to the timer
+    Then  Assert type(self._G) == list and len(self._G) &gt; 0
+    Then  The "chart set" command will set the default chart to the first of list of charts we have seen
+    Then  The "chart get" command will check the default chart 
+    Then  Assert type(self._G) == str and len(self._G) &gt; 0
+    
+    Then  The "pub set RabbitMQ" command will set the on-line speaker target
+    
+    Then  The "pub wait OrdersTotal" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == int and self._G &gt;= 0
+    Then  The "pub wait Period" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == int and self._G &gt; 0
+    Then  The "pub wait RefreshRates" command will wait for the retval from Mt4
+    Then  Assert self._G == True
+    Then  The "pub wait Symbol" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == str and len(self._G) &gt;= 3
+    Then  The "pub wait TerminalCompany" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == str and len(self._G) &gt; 3
+    Then  The "pub wait TerminalName" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == str and len(self._G) &gt; 3
+    Then  The "pub wait TerminalPath" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == str and len(self._G) &gt; 3
+    Then  The "pub wait WindowBarsPerChart" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == int and type(self._G) &gt; 0
+    Then  Comment ##? string -1 pub wait WindowFind" command will wait for the retval from Mt4
+    Then  The "pub wait WindowFirstVisibleBar" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == int and type(self._G) &gt; 0
+    Then  Comment ##? void pub wait WindowRedraw
+    Then  The "pub wait WindowsTotal" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == int and type(self._G) &gt; 0
+    
+    Then  Write the share/examples file
+    Then  Comment if you dont exit properly, the test will hang
+    Then  Destroy the OTCmd2 instance
+</pre>
+
+<h3>RabbitMQ-sub</h3>
+
+<p><strong><a href="RabbitMQ-sub.txt">https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/RabbitMQ-sub.feature</a></strong></p>
+
+<p>@OTMql4AMQP @Mt4Running @examples<br />
+<strong>Feature:</strong> Subscribe to messages from RabbitMQ on a given topic</p>
+
+<p>  These tests will only work if you have an OTMql4AMQP enabled Metatrader running,<br />
+  the Experts/OTMql4/OTPyTestPikaEA.mq4 attached to a chart in it, and<br />
+  the RabbitMQ server configured and running.</p>
+
+<p><strong>Scenario:</strong> OTCmd2-sub.txt</p>
+<pre>
+    Given Create the OTCmd2 instance
+    Given Collect share/examples to "RabbitMQ-sub.txt"
+    Then  The "sub get" command will set the on-line target to be the default from OTCmd2.ini
+    Then  The "sub set RabbitMQ" command will set the on-line target
+    Then  The "sub run retval.# timer.#" command will start a listener thread running, subscribed to retval and timer topics
+    Then  The "py import time" command will load the python time module
+    Then  The "py time.sleep(15)" command will sleep for 15 seconds
+    Then  The "sub show" command will list the message topics that are being hidden
+    Then  The "py time.sleep(15)" command will you should see some timer messages in JSON format
+    Then  The "sub hide timer" command will stop seeing timer messages
+    Then  The "py time.sleep(15)" command will now you should see no timer messages
+    Then  The "sub show timer" command will start seeing timer messages again
+    Then  The "py time.sleep(15)" command will now you should see timer messages
+    Then  The "sub pprint" command will show TOPIC messages with pretty-printing
+    Then  The "sub pprint 0" command will set pretty printing: with 0 - off, 1 - on
+    Then  The "sub pprint 1" command will show pretty printing current value with no argument
+    Then  The "sub thread info" command will info on the thread listening for messages.
+    Then  The "sub thread enumerate" command will enumerate all threads
+    Then  Write the share/examples file
+    Then  Destroy the OTCmd2 instance
+</pre>
+
+<h3>ZeroMQ-chart</h3>
+
+<p><strong><a href="ZeroMQ-chart.txt">https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/ZeroMQ-chart.feature</a></strong></p>
+
+<p>@OTMql4Zmq @Mt4Running  @Mt4Connected @examples<br />
+<strong>Feature:</strong> Send messages to a OTMql4Zmq enabled Mt4 about charts</p>
+
+<p>  These tests will only work if you have an OTMql4Zmq enabled Metatrader running,<br />
+  the Experts/OTMql4/OTZmqCmdEA.mq4 attached to a chart in it.<br />
+  AND the Mt4 is logged in and connected.</p>
+
+<p><strong>Scenario:</strong> OTCmd2-chart.txt</p>
+<pre>
+    Given Create the OTCmd2 instance
+    Given Collect share/examples to "ZeroMQ-chart.txt"
+
+    Then  The "sub get" command will set the on-line target to be the default from OTCmd2.ini
+    Then  The "sub set ZeroMQ" command will set the on-line target for listening
+    
+    Then  The "sub run retval timer" command will start a listener thread running, subscribed to retval and timer topics
+    
+    Then  The "py import time" command will load the python time module
+    Then  The "py time.sleep(15)" command will sleep for 15 seconds
+    
+    Then  The "chart list" command will list all the charts the listener has heard of
+    Then  The "chart set" command will set the target chart to the last one weve seen
+    Then  The "chart get" command will show the target chart we have set
+    
+    Then  Write the share/examples file
+    Then  Comment if you dont exit properly, the test will hang
+    Then  Destroy the OTCmd2 instance
+</pre>
+
+<h3>ZeroMQ-ord</h3>
+
+<p><strong><a href="ZeroMQ-ord.txt">https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/ZeroMQ-ord.feature</a></strong></p>
+
+<p>@OTMql4Zmq @Mt4Running @examples<br />
+<strong>Feature:</strong> Send messages to a OTMql4Zmq enabled Mt4 about orders</p>
+
+<p>  These tests will only work if you have an OTMql4Zmq enabled Metatrader running,<br />
+  the Experts/OTMql4/OTZmqCmdEA.mq4 attached to a chart in it.</p>
+
+<p><strong>Scenario:</strong> OTCmd2-ord.txt</p>
+<pre>
+    Given Create the OTCmd2 instance
+    Given Collect share/examples to "ZeroMQ-ord.txt"
+    Then  The "sub get" command will set the on-line target to be the default from OTCmd2.ini
+    Then  The "sub set ZeroMQ" command will set the on-line target for listening
+    
+    Then  The "sub run retval timer" command will start a listener thread running, subscribed to retval and timer topics
+    
+    Then  The "py import time" command will load the python time module
+    Then  The "py time.sleep(15)" command will sleep for 15 seconds
+    
+    Then  The "chart set" command will set the target chart to the last one weve seen
+    Then  The "pub set ZeroMQ" command will set the on-line target for speaking
+    
+    Then  The "order list" command will list the details of current orders
+    Then  The "order history" command will list the details of closed orders
+    
+    Then  Write the share/examples file
+    Then  Comment if you dont exit properly, the test will hang
+    Then  Destroy the OTCmd2 instance
+</pre>
+
+<h3>ZeroMQ-pub_wait-Accounts</h3>
+
+<p><strong><a href="ZeroMQ-pub_wait-Accounts.txt">https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/ZeroMQ-pub_wait-Accounts.feature</a></strong></p>
+
+<p>@OTMql4Zmq @Mt4Running @Mt4Connected @examples<br />
+<strong>Feature:</strong> Send messages to a OTMql4Zmq enabled Mt4 about Account information.</p>
+
+<p>  These tests will only work if you have an OTMql4Zmq enabled Metatrader running,<br />
+  the Experts/OTMql4/OTZmqCmdEA.mq4 attached to a chart in it.</p>
+
+<p><strong>Scenario:</strong> OTCmd2-pub_wait-Accounts.txt</p>
+<pre>
+    Given Create the OTCmd2 instance
+    Then  Collect share/examples to "ZeroMQ-pub_wait-Accounts.txt"
+    
+    Then  The "sub get" command will set the on-line target to be the default from OTCmd2.ini
+    Then  The "sub set ZeroMQ" command will set the on-line target
+    
+    Then  The "sub run retval timer" command will give us a listener thread running, subscribed to retval
+    
+    Then  The "py import time" command will load the python time module
+    Then  The "py time.sleep(15)" command will sleep for 15 seconds
+    
+    Then  The "chart list" command will get the list of charts we have seen because of listening to the timer
+    Then  Assert type(self._G) == list and len(self._G) &gt; 0
+    Then  The "chart set" command will set the default chart to the first of list of charts we have seen
+    Then  The "chart get" command will check the default chart 
+    Then  Assert type(self._G) == str and len(self._G) &gt; 0
+    
+    Then  The "pub set ZeroMQ" command will set the on-line speaker target
+    
+    Then  The "pub wait AccountBalance" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == float and type(self._G) &gt; 0
+    Then  The "pub wait AccountCompany" command will wait for the retval from Mt4
+    Then  The "pub wait AccountCredit" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == float
+    Then  The "pub wait AccountCurrency" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == str and len(self._G) &gt;= 3
+    Then  The "pub wait AccountEquity" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == float
+    Then  The "pub wait AccountFreeMargin" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == float
+    Then  The "pub wait AccountFreeMarginMode" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == float
+    Then  The "pub wait AccountLeverage" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == int and self._G &gt; 0
+    Then  The "pub wait AccountMargin" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == float
+    Then  The "pub wait AccountName" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == str and len(self._G) &gt; 3
+    Then  The "pub wait AccountNumber" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == int and self._G &gt; 0
+    Then  The "pub wait AccountProfit" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == float
+    Then  The "pub wait AccountServer" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == str and len(self._G) &gt; 3
+    Then  The "pub wait AccountStopoutLevel" command will wait for the retval from Mt4
+    Then  The "pub wait AccountStopoutMode" command will wait for the retval from Mt4
+    Then  Write the share/examples file
+    Then  Comment if you dont exit properly, the test will hang
+    Then  Destroy the OTCmd2 instance
+</pre>
+
+<h3>ZeroMQ-pub_wait-jOT</h3>
+
+<p><strong><a href="ZeroMQ-pub_wait-jOT.txt">https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/ZeroMQ-pub_wait-jOT.feature</a></strong></p>
+
+<p>@OTMql4Zmq @Mt4Running @Mt4Connected @examples<br />
+<strong>Feature:</strong> Send messages to a OTMql4Zmq enabled Mt4 about JSON account information.</p>
+
+<p>  These tests will only work if you have an OTMql4Zmq enabled Metatrader running,<br />
+  the Experts/OTMql4/OTZmqCmdEA.mq4 attached to a chart in it.</p>
+
+<p><strong>Scenario:</strong> OTCmd2-pub_wait-jOT.txt</p>
+<pre>
+    Given Create the OTCmd2 instance
+    Then  Collect share/examples to "ZeroMQ-pub_wait-jOT.txt"
+    
+    Then  The "sub get" command will show the on-line targets from OTCmd2.ini
+    Then  The "sub set ZeroMQ" command will set the on-line target
+    
+    Then  The "sub run retval timer" command will We need a listener thread running, subscribed to retval
+    
+    Then  The "py import time" command will load the python time module
+    Then  The "py time.sleep(15)" command will sleep for 15 seconds
+    
+    Then  The "chart list" command will get the list of charts we have seen because of listening to the timer
+    Then  Assert type(self._G) == list and len(self._G) &gt; 0
+    Then  The "chart set" command will set the default chart to the first of list of charts we have seen
+    Then  The "chart get" command will check the default chart 
+    Then  Assert type(self._G) == str and len(self._G) &gt; 0
+    
+    Then  The "pub set ZeroMQ" command will set the on-line speaker target
+    
+    Then  The "pub wait jOTAccountInformation" command will wait for the retval from Mt4
+    Then  The "pub wait jOTOrdersTickets" command will wait for the retval from Mt4
+    Then  The "pub wait jOTOrdersHistory" command will wait for the retval from Mt4
+    Then  The "pub wait jOTOrdersTrades" command will wait for the retval from Mt4
+    Then  Write the share/examples file
+    Then  Comment if you dont exit properly, the test will hang
+    Then  Destroy the OTCmd2 instance
+</pre>
+
+<h3>ZeroMQ-pub_wait</h3>
+
+<p><strong><a href="ZeroMQ-pub_wait.txt">https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/ZeroMQ-pub_wait.feature</a></strong></p>
+
+<p>@OTMql4Zmq @Mt4Running @examples<br />
+<strong>Feature:</strong> Send messages to a OTMql4Zmq enabled Mt4 about the terminal.</p>
+
+<p>  These tests will only work if you have an OTMql4Zmq enabled Metatrader running,<br />
+  the Experts/OTMql4/OTZmqCmdEA.mq4 attached to a chart in it.</p>
+
+<p><strong>Scenario:</strong> OTCmd2-pub_wait.txt</p>
+<pre>
+    Given Create the OTCmd2 instance
+    Then  Collect share/examples to "ZeroMQ-pub_wait.txt"
+    Then  The "sub get" command will get the on-line targets from OTCmd2.ini
+    
+    Then  The "sub set ZeroMQ" command will set the on-line listener target
+    
+    Then  The "sub run retval timer" command will We need a listener thread running, subscribed to retval
+    
+    Then  The "py import time" command will load the python time module
+    Then  The "py time.sleep(15)" command will sleep for 15 seconds
+    
+    Then  The "chart list" command will get the list of charts we have seen because of listening to the timer
+    Then  Assert type(self._G) == list and len(self._G) &gt; 0
+    Then  The "chart set" command will set the default chart to the first of list of charts we have seen
+    Then  The "chart get" command will check the default chart 
+    Then  Assert type(self._G) == str and len(self._G) &gt; 0
+    
+    Then  The "pub set ZeroMQ" command will set the on-line speaker target
+    
+    Then  The "pub wait OrdersTotal" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == int and self._G &gt;= 0
+    Then  The "pub wait Period" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == int and self._G &gt; 0
+    Then  The "pub wait RefreshRates" command will wait for the retval from Mt4
+    Then  Assert self._G == True
+    Then  The "pub wait Symbol" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == str and len(self._G) &gt;= 3
+    Then  The "pub wait TerminalCompany" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == str and len(self._G) &gt; 3
+    Then  The "pub wait TerminalName" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == str and len(self._G) &gt; 3
+    Then  The "pub wait TerminalPath" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == str and len(self._G) &gt; 3
+    Then  The "pub wait WindowBarsPerChart" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == int and type(self._G) &gt; 0
+    Then  Comment ##? string -1 pub wait WindowFind" command will wait for the retval from Mt4
+    Then  The "pub wait WindowFirstVisibleBar" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == int and type(self._G) &gt; 0
+    Then  Comment ##? void pub wait WindowRedraw
+    Then  The "pub wait WindowsTotal" command will wait for the retval from Mt4
+    Then  Assert type(self._G) == int and type(self._G) &gt; 0
+    
+    Then  Write the share/examples file
+    Then  Comment if you dont exit properly, the test will hang
+    Then  Destroy the OTCmd2 instance
+</pre>
+
+<h3>ZeroMQ-sub</h3>
+
+<p><strong><a href="ZeroMQ-sub.txt">https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/ZeroMQ-sub.feature</a></strong></p>
+
+<p>@OTMql4Zmq @Mt4Running @examples<br />
+<strong>Feature:</strong> Subscribe to messages from ZeroMQ on a given topic</p>
+
+<p>  These tests will only work if you have an OTMql4Zmq enabled Metatrader running,<br />
+  the Experts/OTMql4/OTZmqCmdEA.mq4 attached to a chart in it.</p>
+
+<p><strong>Scenario:</strong> OTCmd2-sub.txt</p>
+<pre>
+    Given Create the OTCmd2 instance
+    Given Collect share/examples to "ZeroMQ-sub.txt"
+    Then  The "sub get" command will set the on-line target to be the default from OTCmd2.ini
+    Then  The "sub set ZeroMQ" command will set the on-line target
+    Then  The "sub run retval timer" command will start a listener thread running, subscribed to retval and timer topics
+    Then  The "py import time" command will load the python time module
+    Then  The "py time.sleep(15)" command will sleep for 15 seconds
+    Then  The "sub show" command will list the message topics that are being hidden
+    Then  The "py time.sleep(15)" command will you should see some timer messages in JSON format
+    Then  The "sub hide timer" command will stop seeing timer messages
+    Then  The "py time.sleep(15)" command will now you should see no timer messages
+    Then  The "sub show timer" command will start seeing timer messages again
+    Then  The "py time.sleep(15)" command will now you should see timer messages
+    Then  The "sub pprint" command will show TOPIC messages with pretty-printing
+    Then  The "sub pprint 0" command will set pretty printing: with 0 - off, 1 - on
+    Then  The "sub pprint 1" command will show pretty printing current value with no argument
+    Then  The "sub thread info" command will info on the thread listening for messages.
+    Then  The "sub thread enumerate" command will enumerate all threads
+    Then  Write the share/examples file
+    Then  Destroy the OTCmd2 instance
+</pre>
+
+<hr />
+
+<p>This file is automatically generated from the source code: do not edit.</p>

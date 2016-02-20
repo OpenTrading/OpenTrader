@@ -1,0 +1,74 @@
+<h2>Pandas Love Omlettes!</h2>
+
+<h3>(And you thought pandas were vegans :-)</h3>
+
+<p>There are many steps to making a good Omlette:</p>
+
+<p>1. Get Feeds to make Ingredients out of.</p>
+
+<p>2. Get a Recipe to make the Omlette.</p>
+
+<p>3. Make the Ingredients from the Recipe and the Feeds.</p>
+
+<p>4. Find a Chef to give the Recipe and Ingredients to.</p>
+
+<p>5. Have the Chef cook the Recipe and Ingredients in the Oven (<a href="Backtesting">Backtesting</a>).</p>
+
+<p>6. Enjoy the Servings that come out of the Oven (<a href="Backtesting">Backtesting</a>).</p>
+
+<p>7. Evaluate the Servings by Reviewers.</p>
+
+<p>Think of OpenTrader as a <i>sommelier</i> for hungry pandas :-)</p>
+
+<p>The architecture is designed to be modular:</p>
+<ul>
+	<li>there should be many recipes using the many Ingredients of <a href="TaLib">TaLib</a>,</li>
+	<li>different Recipes should work with different Chefs,</li>
+	<li>all the Servings should be able to be reviewed by different Reviewers.</li>
+</ul>
+<ul>
+	<li><a href="Omlettes">Omlettes</a></li>
+	<li>Feeds</li>
+	<li><a href="Recipes">Recipes</a></li>
+	<li>Ingredients</li>
+	<li>Chefs</li>
+	<li>Reviewers</li>
+</ul>
+<p>OpenTrader is currently a <a href="Cmd2">Cmd2</a> based command-line read-eval-print loop, <br />
+which is an easy substitute for a GUI; we can  always add a GUI later.<br />
+But the command-line is easy to use for this kind of work, plus it gives<br />
+a domain-specific scripting language at the same time, so we can use example<br />
+scripts as functional tests: see <a href="TestsExamples">TestsExamples</a>. It uses <a href="TabView">TabView</a><br />
+to present multi-line tabular data, and <tt>matplotlib</tt> to plot the underlying<br />
+pandas objects.</p>
+
+<p>The normal usage of the OTCmd2 script to talk to an<br />
+<a href="OTMql4AMQP">OTMql4AMQP</a> enabled Metatrader is:</p>
+<pre>
+sub run timer# retval.#  - start a thread listening for messages: timer and retval
+pub cmd AccountBalance   - to send a command to OTMql4AMQP,
+                           the return will be a retval message on the listener
+sub hide timer           - stop seeing timer messages (just see the retval.#)
+order list               - list your open order tickets
+order buy EURUSD 0.1	 - send a market order for 0.1 lots of EURUSD
+</pre>
+
+<p>The <a href="OTCmd2">DocOTCmd2</a> is based on <a href="Cmd2">Cmd2</a>, a tool for writing command-line<br />
+interactive applications. It provides the following features:</p>
+
+<ul>
+	<li>Searchable command history</li>
+	<li>Load commands from file, save to file, edit commands in file</li>
+	<li>Multi-line commands</li>
+	<li>Case-insensitive commands</li>
+	<li>Special-character shortcut commands (beyond cmd's <tt>@</tt> and <tt>!</tt>)</li>
+	<li>Settable environment parameters</li>
+	<li>Parsing commands with flags</li>
+	<li>Redirection to file with <tt>&gt;</tt>, <tt>&gt;&gt;</tt>; input from file with <tt>&lt;</tt></li>
+	<li>Bare <tt>&gt;</tt>, <tt>&gt;&gt;</tt> with no filename send output to paste buffer</li>
+	<li>Pipe output to shell commands with <tt>|</tt></li>
+	<li>Simple transcript-based application testing</li>
+</ul>
+<hr />
+
+<p>Parent: <a href="Home">Home</a></p>

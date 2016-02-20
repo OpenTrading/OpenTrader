@@ -1,0 +1,94 @@
+<h2>OpenTrader</h2>
+
+<p><a href="https://github.com/OpenTrading/OpenTrader/">https://github.com/OpenTrading/OpenTrader/</a></p>
+
+<p>OpenTrader is an Open Source platform to communicate with on-line trading platforms,<br />
+and includes the ability to:</p>
+<ul>
+	<li>write trading Recipes for multiple back-end testers (1 at the moment :-),</li>
+	<li>import data from CSV files or from the web for Backtesting,</li>
+	<li>analyze the Backtesting with multiple back-end reviewers (1 at the moment :-),</li>
+	<li>save the backtests, along with their parameters in an HDF5 file,</li>
+	<li>send and receive data from multiple on-line trading platforms (1 at the moment :-).</li>
+</ul>
+<p>This ia a work in progress but it has quite a lot in there already:</p>
+<ul>
+	<li>send most Mql4 commands and gets the return values as Python, using the  <a href="Python bridge enabled MetaTrader">https://github.com/OpenTrading/OTMql4AMQP</a> , or  <a href="ZeroMQ enabled MetaTrader">https://github.com/OpenTrading/OTMql4Zmq</a> .</li>
+	<li>receive bar, tick and timer notifications,</li>
+	<li>send and query orders to Mt4, using a  <a href="better MQL4 trading library">https://github.com/OpenTrading/OTMql4Lib</a> ,</li>
+	<li>there's a backtester for trading recipes based on  <a href="pybacktest">https://github.com/ematvey/pybacktest/</a> ,  using pandas with <a href="TaLib">https://github.com/OpenTrading/OpenTrader/wiki/TaLib</a> ,  so it's quite fast.</li>
+	<li>reads CSV history files and treats everything internally in  pandas DataFrames or Series,</li>
+	<li>there's simple plotting of the CSV files and results using  <a href="matplotlib">http://matplotlib.org</a> ,</li>
+	<li>you can save recipes and backtest results as an HDF5 file,  viewable by  <a href="ViTables">https://github.com/OpenTrading/OpenTrader/wiki/ViTables</a></li>
+	<li>if you have <a href="pyrabbit">http://pypi.python.org/packages/source/p/pyrabbit</a>  installed, you can query the AMQP server.</li>
+</ul>
+<p>Coming <strong>Real Soon Now(TM)</strong> is:</p>
+<ul>
+	<li>wiring up the backtester so that it should soon support Recipes for  live-trading on Metatrader from Recipes and Chefs.</li>
+	<li>there's an optimizer in the backtester, but it's not yet wired up.For our future directions, see the <a href="RoadMap">https://github.com/OpenTrading/OpenTrader/wiki/RoadMap</a> .</li>
+</ul>
+<h3>Messaging Protocols</h3>
+
+<p>This project now works with ZeroMQ or RabbitMQ Messaging Protocols.<br />
+The ZeroMQ protocol is preferred and all development is currently on it.</p>
+
+<p><strong>ZeroMQ</strong>: To use ZeroMQ, this project builds on<br />
+<a href="OTMql4Zmq">https://github.com/OpenTrading/OTMql4Zmq/</a> ,<br />
+and requires that to be installed in your Metatrader as a pre-requisite.<br />
+You also must have installed Python and the <br />
+<a href="OTMql4Py Python bridge">https://github.com/OpenTrading/OTMql4Py/</a> and<br />
+<a href="OTMql4Lib Metatrader library">https://github.com/OpenTrading/OTMql4Lib/</a> .<br />
+OpenTrader runs fine with either the C coded implementation<br />
+of ZeroMQ for Metatrader:<br />
+<a href="OTZmqCmdEA.mq4">https://github.com/OpenTrading/OTMql4Zmq/raw/master/MQL4/Experts/OTMql4/OTZmqCmdEA.mq4</a><br />
+or the  or Python implementation<br />
+<a href="OTPyTestZmqEA.mq4">https://github.com/OpenTrading/OTMql4Zmq/raw/master/MQL4/Experts/OTMql4/OTPyTestZmqEA.mq4</a><br />
+.</p>
+
+<p><strong>RabbitMQ</strong>: To use RabbitMQ, this project builds on<br />
+<a href="OTMql4AMQP">https://github.com/OpenTrading/OTMql4AMQP/</a> ,<br />
+and requires that to be installed in your Metatrader Python as a pre-requisite.<br />
+You also must have installed Python and the <br />
+<a href="OTMql4Py Python bridge">https://github.com/OpenTrading/OTMql4Py/</a> and<br />
+<a href="OTMql4Lib Metatrader library">https://github.com/OpenTrading/OTMql4Lib/</a> .<br />
+You also must have installed and started a<br />
+<a href="RabbitMQ server">http://rabbitmq.org</a> , which is not so easy under Windows.</p>
+
+<p>One day we will make installers for a shrink-wrapped distribution, but<br />
+for now, you must clone from github.com and manually install.</p>
+
+<p><tt>OTCmd2</tt> is a command line script to run send commands<br />
+to a OTMql4Zmq or OTMql4AMPQ enabled Metatrader. It will start<br />
+a command loop to listen, send commands, based on the Cmd2 read-eval-print,<br />
+or take commands from the standard input, a file, or as command-line arguments.<br />
+You will have to call OTCmd2 with the<tt>-P</tt> option with the<br />
+path of your installed Metatrader (e.g. <tt>c:\Program Files\Metatrader</tt>),<br />
+or set the <tt>default</tt> <tt>sMt4Dir</tt> setting of the <tt>OTCmd2.ini</tt> file,<br />
+or add your installed OTMql4Py Python directory to the <tt>PYTHONPATH</tt><br />
+environment variable (e.g. <tt>c:\Program Files\Metatrader\MQL4\Python</tt>).</p>
+
+<h3>Work in Progress</h3>
+
+<p><strong>This is a work in progress - a developers' pre-release version.</strong><br />
+It has been fully checked in, and there is a test-suite based on the<br />
+examples that provides good coverage, but the internal APIs may change.</p>
+
+<p>The project wiki should be open for editing by anyone logged into GitHub:<br />
+Please report any system it works or doesn't work on in the wiki:<br />
+include the Metatrader build number, the origin of the metatrader exe,<br />
+the Windows version, and the AMQP server version and version of the Pika.<br />
+This code in known to run under Linux Wine (1.7.x), so this project<br />
+bridges Metatrader to RabbitMQ under Linux.</p>
+
+<ul>
+	<li><a href="Wiki">https://github.com/OpenTrading/OpenTrader/wiki/Home</a></li>
+	<li><a href="Installation">https://github.com/OpenTrading/OpenTrader/wiki/Installation</a></li>
+	<li><a href="Architecture">https://github.com/OpenTrading/OpenTrader/wiki/Architecture</a></li>
+	<li><a href="Testing">https://github.com/OpenTrading/OpenTrader/wiki/Testing</a></li>
+</ul>
+<ul>
+	<li><a href="Index">https://github.com/OpenTrading/OpenTrader/wiki/TitleIndex</a></li>
+</ul>
+<hr />
+
+<p>Parent: <a href="Home">https://github.com/OpenTrading/OpenTrader/wiki/Home</a></p>

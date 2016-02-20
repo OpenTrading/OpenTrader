@@ -1,0 +1,77 @@
+<h2>Cmd2</h2>
+
+<p><a href="cmd2">https://bitbucket.org/catherinedevlin/cmd2</a> is a tool for<br />
+writing command-line interactive applications. It is based on the<br />
+Python Standard Library's <tt>cmd</tt> module, and can be used anyplace cmd is<br />
+used simply by importing cmd2 instead.</p>
+
+<p><tt>cmd2}} provides the following features, in addition to those already existing in {{{cmd</tt>:</p>
+
+<ul>
+	<li>Searchable command history</li>
+	<li>Load commands from file, save to file, edit commands in file</li>
+	<li>Multi-line commands</li>
+	<li>Case-insensitive commands</li>
+	<li>Special-character shortcut commands (beyond cmd's @ and !)</li>
+	<li>Settable environment parameters</li>
+	<li>Parsing commands with flags</li>
+	<li>Redirection to file with &gt;, &gt;&gt;; input from file with &lt;</li>
+	<li>Bare '&gt;', '&gt;&gt;' with no filename send output to paste buffer</li>
+	<li>Pipe output to shell commands with |</li>
+	<li>Simple transcript-based application testing</li>
+</ul>
+<h3>Searchable command history</h3>
+
+<p>All commands will automatically be tracked in the session's history,<br />
+unless the command is listed in Cmd's excludeFromHistory<br />
+attribute. The history is accessed through the history, list, and run<br />
+commands (and their abbreviations: hi, li, l, r). If you wish to<br />
+exclude some of your custom commands from the history, append their<br />
+names to the list at Cmd.ExcludeFromHistory.</p>
+
+<h3>Load commands from file, save to file, edit commands in file</h3>
+
+<p>        Type help load, help save, help edit for details.</p>
+
+<h3>Multi-line commands</h3>
+
+<p>Any command accepts multi-line input when its name is listed in<br />
+Cmd.multilineCommands. The program will keep expecting input until a<br />
+line ends with any of the characters in Cmd.terminators . The default<br />
+terminators are ; and /n (empty newline).</p>
+
+<h3>Case-insensitive commands</h3>
+
+<p>All commands are case-insensitive, unless Cmd.caseInsensitive is set to False.</p>
+
+<h3>Special-character shortcut commands (beyond cmd's "@" and "!")</h3>
+
+<p>To create a single-character shortcut for a command, update Cmd.shortcuts.</p>
+
+<h3>Settable environment parameters</h3>
+
+<p>To allow a user to change an environment parameter during program<br />
+execution, append the parameter's name to Cmd.settable.</p>
+
+<h3>Parsing commands with optparse options (flags)</h3>
+
+<p>See Python standard library's optparse </p>
+
+<h3>Useful Subcommands</h3>
+
+<p>Useful <tt>cmd2</tt> subcommands are:</p>
+<ul>
+	<li>history     - show the command history; rereun commands with: run.</li>
+	<li>load FILE   - load a script of commands from FILE.</li>
+	<li>save * FILE - save a script of commands to FILE; use * for all commands,                a number for that command, or nothing for the last command.</li>
+	<li>edit        - edit the previous command in an editor, or edit *, or edit FILE;                commands are run after editor is closed; used EDITOR environment var.</li>
+	<li>py [CMD]    - execute a Python command CMD, or with no arguments, enter a Python loop:                In the loop: self = CMD2 object, self.oOm = Omellete, self.oOm.oBt = Oven</li>
+	<li>help [SUB]  - help, or help on subcommand SUB.</li>
+</ul>
+<p>See also:</p>
+<ul>
+	<li><a href="http://catherinedevlin.blogspot.de/">http://catherinedevlin.blogspot.de/</a></li>
+</ul>
+<hr />
+
+<p>Parent: <a href="Components">Components</a></p>

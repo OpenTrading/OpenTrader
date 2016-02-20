@@ -1,0 +1,61 @@
+<h2>TALIB</h2>
+
+<p>We recommend that you install the Cython version of <a href="ta-lib">http://ta-lib.org</a>:<br />
+<a href="ta-lib">https://github.com/mrjbq7/ta-lib</a></p>
+
+<h3>Function API Examples</h3>
+
+<p>Similar to TA-Lib, the function interface provides a lightweight wrapper of<br />
+the exposed TA-Lib indicators.</p>
+
+<p>Each function returns an output array and have default values for their<br />
+parameters, unless specified as keyword arguments. Typically, these functions<br />
+will have an initial "lookback" period (a required number of observations<br />
+before an output is generated) set to ``NaN``.</p>
+
+<p>All of the following examples use the function API:</p>
+
+<pre>
+import numpy
+import talib
+
+close = numpy.random.random(100)
+</pre>
+
+<p>Calculate a simple moving average of the close prices:</p>
+
+<pre>
+output = talib.SMA(close)
+</pre>
+
+<p>Calculating bollinger bands, with triple exponential moving average:</p>
+
+<pre>
+from talib import MA_Type
+
+upper, middle, lower = talib.BBANDS(close, matype=MA_Type.T3)
+</pre>
+
+<p>Calculating momentum of the close prices, with a time period of 5:</p>
+
+<pre>
+output = talib.MOM(close, timeperiod=5)
+</pre>
+
+<p>Documentation for all functions:</p>
+
+<ul>
+	<li><a href="Overlap Studies">TaLib_overlap_studies</a></li>
+	<li><a href="Momentum Indicators">TaLib_momentum_indicators</a></li>
+	<li><a href="Volume Indicators">TaLib_volume_indicators</a></li>
+	<li><a href="Volatility Indicators">TaLib_volatility_indicators</a></li>
+	<li><a href="Pattern Recognition">TaLib_pattern_recognition</a></li>
+	<li><a href="Cycle Indicators">TaLib_cycle_indicators</a></li>
+	<li><a href="Statistic Functions">TaLib_statistic_functions</a></li>
+	<li><a href="Price Transform">TaLib_price_transform</a></li>
+	<li><a href="Math Transform">TaLib_math_transform</a></li>
+	<li><a href="Math Operators">TaLib_math_operators</a></li>
+</ul>
+<hr />
+
+<p>Parent: <a href="Components">Components</a></p>
