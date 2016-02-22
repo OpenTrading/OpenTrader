@@ -1,5 +1,5 @@
-usage: OTCmd2.py [-h] [-v IVERBOSE] [-t] [-c SCONFIGFILE] [-P SMT4DIR]
-                 [-T SONLINETARGET] [-R IRETVALTIMEOUT]
+usage: OTCmd2.py [-h] [-v IVERBOSE] [-t] [-s LSET LSET] [-c SCONFIGFILE]
+                 [-P SMT4DIR] [-T SONLINETARGET] [-R IRETVALTIMEOUT]
                  [lArgs [lArgs ...]]
 
 This script can be run from the command line to send commands
@@ -39,6 +39,9 @@ optional arguments:
   -v IVERBOSE, --verbose IVERBOSE
                         the verbosity, 0 for silent 4 max (default 4)
   -t, --test            Run unit test suite
+  -s LSET LSET, --set LSET LSET
+                        Set cmd2 settables, followed by name and value -
+                        repeat if needed
   -c SCONFIGFILE, --config SCONFIGFILE
                         Config file for OTCmd2 options
   -P SMT4DIR, --mt4dir SMT4DIR

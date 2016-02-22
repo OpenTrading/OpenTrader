@@ -1,4 +1,4 @@
-== OTBackTest.py
+== OTBackTest.py ===
 
 Besides using the  {{{backtest}}} command in [[OTCmd2|DocOTCmd2]], you can run
 {{{OTBackTest.py}}} as a stand-alone script for backtesting:
@@ -10,7 +10,7 @@ usage: OTBackTest.py [-h] [-T] [-P] [-R SRECIPE] [-C SCHEF] [-H SHDFSTORE]
 Give the Symbol Timeframe and Year to backtest. The Timeframe is the period in
 minutes: e.g. 1 60 240 1440.
 
-=== CSV Files
+=== CSV Files ===
 
 In order to backtest, you will need some Open High Low Close (OHLC) data
 in CSV files. You can download the 1 minute history of major forex pairs from
@@ -67,7 +67,7 @@ This is best done when **not** connected or logged in.
 
 These CSV files have no header.
 
-### Resampling to Longer Time Periods
+=== Resampling to Longer Time Periods ===
 
 Once you have the large 1 minute history files in CSV, you will want to
 resample them and save them as OHLC CSV files at longer timeperiods.

@@ -1,4 +1,4 @@
-Welcome to the OpenTrader wiki!
+Welcome to the OpenTrader project!
 
 OpenTrader is an Open Source platform to communicate with on-line trading platforms,
 and includes the ability to:
@@ -9,16 +9,7 @@ and includes the ability to:
 * send and receive data from multiple on-line trading platforms (1 at the moment :-).
 For more details, see the [[FrontPage]].
 
-Use the Wiki to start topics for discussion; it's better to use the
-wiki for knowledge capture, and then we can pull pages back into the
-release documentation in the {{{wiki}}} directory. You may need to be
-signed into github.com to edit in the wiki.
-
-Please file any bugs in the
-[[issues tracker|https://github.com/OpenTrading/OpenTrader/issues]].
-
-* [[FrontPage]]
-* [[TitleIndex]]
+=== Documentation ===
 
 * [[Installation]]
 * [[Architecture]]
@@ -29,7 +20,19 @@ Please file any bugs in the
 * [[DocOTBackTest]]
 * [[DocOTPpnAmgc]]
 
+* [[TitleIndex]]
+
+=== Project ===
+
+Use the Wiki to start topics for discussion; it's better to use the
+wiki for knowledge capture, and then we can pull pages back into the
+release documentation in the {{{wiki}}} directory. You may need to be
+signed into github.com to edit in the wiki.
+
+Please format wiki pages as Creole. http://wikicreole.org/
+
+Please file any bugs in the
+[[issues tracker|https://github.com/OpenTrading/OpenTrader/issues]].
 
 
 ----
-Please format wiki pages as Creole. http://wikicreole.org/

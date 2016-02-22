@@ -59,15 +59,15 @@ See Python standard library's optparse
 === Useful Subcommands
 
 Useful {{{cmd2}}} subcommands are:
-* history     - show the command history; rereun commands with: run.
-* load FILE   - load a script of commands from FILE.
-* save * FILE - save a script of commands to FILE; use * for all commands,
+* {{{history}}}     - show the command history; rereun commands with: run.
+* {{{load FILE}}}   - load a script of commands from FILE.
+* {{{save * FILE}}} - save a script of commands to FILE; use * for all commands,
                 a number for that command, or nothing for the last command.
-* edit        - edit the previous command in an editor, or edit *, or edit FILE;
+* {{{edit}}}        - edit the previous command in an editor, or edit *, or edit FILE;
                 commands are run after editor is closed; used EDITOR environment var.
-* py [CMD]    - execute a Python command CMD, or with no arguments, enter a Python loop:
+* {{{py [CMD]}}}    - execute a Python command CMD, or with no arguments, enter a Python loop:
                 In the loop: self = CMD2 object, self.oOm = Omellete, self.oOm.oBt = Oven
-* help [SUB]  - help, or help on subcommand SUB.
+* {{{help [SUB]}}}  - help, or help on subcommand SUB.
 
 See also:
 * http://catherinedevlin.blogspot.de/

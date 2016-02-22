@@ -36,5 +36,9 @@ see [[TestsFeatures]].
 
 === GUI Use Cases Plotting
 
+=== Trade Copier
+
+* [[TradeCopier]]
+
 ----
 Parent: [[RoadMap]]

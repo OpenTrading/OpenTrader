@@ -1,6 +1,6 @@
-== Pandas Love Omlettes!
+== Pandas Love Omlettes! ==
 
-=== (And you thought pandas were vegans :-)
+=== (And you thought pandas were vegans :-) ===
 
 There are many steps to making a good Omlette:
 

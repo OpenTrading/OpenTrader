@@ -1,4 +1,5 @@
-=== OTCmd2 order
+=== OTCmd2 order ==
+WARN: sMt4Dir not found: /c/Program Files/MetaTrader 4 Terminal
 
 Manage orders in an OTMql4AQMp enabled Metatrader:
 {{{
@@ -16,7 +17,7 @@ Manage orders in an OTMql4AQMp enabled Metatrader:
 }}}
 
 {{{
-Usage: order [options] command
+Usage: order [options] list|tickets|trades|history|info|exposure|close|sell|buy
 
 Options:
   -h, --help  show this help message and exit

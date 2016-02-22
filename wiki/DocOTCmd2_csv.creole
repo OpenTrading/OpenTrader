@@ -1,5 +1,5 @@
-=== OTCmd2 csv
-
+=== OTCmd2 csv ==
+WARN: sMt4Dir not found: /c/Program Files/MetaTrader 4 Terminal
 Download, resample and convert CSV files into pandas:
 {{{
 csv url PAIRSYMBOL       - show a URL where you can download  1 minute Mt HST data
@@ -9,7 +9,7 @@ csv resample SRAW1MINFILE, SRESAMPLEDCSV, STIMEFRAME - Resample 1 minute CSV dat
 }}}
 
 {{{
-Usage: csv [options] command
+Usage: csv [options] url|resample
 
 Options:
   -h, --help  show this help message and exit

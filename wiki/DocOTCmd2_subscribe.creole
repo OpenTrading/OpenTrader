@@ -1,4 +1,5 @@
-=== OTCmd2 subscribe
+=== OTCmd2 subscribe ==
+WARN: sMt4Dir not found: /c/Program Files/MetaTrader 4 Terminal
 
 Subscribe to messages from RabbitMQ on a given topic:
 {{{
@@ -34,7 +35,7 @@ The RabbitMQ host and login information is set in the {{{[RabbitMQ]}}}
 section of the {{{OTCmd2.ini}}} file; see the {{{-c/--config}}} command-line options.
 
 {{{
-Usage: subscribe [options] command
+Usage: subscribe [options] get|config|topics|set|thread|hide|show|pprint|run|foo
 
 Options:
   -h, --help  show this help message and exit

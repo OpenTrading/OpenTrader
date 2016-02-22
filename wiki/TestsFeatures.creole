@@ -80,6 +80,450 @@ Features are tagged with these tags, that may have the preconditions:
 * @broken     - work-in-progress - won't work
 
 
+=== 01_csv
+
+**[[01_csv.txt|https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/01_csv.feature]]**
+
+**Feature:** csv command
+Download, resample and convert CSV files into pandas:
+{{{
+csv url PAIRSYMBOL       - show a URL where you can download  1 minute Mt HST data
+csv resample SRAW1MINFILE, SRESAMPLEDCSV, STIMEFRAME - Resample 1 minute CSV data,
+                                                       to a new timeframe
+                                                       and save it as CSV file
+}}}
+For help on subcommands type: csv help <sub> 
+
+
+
+**Scenario:** csv url
+{{{
+For help on options type: help csv
+
+        Given We get help when we type "csv help url"
+        """csv url PAIRSYMBOL       
+                - show a URL where you can download  1 minute Mt HST data
+                
+        For help on options type: help csv
+        """
+
+
+**Scenario:** csv resample
+{{{
+For help on options type: help csv
+
+        Given We get help when we type "csv help resample"
+        """csv resample SRAW1MINFILE, SRESAMPLEDCSV, STIMEFRAME 
+                - Resample 1 minute CSV data, to a new timeframe and save it as CSV file
+                
+        For help on options type: help csv
+        """
+}}}
+
+=== 02_chart
+
+**[[02_chart.txt|https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/02_chart.feature]]**
+
+**Feature:** chart command
+chart
+For help on subcommands type: chart help <sub> 
+
+
+
+**Scenario:** chart list
+{{{
+For help on options type: help chart
+
+        Given We get help when we type "chart help list"
+        """chart list
+                
+        For help on options type: help chart
+        """
+
+
+**Scenario:** chart get
+{{{
+For help on options type: help chart
+
+        Given We get help when we type "chart help get"
+        """chart get
+                
+        For help on options type: help chart
+        """
+
+
+**Scenario:** chart set
+{{{
+For help on options type: help chart
+
+        Given We get help when we type "chart help set"
+        """chart list
+                
+        For help on options type: help chart
+        """
+}}}
+
+=== 03_subscribe
+
+**[[03_subscribe.txt|https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/03_subscribe.feature]]**
+
+**Feature:** subscribe command
+
+Subscribe to messages from RabbitMQ on a given topic:
+{{{
+  sub get               - get the current target for subscribe; defaults to:
+                        the first value of default['lOnlineTargets'] in OTCmd2.ini
+  sub set TARGET        - set the target for subscribe, must be one of:
+                        the values of default['lOnlineTargets'] in OTCmd2.ini
+  sub config            - configure the current target for subscribe: [KEY [VAL]]
+  sub run TOPIC1 ...    - start a thread to listen for messages,
+                          TOPIC is one or more Rabbit topic patterns.
+  sub topics            - shows topics subscribed to.
+  sub hide TOPIC        - stop seeing TOPIC messages (e.g. tick - not a pattern)
+  sub show              - list the message topics that are being hidden
+  sub show TOPIC        - start seeing TOPIC messages (e.g. tick - not a pattern)
+  sub pprint ?0|1       - seeing TOPIC messages with pretty-printing,
+                          with 0 - off, 1 - on, no argument - current value
+  sub thread info       - info on the thread listening for messages.
+  sub thread stop       - stop a thread listening for messages.
+  sub thread enumerate  - enumerate all threads
+}}}
+
+Common RabbitMQ topic patterns are:
+* {{{#}}} for all messages,
+* {{{tick.#}}} for ticks,
+* {{{timer.#}}} for timer events,
+* {{{retval.#}}} for return values.
+
+You can choose as specific chart with syntax like:
+{{{
+    tick.oChart.EURGBP.240.93ACD6A2.#
+}}}
+The RabbitMQ host and login information is set in the {{{[RabbitMQ]}}}
+section of the {{{OTCmd2.ini}}} file; see the {{{-c/--config}}} command-line options.
+For help on subcommands type: subscribe help <sub> 
+
+
+
+**Scenario:** subscribe get
+{{{
+For help on options type: help subscribe
+
+        Given We get help when we type "subscribe help get"
+        """subscribe get
+                
+        For help on options type: help subscribe
+        """
+
+
+**Scenario:** subscribe config
+{{{
+For help on options type: help subscribe
+
+        Given We get help when we type "subscribe help config"
+        """subscribe config - configure the current target for subscribe:  [KEY [VAL]]
+                
+        For help on options type: help subscribe
+        """
+
+
+**Scenario:** subscribe topics
+{{{
+For help on options type: help subscribe
+
+        Given We get help when we type "subscribe help topics"
+        """subscribe topics: shows topics subscribed to
+                
+        For help on options type: help subscribe
+        """
+
+
+**Scenario:** subscribe set
+{{{
+For help on options type: help subscribe
+
+        Given We get help when we type "subscribe help set"
+        """subscribe set
+                
+        For help on options type: help subscribe
+        """
+
+
+**Scenario:** subscribe thread
+{{{
+For help on options type: help subscribe
+
+        Given We get help when we type "subscribe help thread"
+        """thread info       - info on the thread listening for messages.
+        thread stop       - stop a thread listening for messages.
+        For help on options type: help subscribe
+        """
+
+
+**Scenario:** subscribe hide
+{{{
+For help on options type: help subscribe
+
+        Given We get help when we type "subscribe help hide"
+        """subscribe hide: stop seeing TOPIC messages (e.g. tick - not a pattern)
+                
+        For help on options type: help subscribe
+        """
+
+
+**Scenario:** subscribe show
+{{{
+For help on options type: help subscribe
+
+        Given We get help when we type "subscribe help show"
+        """subscribe show
+        start seeing TOPIC messages (e.g. tick - not a pattern)
+                
+        For help on options type: help subscribe
+        """
+
+
+**Scenario:** subscribe pprint
+{{{
+For help on options type: help subscribe
+
+        Given We get help when we type "subscribe help pprint"
+        """subscribe pprint:
+        - seeing TOPIC messages with pretty-printing,
+        - with 0 - off, 1 - on, no argument - current value
+        For help on options type: help subscribe
+        """
+
+
+**Scenario:** subscribe run
+{{{
+For help on options type: help subscribe
+
+        Given We get help when we type "subscribe help run"
+        """subscribe run: start a thread to listen for messages,
+                
+        For help on options type: help subscribe
+        """
+
+
+**Scenario:** subscribe list
+{{{
+For help on options type: help subscribe
+
+        Given We get help when we type "subscribe help list"
+        """subscribe list
+                
+        For help on options type: help subscribe
+        """
+}}}
+
+=== 04_publish
+
+**[[04_publish.txt|https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/04_publish.feature]]**
+
+**Feature:** publish command
+
+Publish a message via RabbitMQ to a given chart on a OTMql4Py enabled terminal:
+{{{
+}}}
+You wont see the return value unless you have already done a:
+{{{
+  sub run retval.#
+}}}
+The RabbitMQ host and login information is set in the {{{[RabbitMQ]}}}
+section of the {{{OTCmd2.ini}}} file; see the {{{-c/--config}}} command-line options.
+For help on subcommands type: publish help <sub> 
+
+
+
+**Scenario:** publish get
+{{{
+For help on options type: help publish
+
+        Given We get help when we type "publish help get"
+        """pub get                   - get the current target for publish; defaults to:
+                                    the first value of default['lOnlineTargets'] in OTCmd2.ini
+                
+        For help on options type: help publish
+        """
+
+
+**Scenario:** publish config
+{{{
+For help on options type: help publish
+
+        Given We get help when we type "publish help config"
+        """pub config                - configure the current target for publish: [KEY [VAL]]
+                
+        For help on options type: help publish
+        """
+
+
+**Scenario:** publish set
+{{{
+For help on options type: help publish
+
+        Given We get help when we type "publish help set"
+        """  pub set TARGET            - set the target for publish,
+                
+        For help on options type: help publish
+        """
+
+
+**Scenario:** publish wait
+{{{
+For help on options type: help publish
+
+        Given We get help when we type "publish help wait"
+        """pub wait COMMAND ARG1 ... - publish a Mql command to Mt4 and wait for the result,
+              the command should be a single string, with a space seperating arguments.
+                
+        For help on options type: help publish
+        """
+
+
+**Scenario:** publish exec
+{{{
+For help on options type: help publish
+
+        Given We get help when we type "publish help exec"
+        """pub wait COMMAND ARG1 ... - publish a Mql command to Mt4 and wait for the result,
+              the command should be a single string, with a space seperating arguments.
+                
+        For help on options type: help publish
+        """
+
+
+**Scenario:** publish sync
+{{{
+For help on options type: help publish
+
+        Given We get help when we type "publish help sync"
+        """pub wait COMMAND ARG1 ... - publish a Mql command to Mt4 and wait for the result,
+              the command should be a single string, with a space seperating arguments.
+                
+        For help on options type: help publish
+        """
+
+
+**Scenario:** publish cmd
+{{{
+For help on options type: help publish
+
+        Given We get help when we type "publish help cmd"
+        """pub wait COMMAND ARG1 ... - publish a Mql command to Mt4 asyncronsly,
+              the command should be a single string, with a space seperating arguments.
+                
+        For help on options type: help publish
+        """
+
+
+**Scenario:** publish async
+{{{
+For help on options type: help publish
+
+        Given We get help when we type "publish help async"
+        """pub wait COMMAND ARG1 ... - publish a Mql command to Mt4 asyncronsly,
+              the command should be a single string, with a space seperating arguments.
+                
+        For help on options type: help publish
+        """
+
+
+**Scenario:** publish eval
+{{{
+For help on options type: help publish
+
+        Given We get help when we type "publish help eval"
+        """pub eval COMMAND ARG1 ... - publish a Python command to the OTMql4Py,
+        the command should be a single string, with a space seperating arguments.
+                
+        For help on options type: help publish
+        """
+
+
+**Scenario:** publish json
+{{{
+For help on options type: help publish
+
+        Given We get help when we type "publish help json"
+        """
+                
+        For help on options type: help publish
+        """
+}}}
+
+=== 05_backtest
+
+**[[05_backtest.txt|https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/05_backtest.feature]]**
+
+**Feature:** backtest command
+
+Backtest recipes with chefs, and serve the results as metrics and plots.
+
+The subcommands are:
+* omlette   - An omlette is an HDF5 file that saves all the data from a backtest
+* feed      - Create feeds (pandas DataFrames) from CSV OHLCV files
+* recipe    - Set the recipe that the chef will use, and make the ingredients from the feeds
+* chef      - Set the chef that we will use, and cook from the ingredients and the feeds
+* servings  - List the servings the chef has cooked, and dish out the servings
+* plot      - Plot the servings the chef has cooked, using matplotlib
+For help on subcommands type: backtest help <sub> 
+
+
+
+**Scenario:** backtest omlette
+{{{
+For help on options type: help backtest
+
+        Given We get help when we type "backtest help omlette"
+        """backtest omlette
+        An omlette is an HDF5 file that saves all the information from a backtest,
+        including the metadata: all of parameter values that were used in the recipe,
+        the parameters used by the cook, and the servings results.
+        You should open an omlette before you backtest giving it a filename,
+        and close it after the 'chef cook' and 'servings'.
+        {{{
+        back omlette open FILE           - open an HDF file to save all the backtest parts
+        back omlette check               - show the current omlette filename
+        back omlette display             - display the current omlette HDF sections
+        back omlette close               - close the HDF file saving the omlette
+        }}}
+        Real Soon Now you will be able to enjoy them more by reloading previously saved
+        omlettes, plotting the data or the results, and adding or editing comments.
+                
+        For help on options type: help backtest
+        """
+}}}
+
+=== 06_make
+
+**[[06_make.txt|https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/06_make.feature]]**
+
+**Feature:** make command
+The make command lets us make things that are useful, such as making
+the feature files that will be used to run the tests. 
+
+* make [--features_dir] features: will generate the test feature files to test the code.
+For help on subcommands type: make help <sub> 
+
+
+
+**Scenario:** make features
+{{{
+For help on options type: help make
+
+        Given We get help when we type "make help features"
+        """make [--features_dir] features will generate the test feature files
+        that are used to test the code from the code itself. This way, the
+        documentation in the feature files is drawn directly from the documentation
+        in the code, which makes it easier to keep it up-to-date with the code.
+        make features uses the --features_dir dir option to the make command to know what
+        directory the feature files will be written to. The directory must exist.
+        For help on options type: help make
+        """
+}}}
+
 === OTCmd2-backtest_feed_plot
 
 **[[OTCmd2-backtest_feed_plot.txt|https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/OTCmd2-backtest_feed_plot.feature]]**
