@@ -1,9 +1,9 @@
-=== Installation
+=== Installation ===
 
 One day we will make installers for a shrink-wrapped distribution, but
 for now, you must clone from https://github.com and manually install.
 
-==== Prerequisites
+==== Prerequisites ====
 
 You must have {{{cmd2}}} installed the Python that runs these scripts:
 see https://bitbucket.org/catherinedevlin/cmd2
@@ -11,7 +11,7 @@ see https://bitbucket.org/catherinedevlin/cmd2
 You must have {{{configobj}}} installed in the Python that runs these scripts.
 The up-to-date one is at https://github.com/DiffSK/configobj/
 
-===== Plotting Prerequisites
+===== Plotting Prerequisites =====
 
 You must have {{{pandas}}} installed in the Python that runs these scripts:
 http://pypi.python.org/pypi/pandas
@@ -19,7 +19,7 @@ http://pypi.python.org/pypi/pandas
 You must have {{{matplotlib}}} installed in the Python that runs these scripts:
 http://pypi.python.org/pypi/matplotlib
 
-===== Backtesting Prerequisites
+===== Backtesting Prerequisites =====
 
 For backtesting ([[DocOTCmd2_backtest]]), you need to have {{{pybacktest}}}
 installed in the Python that runs these scripts:
@@ -31,7 +31,7 @@ http://pypi.python.org/pypi/pandas
 You will probably also want the Cythoned {{{ta-lib}}} that works with pandas/numpy:
 see [[TaLib]].
 
-==== Metatrader Prerequisites
+==== Metatrader Prerequisites ====
 
 
 In your Metatrader Python, you also must have installed {{{Pika}}}:
@@ -52,7 +52,7 @@ into that directory. Then recursively copy the contents of each of the three
 This project now works with ZeroMQ or RabbitMQ Messaging Protocols.
 The ZeroMQ protocol is preferred and all development is currently on it.
 
-===== Metatrader ZeroMQ
+===== Metatrader ZeroMQ =====
 
 For ZeroMq you will need to have installed
 * [[OTMql4Zmq]] https://github.com/OpenTrading/OTMql4Zmq/,
@@ -68,7 +68,7 @@ commands {{{sub set}}} and  {{{sub run retval timer}}}.
 Within about 15 seconds you should see timer messages coming for your
 {{{OTMql4Zmq}}} enabled Metatrader.
 
-===== Metatrader RabbitMQ
+===== Metatrader RabbitMQ =====
 
 For RabbitMQ you will need to have installed:
 * [[OTMql4AMQP]] https://github.com/OpenTrading/OTMql4AMQP/,
@@ -88,7 +88,7 @@ Within about 15 seconds you should see timer messages coming for your
 {{{OTMql4AMQP}}} enabled Metatrader.
 
 
-==== Setup
+==== Setup ====
 
 Clone this project from github
 {{{

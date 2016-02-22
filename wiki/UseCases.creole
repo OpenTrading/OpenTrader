@@ -1,4 +1,4 @@
-== Use Cases
+== Use Cases ==
 
 Use-cases are the starting point for our Behaviour Driven Development (BDD).
 The use-cases are elaborated into required feature need to fulfil
@@ -22,21 +22,21 @@ directory of the distribution. For the currently documented features,
 see [[TestsFeatures]].
 
 
-=== Omlettes Use Cases
+=== Omlettes Use Cases ===
 
 * [[ComparingOmeletteReviews]]
 
-=== Backtesting Use Cases
+=== Backtesting Use Cases ===
 
-=== Livetrading Use Cases
+=== Livetrading Use Cases ===
 
-=== GUI Use Cases
+=== GUI Use Cases ===
 
-=== GUI Use Cases Tables
+=== GUI Use Cases Tables ===
 
-=== GUI Use Cases Plotting
+=== GUI Use Cases Plotting ===
 
-=== Trade Copier
+=== Trade Copier ===
 
 * [[TradeCopier]]
 

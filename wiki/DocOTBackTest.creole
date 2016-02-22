@@ -1,4 +1,4 @@
-== OTBackTest.py ===
+== OTBackTest.py ==
 
 Besides using the  {{{backtest}}} command in [[OTCmd2|DocOTCmd2]], you can run
 {{{OTBackTest.py}}} as a stand-alone script for backtesting:
@@ -88,3 +88,6 @@ You may want to break them up into smaller chunks, such as one file
 per year, so that your backtests run faster. It can be also very
 informative to see how much your results vary in different years.
 
+
+----
+Parent: [[Components]]

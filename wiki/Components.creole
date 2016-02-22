@@ -1,4 +1,4 @@
-== Components
+== Components ==
 
 OpenTrader is made without any additives or preservatives, and is GMO free:
 only pure, natural, Open Source components.
@@ -11,11 +11,12 @@ For the pre-requisites, see [[Installation]].
 The [[Architecture]] is designed to be modular, and we aim at having
 components that can plug in to provide functionality.
 
-=== Current Components
+=== Current Components ===
 
 For the prerequisites, see [[Installation]].
 
 * [[Cmd2]]
+* [[ZeroMQ]]
 * [[RabbitMQ]]
 * [[TaLib]]
 * [[TabView]]
@@ -23,11 +24,11 @@ For the prerequisites, see [[Installation]].
 
 For the backtesters, [[Backtesting]]
 
-=== GUI Components
+=== GUI Components ===
 
 If you want to visualize and explore [[Omlettes]], you can use [[ViTables]].
 
-=== Visualization Components
+=== Visualization Components ===
 
 Many of the Scientific Visualization packages can work with HDF files.
 
@@ -37,7 +38,7 @@ comments here if you have tried them with [[Omlettes]].
 * [[veusz|http://home.gna.org/veusz/]]
 
 
-=== Possible Future Compenents
+=== Possible Future Compenents ===
 
 * See the Chefs listed in [[Backtesting]]
 * [[seaborn||http://stanford.edu/~mwaskom/software/seaborn/]]

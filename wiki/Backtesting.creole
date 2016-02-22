@@ -1,4 +1,4 @@
-== Backtesting
+== Backtesting ==
 
 The architecure of OpenTrader supports different chefs (backtesters), and it
 is assumed that some will have different features, strengths, and weaknesses.
@@ -24,7 +24,7 @@ judge it on criteria. This is especially true now that core bottlenecks are bein
 rewritten in Cython. Similarly, if a feature is missing and important enough to us,
 we perhaps can implement the feature and push it back upstream.
 
-=== Criteria
+=== Criteria ===
 
 Idealy, our backtesters will have all of the features found in the Stategy Tester,
 so that we can make direct comparisons.
@@ -43,7 +43,7 @@ so that we can make direct comparisons.
 
 * slow
 
-=== Candidates
+=== Candidates ===
 
 We list here some of the open source software that we know of, with some
 comments based on our Criteria:

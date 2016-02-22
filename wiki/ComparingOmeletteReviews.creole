@@ -1,4 +1,4 @@
-== Comparing Omelette Reviews
+== Comparing Omelette Reviews ==
 
 After having used [[Backtesting]], the open trader wants to compare
 how the Ingredients performed as a function of the Recipe, or the
@@ -25,7 +25,7 @@ from each of the Reviews, with  large numbers (10-20) of [[Omlettes]].
 
 We will start with the tabular route, and elaborate it in this use-case.
 
-=== Tabular Comparing Omelette Reviews
+=== Tabular Comparing Omelette Reviews ===
 
 For this we may have the required tool already: [[TabView]].
 

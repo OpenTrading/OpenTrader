@@ -1,4 +1,4 @@
-=== OTCmd2 rabbit ==
+=== OTCmd2 rabbit
 WARN: sMt4Dir not found: /c/Program Files/MetaTrader 4 Terminal
 
 Introspect some useful information from the RabbitMQ server:

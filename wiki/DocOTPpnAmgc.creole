@@ -1,4 +1,4 @@
-== OTPpnAmgc
+== OTPpnAmgc ==
 
 OTPpnAmgc charts a CSV file of Open High Low Close Volume values, along with
 the MACD and RSI, using matplotlib.
@@ -26,3 +26,6 @@ optional arguments:
   --iMacdFast IMACDFAST
   --iMacdEma IMACDEMA
 }}}
+
+----
+Parent: [[Components]]

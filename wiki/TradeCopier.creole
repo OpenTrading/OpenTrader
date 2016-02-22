@@ -1,12 +1,12 @@
-== Definition
+== Definition ==
 
 Statement of the Problem.
 
-== Use Cases
+== Use Cases ==
 
 Exact scenarios of how the functionality will be used by end users.
 
-== Features
+== Features ==
 
 
 ----

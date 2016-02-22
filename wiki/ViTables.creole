@@ -1,4 +1,4 @@
-== ViTables
+== ViTables ==
 
 [[ViTables|https://github.com/uvemas/ViTables]] can visualize tabular data, based on
 [[pytables|http://pypi.python.org/packages/source/p/pytables]].

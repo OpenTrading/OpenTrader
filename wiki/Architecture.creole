@@ -25,14 +25,6 @@ The architecture is designed to be modular:
 * different Recipes should work with different Chefs,
 * all the Servings should be able to be reviewed by different Reviewers.
 
-
-* [[Omlettes]]
-* Feeds
-* [[Recipes]]
-* Ingredients
-* Chefs
-* Reviewers
-
 OpenTrader is currently a [[Cmd2]] based command-line read-eval-print loop, 
 which is an easy substitute for a GUI; we can  always add a GUI later.
 But the command-line is easy to use for this kind of work, plus it gives
@@ -66,6 +58,14 @@ interactive applications. It provides the following features:
 * Bare {{{>}}}, {{{>>}}} with no filename send output to paste buffer
 * Pipe output to shell commands with {{{|}}}
 * Simple transcript-based application testing
+
+
+* [[Omlettes]]
+* Feeds
+* [[Recipes]]
+* Ingredients
+* Chefs
+* Reviewers
 
 ----
 Parent: [[Home]]

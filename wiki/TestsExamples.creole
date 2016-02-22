@@ -1,4 +1,4 @@
-== Examples
+== Examples ==
 
 Because [[OTCmd2|DocOTCmd2]] is a cmd2 application, not only can
 it interpret commands in an interactive loop, but it can read
@@ -41,7 +41,7 @@ it different {{{.ini}}} files, for example under Msys or Unix, like this:
 OTCmd2 -c /tmp/My.ini -P "/c/Program Files/MetaTrader"  < share/examples/OTCmd2-sub.txt
 }}}
 
-=== Current Examples
+=== Current Examples ===
 
 These examples can be run as a test suite, but some are slow
 and some require the rabbitq server to be running and some

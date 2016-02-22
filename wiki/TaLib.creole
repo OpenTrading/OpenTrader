@@ -1,9 +1,9 @@
-== TALIB
+== TALIB ==
 
 We recommend that you install the Cython version of [[ta-lib|http://ta-lib.org]]:
 [[ta-lib|https://github.com/mrjbq7/ta-lib]]
 
-=== Function API Examples
+=== Function API Examples ===
 
 Similar to TA-Lib, the function interface provides a lightweight wrapper of
 the exposed TA-Lib indicators.

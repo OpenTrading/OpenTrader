@@ -1,4 +1,4 @@
-== RabbitMQ
+== RabbitMQ ==
 
 To run OpenTrader, you must have a AMQP server running,
 usually with the default guest account: see http://rabbitmq.org 
@@ -16,9 +16,7 @@ It may be possible to speed up the round-trip time with [[OTMql4AMQP]] by using
 You can run Metatrader under Wine on Linux, and have OpenTrader under Linux
 use the standard RabbitMQ that is supplied with your distribution.
 
-There is no reason why OpenTrader cannot be made to work with ZeroMQ using
-[[OTMql4Zmq|https://github.com/OpenTrading/OTMql4Zmq/]]
-but that work has not yet been done.
+OpenTrader also works with [[ZeroMQ]].
 
 ----
 Parent: [[Components]]

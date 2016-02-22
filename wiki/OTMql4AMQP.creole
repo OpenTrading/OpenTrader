@@ -1,4 +1,4 @@
-== OTMql4AMQP - AMQP bindings for MQL4 Python
+== OTMql4AMQP - AMQP bindings for MQL4 Python ==
 
 https://github.com/OpenTrading/OTMql4AMQP/
 

@@ -1,4 +1,4 @@
-== OpenTrader
+== OpenTrader ==
 
 https://github.com/OpenTrading/OpenTrader/
 
@@ -36,7 +36,7 @@ Coming **Real Soon Now(TM)** is:
 * there's an optimizer in the backtester, but it's not yet wired up.
 For our future directions, see the RoadMap (https://github.com/OpenTrading/OpenTrader/wiki/RoadMap) .
 
-=== Messaging Protocols
+=== Messaging Protocols ===
 
 This project now works with ZeroMQ or RabbitMQ Messaging Protocols.
 The ZeroMQ protocol is preferred and all development is currently on it.
@@ -76,7 +76,7 @@ or set the {{{default}}} {{{sMt4Dir}}} setting of the {{{OTCmd2.ini}}} file,
 or add your installed OTMql4Py Python directory to the {{{PYTHONPATH}}}
 environment variable (e.g. {{{c:\Program Files\Metatrader\MQL4\Python}}}).
 
-=== Work in Progress
+=== Work in Progress ===
 
 **This is a work in progress - a developers' pre-release version.**
 It has been fully checked in, and there is a test-suite based on the

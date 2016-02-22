@@ -1,4 +1,4 @@
-== Testing
+== Testing ==
 
 [[UseCases]] proceed to getting fleshed out as Features. 
 Features are implemented as Gherkin feature files, and tested using
@@ -11,7 +11,7 @@ python setup.py behave_test
 YMMV :-)
 
 
-=== Features
+=== Features ===
 
 The features can be found in the 
 [[tests/features/|https://github.com/OpenTrading/OpenTrader/raw/master/tests/features/]]
@@ -20,7 +20,7 @@ directory of the distribution.
 For the details of our BDD testing, and the currently documented features, see
 [[TestsFeatures]].
 
-=== Examples
+=== Examples ===
 
 Features that are implemented as commands in [[OTCmd2|DocOTCmd2]] also
 have tests as examples.Because [[OTCmd2|DocOTCmd2]] is a

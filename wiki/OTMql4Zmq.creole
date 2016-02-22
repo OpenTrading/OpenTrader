@@ -1,4 +1,4 @@
-== OTMql4Zmq - ZeroMQ bindings for MQL4 Python
+== OTMql4Zmq - ZeroMQ bindings for MQL4 Python ==
 
 https://github.com/OpenTrading/OTMql4Zmq/
 

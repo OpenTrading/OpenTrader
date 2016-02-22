@@ -1,0 +1,22 @@
+== ZeroMQ ==
+
+This project now works with ZeroMQ or [[RabbitMQ]] Messaging Protocols.
+The ZeroMQ protocol is preferred and all development is currently on it.
+
+**ZeroMQ**: To use ZeroMQ, this project builds on
+[[OTMql4Zmq|https://github.com/OpenTrading/OTMql4Zmq/]] ,
+and requires that to be installed in your Metatrader as a pre-requisite.
+You also must have installed Python and the 
+[[OTMql4Py Python bridge|https://github.com/OpenTrading/OTMql4Py/]] and
+[[OTMql4Lib Metatrader library|https://github.com/OpenTrading/OTMql4Lib/]] .
+OpenTrader runs fine with either the C coded implementation
+of ZeroMQ for Metatrader:
+[[OTZmqCmdEA.mq4|https://github.com/OpenTrading/OTMql4Zmq/raw/master/MQL4/Experts/OTMql4/OTZmqCmdEA.mq4]]
+or the  or Python implementation
+[[OTPyTestZmqEA.mq4|https://github.com/OpenTrading/OTMql4Zmq/raw/master/MQL4/Experts/OTMql4/OTPyTestZmqEA.mq4]]
+.
+
+The work has not yet documented yet.
+
+----
+Parent: [[Components]]

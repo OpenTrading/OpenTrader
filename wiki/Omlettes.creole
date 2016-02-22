@@ -1,4 +1,4 @@
-== Omlettes
+== Omlettes ==
 
 An omlette is an HDF5 file that saves all the information obtained from [[Backtesting]],
 including the metadata: all of parameter values that were used in the [[Recipe]],

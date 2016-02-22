@@ -1,4 +1,4 @@
-== Road Map
+== Road Map ==
 
 There are a lot of directions we can take this project, and a lot
 of things we can do. The Road Map is ideas that when they are accepted,
@@ -58,6 +58,7 @@ The order should be approximately that of importance.
 * Rationalize our syntactic sugar with other <<haute cuisine>> establishments.
 
 
+* [[UseCases]]
 
 ----
 Parent: [[Home]]

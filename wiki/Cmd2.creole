@@ -19,7 +19,7 @@ used simply by importing cmd2 instead.
 * Pipe output to shell commands with |
 * Simple transcript-based application testing
 
-===    Searchable command history
+===    Searchable command history ===
 
 All commands will automatically be tracked in the session's history,
 unless the command is listed in Cmd's excludeFromHistory
@@ -28,35 +28,35 @@ commands (and their abbreviations: hi, li, l, r). If you wish to
 exclude some of your custom commands from the history, append their
 names to the list at Cmd.ExcludeFromHistory.
 
-===    Load commands from file, save to file, edit commands in file
+===    Load commands from file, save to file, edit commands in file ===
 
         Type help load, help save, help edit for details.
 
-=== Multi-line commands
+=== Multi-line commands ===
 
 Any command accepts multi-line input when its name is listed in
 Cmd.multilineCommands. The program will keep expecting input until a
 line ends with any of the characters in Cmd.terminators . The default
 terminators are ; and /n (empty newline).
 
-=== Case-insensitive commands
+=== Case-insensitive commands ===
 
 All commands are case-insensitive, unless Cmd.caseInsensitive is set to False.
 
-=== Special-character shortcut commands (beyond cmd's "@" and "!")
+=== Special-character shortcut commands (beyond cmd's "@" and "!") ===
 
 To create a single-character shortcut for a command, update Cmd.shortcuts.
 
-=== Settable environment parameters
+=== Settable environment parameters ===
 
 To allow a user to change an environment parameter during program
 execution, append the parameter's name to Cmd.settable.
 
-=== Parsing commands with optparse options (flags)
+=== Parsing commands with optparse options (flags) ===
 
 See Python standard library's optparse 
 
-=== Useful Subcommands
+=== Useful Subcommands ===
 
 Useful {{{cmd2}}} subcommands are:
 * {{{history}}}     - show the command history; rereun commands with: run.

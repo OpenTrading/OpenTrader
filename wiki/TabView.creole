@@ -1,4 +1,4 @@
-=== Tabview
+=== Tabview ===
 
 [[tabview.py|https://github.com/OpenTrading/OpenTrader/raw/master/OpenTrader/tabview.py]]
 allows you to view a tab-delimited file in a spreadsheet-like display.
