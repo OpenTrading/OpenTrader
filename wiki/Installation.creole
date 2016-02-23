@@ -1,7 +1,7 @@
 === Installation ===
 
 One day we will make installers for a shrink-wrapped distribution, but
-for now, you must clone from https://github.com and manually install.
+for now, you must clone from github.com and manually install.
 
 ==== Prerequisites ====
 
@@ -33,12 +33,11 @@ see [[TaLib]].
 
 ==== Metatrader Prerequisites ====
 
-
 In your Metatrader Python, you also must have installed {{{Pika}}}:
 https://pypi.python.org/pypi/pika/
 
 In order to interact with Metatrader, you will need to
-install the OTMql4AMQP, OTMql4Py and OTMql4Lib projects from
+install the OTMql4Py and OTMql4Lib projects from
 https://github.com/OpenTrading/ into the Python called by your Metatrader:
 * [[OTMql4Py]] https://github.com/OpenTrading/OTMql4Py/, and
 * OTMql4Lib https://github.com/OpenTrading/OTMql4Lib/
