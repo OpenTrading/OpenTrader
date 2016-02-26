@@ -6,6 +6,8 @@
 # the 'rabbitmq_management' and 'rabbitmq_web_dispatch' plugins are enabled.
 # echo the commands from the script so that we can watch the progress
 set echo True
+# turn on debug tracing for now
+set debug True
 # list the vhost_names
 rabbit get vhost_names
 py assert len(self._G) > 0

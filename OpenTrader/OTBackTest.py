@@ -25,6 +25,7 @@ def oPyBacktestCook(dFeeds, oRecipe, oChefModule, oOm, oFd=sys.stdout):
     """
     Returns an error message string on failure; a Cooker instance on success.
     """
+    #? Why is dFeeds unused?
     from collections import OrderedDict
 
     dDishes = oRecipe.dApplyRecipe()
@@ -32,11 +33,11 @@ def oPyBacktestCook(dFeeds, oRecipe, oChefModule, oOm, oFd=sys.stdout):
     rSell = rShort = dDishes['rSell']
 
     if not len(rBuy[rBuy == True]):
-        sMsg = "WARN: NO Buy/Cover signals; qutting!"
+        sMsg = "WARN: NO Buy/Cover signals; quitting!"
         sys.stderr.write(sMsg +'\n')
         return sMsg
     if not len(rSell[rSell == True]):
-        sMsg = "WARN: NO Short/Sell signals; qutting!"
+        sMsg = "WARN: NO Short/Sell signals; quitting!"
         sys.stderr.write(sMsg +'\n')
         return sMsg
 
@@ -180,7 +181,7 @@ def oOmain(lArgv):
 
     oBt = oPyBacktestCook(dFeeds, oRecipe, oChefModule, oOm)
     assert oBt is not None
-    if type(oBt) == str:
+    if isinstance(oBt, basestring):
         raise RuntimeError(oBt)
 
     # this was the same as: oBt._mSignals = bt.mSignals() or oBt.signals

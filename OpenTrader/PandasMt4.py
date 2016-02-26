@@ -15,10 +15,10 @@ def vResampleFiles(sSymbol, sDir):
             sResampledCsv = os.path.join(sDir, sSymbol + sTimeFrame +'-' +sYear +'.csv')
             if not os.path.exists(sResampledCsv):
                 print "INFO: cooking %s %s %s" % (sTimeFrame, sSymbol, sYear, )
-                vResample1Min(sRaw1, sResampledCsv, sTimeFrame)
+                vResample1Min(sSymbol, sRaw1, sResampledCsv, sTimeFrame)
             assert os.path.exists(sResampledCsv)
 
-def vResample1Min(sRaw1, sResampledCsv, sTimeFrame, oFd=sys.stdout):
+def vResample1Min(sSymbol, sRaw1, sResampledCsv, sTimeFrame, oFd=sys.stdout):
     global dDF_RAW1MIN
 
     sKey = sSymbol

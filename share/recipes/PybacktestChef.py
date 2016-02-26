@@ -18,6 +18,7 @@ s@pr_mask_int@lPriceFieldsInt@
 from __future__ import print_function
 import sys
 import time
+import warnings
 
 from pandas.lib import cache_readonly
 
@@ -38,7 +39,7 @@ class StatEngine(object):
             fn = getattr(PYBTDailyPerformance, attr)
             try:
                 return fn(equity)
-            except Exception, e:
+            except StandardError, e:
                 sys.stdout.write("Error calling %s function: %s\n" % (attr, str(e),))
                 return
         else:
@@ -117,8 +118,8 @@ class ChefsOven(object):
         
         self._dDataDict = dict([(k.lower(), v) for k, v in dDataDict.iteritems()])
         
-        if signal_fields == None:
-            signal_fields = _lSignalFields
+        if signal_fields is None:
+            signal_fields = self._lSignalFields
         else:
             for sElt in signal_fields:
                 assert sElt in dDataDict
@@ -197,7 +198,9 @@ class ChefsOven(object):
         WARNING: In production, override default zero value in init_pos with
         extreme caution.
         """
-        from pybacktest import parts
+        with warnings.catch_warnings():
+            warnings.filterwarnings('ignore') # ignore problems during import
+            from pybacktest import parts
         return parts.signals_to_positions(self.signals, init_pos=0,
                                           mask=self._lSignalFieldsInt)
 
@@ -228,7 +231,9 @@ class ChefsOven(object):
     
     def rEquity(self):
         # equity diff series
-        from pybacktest import parts
+        with warnings.catch_warnings():
+            warnings.filterwarnings('ignore') # ignore problems during import
+            from pybacktest import parts
         return parts.trades_to_equity(self.trades)
 
     @cache_readonly
@@ -323,3 +328,11 @@ def vPlotEquity(rEquityDiff, mOhlc, sPeriod='W',
     pylab.legend(loc='best')
     pylab.title(sTitle)
 
+# pylint: disable=W0110,C0103,R0903,E1136,E1101
+#    C0103 invalid-name	39,54,66,179,180,180,182,214,216,217,273,284,285,286,287,288,300,301,321
+#    E1101 no-member	179,214,215,218,284,300
+#    E1136 unsubscriptable-object	181,182
+#    R0903 too-few-public-methods	28
+#    W0110 deprecated-lambda	61
+
+# the end

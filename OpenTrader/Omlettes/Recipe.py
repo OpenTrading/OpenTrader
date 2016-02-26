@@ -10,10 +10,12 @@
 
 """
 import sys, os
-import pandas
 from collections import OrderedDict
+
 from configobj import ConfigObj
-from PybacktestChef import mExtractFrame
+import pandas
+
+from OpenTrader.Omlettes.PybacktestChef import mExtractFrame
 
 class Recipe(object):
     
@@ -32,6 +34,7 @@ class Recipe(object):
         # but you could have more: multi-equity, multi-timeframe...
         self.lRequiredFeeds = []
         self.lRequiredIngredients = []
+        self.sIniFile = ''
 
     def oConfig(self, sSect=None, sKey=None, gVal=None):
         if self.sName == "": return None
@@ -171,9 +174,9 @@ class Recipe(object):
 
         rPositionsSign = mTrades.pos.apply(_cmp_fn)
         closepoint = rPositionsSign != rPositionsSign.shift()
-        e = (mTrades.vol * mTrades.price).cumsum()[closepoint] - \
-            (mTrades.pos * mTrades.price)[closepoint]
-        e = e.diff()
-        e = e.reindex(mTrades.index).fillna(value=0)
-        e[e != 0] *= -1
-        return e
+        rRetval = (mTrades.vol * mTrades.price).cumsum()[closepoint] - \
+                  (mTrades.pos * mTrades.price)[closepoint]
+        rRetval = rRetval.diff()
+        rRetval = rRetval.reindex(mTrades.index).fillna(value=0)
+        rRetval[rRetval != 0] *= -1
+        return rRetval

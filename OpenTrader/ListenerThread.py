@@ -69,7 +69,7 @@ class ListenerThread(threading.Thread):
             if sChart not in self.lCharts:
                 # keep a list of charts that we have seen for "chart list"
                 self.lCharts.append(sChart)
-                
+
             #? FixMe: what does null come back as?
             if sMsgType == 'retval':
                 # gRetvalToPython requires
@@ -96,7 +96,7 @@ class ListenerThread(threading.Thread):
                     sMsgType +" sPayloadType expected 'json' not " \
                     +sPayloadType +"\n" +sBody
                 # can use this to find the current bid and ask
-                gPayload =json.loads(lArgs[5])
+                gPayload = json.loads(lArgs[5])
                 self.jLastTick = gPayload
 
             elif sMsgType == 'timer':
@@ -105,7 +105,7 @@ class ListenerThread(threading.Thread):
                 # can use this to find if we are currently connected
                 gPayload = json.loads(lArgs[5])
                 self.gLastTimer = gPayload
-                
+
             elif sMsgType in ['cmd', 'exec']:
                 #? why do we see outgoing messages?
                 return

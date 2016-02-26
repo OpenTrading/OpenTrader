@@ -1,0 +1,7 @@
+
+This is a collection of links to forums where OpenTrader is discussed.
+
+=== Posts On OpenTrader ===
+
+Mql4j - Java for Metatrader
+http://www.stevehopwoodforex.com/phpBB3/viewtopic.php?f=21&t=4531

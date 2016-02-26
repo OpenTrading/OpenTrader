@@ -1,22 +1,6 @@
 # -*-mode: python; py-indent-offset: 4; indent-tabs-mode: nil; encoding: utf-8-dos; coding: utf-8 -*-
 
 """
-"""
-
-import sys
-import os
-from pprint import pprint, pformat
-
-try:
-    import tabview
-except ImportError:
-    # depends on curses
-    tabview = None
-    
-from OTUtils import sStripCreole, lConfigToList
-
-#? feed rename delete
-sBAC__doc__ = """
 Backtest recipes with chefs, and serve the results as metrics and plots.
 
 The subcommands are:
@@ -28,8 +12,114 @@ The subcommands are:
 * plot      - Plot the servings the chef has cooked, using matplotlib
 """
 
-sBAComlette__doc__ = """
-==== OTCmd2 backtest omlette
+SDOC = __doc__
+
+import sys
+import os
+import traceback
+from optparse import make_option
+from pprint import pprint, pformat
+
+try:
+    from OpenTrader.deps import tabview
+except ImportError:
+    # depends on curses
+    tabview = None
+
+from OpenTrader.OTUtils import sStripCreole, lConfigToList
+from OpenTrader.doer import Doer
+
+sCURRENT_OMLETTE_DIR = ""
+
+LOPTIONS = [make_option("-C", "--chef",
+                          dest="sChef",
+                          # no default here - we want it to come from the ini
+                          default="",
+                          help="the backtest package (one of: PybacktestChef)"),
+              make_option("-R", "--recipe",
+                          dest="sRecipe",
+                          # no default here - we want it to come from the ini
+                          default="",
+                          help="recipe to backtest (one of SMARecipe"),
+              make_option("-H", "--history_dir",
+                          dest="sHistoryDir",
+                          # no default here
+                          default="",
+                          help="directory for creating Create feeds from CSV OHLCV files")
+              ]
+
+LCOMMANDS = []
+
+#? feed rename delete
+
+dFEED_CACHE = {}
+sFEED_CACHE_KEY = ""
+
+def oEnsureOmlette(ocmd2, _oValues, sNewOmlette=""):
+    from OpenTrader.Omlettes import Omlette
+    if not sNewOmlette and hasattr(ocmd2, 'oOm') and ocmd2.oOm:
+        return ocmd2.oOm
+    oOm = Omlette.Omlette(oFd=sys.stdout)
+    if sNewOmlette:
+        # The default is no HDF file - it's not in ocmd2.oOptions.sOmlette
+        oOm.oAddHdfStore(sNewOmlette)
+
+    ocmd2.oOm = oOm
+    return oOm
+
+def oEnsureRecipe(ocmd2, oValues, sNewRecipe=""):
+    oOm = oEnsureOmlette(ocmd2, oValues)
+    if not sNewRecipe and hasattr(oOm, 'oRecipe') and oOm.oRecipe:
+        return oOm.oRecipe
+    if not sNewRecipe:
+        # The are set earlier in the call to do_back
+        sNewRecipe = ocmd2.sRecipe
+    if hasattr(oOm, 'oRecipe') and oOm.oRecipe:
+        sOldName = oOm.oRecipe.sName
+    else:
+        sOldName = ""
+    oRecipe = oOm.oAddRecipe(sNewRecipe)
+    if sOldName and sOldName != sNewRecipe:
+        #? do we invalidate the current servings if the recipe changed?
+        vClearOven(ocmd2, oValues)
+    return oRecipe
+
+def oEnsureChef(ocmd2, oValues, sNewChef=""):
+    oOm = oEnsureOmlette(ocmd2, oValues)
+    if not sNewChef and hasattr(oOm, 'oChefModule') and oOm.oChefModule:
+        return oOm.oChefModule
+    if not sNewChef:
+        # The are set earlier in the call to do_back
+        sNewChef = ocmd2.sChef
+    if hasattr(oOm, 'oChefModule') and oOm.oChefModule and oOm.oChefModule.sChef:
+        sOldName = oOm.oChefModule.sChef
+    else:
+        sOldName = ""
+    oChefModule = oOm.oAddChef(sNewChef)
+    if sOldName and sOldName != sNewChef:
+        #? do we invalidate the current servings if the chef changed?
+        vClearOven(ocmd2, oValues)
+    return oOm.oChefModule
+
+def vClearOven(ocmd2, oValues):
+    oOm = oEnsureOmlette(ocmd2, oValues)
+    oOm.oBt = None
+
+class DoBacktest(Doer):
+    __doc__ = SDOC
+    # putting this as a module variable backtest it available
+    # before an instance has been instantiated.
+    global LCOMMANDS
+
+    dhelp = {'': __doc__}
+
+    def __init__(self, ocmd2):
+        Doer.__init__(self, ocmd2, 'backtest')
+        self._G = self.ocmd2._G
+
+    LCOMMANDS += ['omlette']
+    def backtest_omlette(self):
+        """backtest omlette
 
 An omlette is an HDF5 file that saves all the information from a backtest,
 including the metadata: all of parameter values that were used in the recipe,
@@ -45,171 +135,26 @@ back omlette close               - close the HDF file saving the omlette
 }}}
 Real Soon Now you will be able to enjoy them more by reloading previously saved
 omlettes, plotting the data or the results, and adding or editing comments.
-"""
-sBAC__doc__ += sBAComlette__doc__
+        """
+        sDo = 'omlette'
+        #!WTF local variable '__doc__' referenced before assignment
+        self.dhelp['omlette'] = __doc__
 
-sBACfeed__doc__ = """
-==== OTCmd2 backtest feed
-
-Create feeds (pandas DataFrames) from CSV OHLCV files.
-{{{
-back feed dir                                  - NotImplemented
-back feed dir dirname                          - NotImplemented
-
-back feed read_mt4_csv SYMBOL TIMEFRAME [YEAR] - read a CSV file from Mt4 into pandas
-back feed read_yahoo_csv SYMBOL [STARTYEAR]    - read a Yahoo internet feed into pandas
-back feed list                                 - list the feeds we have read
-back feed get                                  - get the key name of the current feed
-back feed info                                 - concise summary of the DataFrame
-back feed plot                                 - plot the CSV data using OTPpnAmgc
-               This plots the feed, with SMA, RSIs and MACDs, using matplotlib.
-}}}
-"""
-sBAC__doc__ += sBACfeed__doc__
-
-sBACrecipe__doc__ = """
-==== OTCmd2 backtest recipe
-
-Set the recipe that the chef will use, and make the ingredients from the feeds.
-{{{
-back recipe list                        - list the known recipes
-back recipe get                         - show the current recipe
-back recipe set RECIPE                  - set the current recipe
-back recipe ingredients                 - make the ingredients
-back recipe config                      - show the current recipe config
-back recipe config KEY                  - show the current config of KEY
-back recipe config KEY VAL              - set the current config of KEY to VAL
-back recipe config tabview              - view the config with tabview
-}}}
-"""
-sBAC__doc__ += sBACrecipe__doc__
-
-sBACchef__doc__ = """
-==== OTCmd2 backtest chef
-
-Set the chef that we will use, and cook from the ingredients and the feeds.
-{{{
-back chef list                          - list the known chefs
-back chef set                           - show the current chef
-back chef set CHEF                      - set the current chef
-back chef cook                          - cook the recipe by the chef
-}}}
-"""
-sBAC__doc__ += sBACchef__doc__
-
-sBACservings__doc__ = """
-==== OTCmd2 backtest servings
-
-List the servings the chef has cooked, and dish out the servings.
-{{{
-back servings list            - list the servings that result from the recipe and chef
-back servings signals         - show the signals: when to buy or sell
-back servings trades          - show the trades: what was bought or sold
-back servings positions       - show how the trades effected the positions
-back servings equity          - show the results of the trades as equity differences
-back servings reviews         - show the metrics and reviews of the trades
-back servings tabview SERVING - view with tabview: the SERVING, or reviews
-}}}
-"""
-#? back reviews get/set/servings/tabview
-sBAC__doc__ += sBACservings__doc__
-
-sBACplot__doc__ = """
-==== OTCmd2 backtest plot
-
-Plot the servings the chef has cooked, using matplotlib.
-{{{
-back plot show      - show the current plot
-back plot trades    - plot the trades
-back plot equity    - plot the cumulative equity
-}}}
-"""
-sBAC__doc__ += sBACplot__doc__
-
-dRunCache = {}
-
-dFEED_CACHE = {}
-sFEED_CACHE_KEY = ""
-
-_sCurrentOmletteDir = ""
-_oCurrentOmlette = None
-_oCurrentRecipe = None
-_oCurrentChef = None
-
-def oEnsureOmlette(self, oOpts, sNewOmlette=""):
-    from Omlettes import Omlette
-    if not sNewOmlette and hasattr(self, 'oOm') and self.oOm:
-        return self.oOm
-    oOm = Omlette.Omlette(oFd=sys.stdout)
-    if sNewOmlette:
-        # The default is no HDF file - it's not in self.oOptions.sOmlette
-        oOm.oAddHdfStore(sNewOmlette)
-
-    self.oOm = oOm
-    return oOm
-
-def oEnsureRecipe(self, oOpts, sNewRecipe=""):
-    oOm = oEnsureOmlette(self, oOpts)
-    if not sNewRecipe and hasattr(oOm, 'oRecipe') and oOm.oRecipe:
-        return oOm.oRecipe
-    if not sNewRecipe:
-        # The are set earlier in the call to do_back
-        sNewRecipe = self.sRecipe
-    if hasattr(oOm, 'oRecipe') and oOm.oRecipe:
-        sOldName = oOm.oRecipe.sName
-    else:
-        sOldName = ""
-    oRecipe = oOm.oAddRecipe(sNewRecipe)
-    if sOldName and sOldName != sNewRecipe:
-        #? do we invalidate the current servings if the recipe changed?
-        vClearOven(self, oOpts)
-    return oRecipe
-
-def oEnsureChef(self, oOpts, sNewChef=""):
-    oOm = oEnsureOmlette(self, oOpts)
-    if not sNewChef and hasattr(oOm, 'oChefModule') and oOm.oChefModule:
-        return oOm.oChefModule
-    if not sNewChef:
-        # The are set earlier in the call to do_back
-        sNewChef = self.sChef
-    if hasattr(oOm, 'oChefModule') and oOm.oChefModule and oOm.oChefModule.sChef:
-        sOldName = oOm.oChefModule.sChef
-    else:
-        sOldName = ""
-    oChefModule = oOm.oAddChef(sNewChef)
-    if sOldName and sOldName != sNewChef:
-	#? do we invalidate the current servings if the chef changed?
-        vClearOven(self, oOpts)
-    return oOm.oChefModule
-
-def vClearOven(self, oOpts):
-    oOm = oEnsureOmlette(self, oOpts)
-    oOm.oBt = None
-
-def vDoBacktestCmd(self, oArgs, oOpts=None):
-    __doc__ = sBAC__doc__
-    global dFEED_CACHE
-    global sFEED_CACHE_KEY
-
-    lArgs = oArgs.split()
-    sDo = lArgs[0]
-
-    # An omlette is an HDF5 file that saves all the data from a backtest
-    if sDo == 'omlette':
         # is this a backtest command or should it move up
         # leave it here for now, and move it up later
-        __doc__ = sBAComlette__doc__
 
-        global _sCurrentOmletteDir
+        global sCURRENT_OMLETTE_DIR
         # ingredients recipe dish
         # plot sSection
         #
+        lArgs = self.lArgs
         _lCmds = ['load', 'open', 'check', 'save', 'close', 'display']
         assert len(lArgs) > 1, "ERROR: " +sDo +" " +str(_lCmds)
         sCmd = lArgs[1]
         assert sCmd in _lCmds, "ERROR: " +sDo +" " +str(_lCmds)
 
-        oOm = oEnsureOmlette(self, oOpts, sNewOmlette="")
+        oValues = self.oValues
+        oOm = oEnsureOmlette(self.ocmd2, oValues, sNewOmlette="")
         if sCmd == 'check':
             assert hasattr(oOm, 'oHdfStore')
             assert oOm.oHdfStore is not None
@@ -229,7 +174,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
         if sCmd == 'close':
             assert oOm.oHdfStore is not None, \
                    "ERROR: " +sDo +" " +sCmd +"; not open: use '" +sDo +" open FILE'"
-            self.oOm.vClose()
+            oOm.vClose()
             return
 
         assert len(lArgs) >= 3, \
@@ -239,22 +184,47 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
         if sCmd == 'open':
             o = oOm.oAddHdfStore(sFile)
             assert o is not None and oOm.oHdfStore is not None
-            _sCurrentOmletteDir = os.path.dirname(sFile)
+            sCURRENT_OMLETTE_DIR = os.path.dirname(sFile)
             return
 
         if sCmd == 'load':
             assert os.path.isfile(sFile), \
                    "ERROR: " +sDo +" " +sCmd +" file not found " +sFile
-            _sCurrentOmletteDir = os.path.dirname(sFile)
+            sCURRENT_OMLETTE_DIR = os.path.dirname(sFile)
             raise RuntimeError(NotImplemented)
             return
 
-        self.vError("Unrecognized omlette command: " + str(oArgs) +'\n' +__doc__)
+        self.vError("Unrecognized omlette command: " + str(lArgs) +'\n' +__doc__)
         return
 
     # Create feeds (pandas DataFrames) from CSV OHLCV files
-    if sDo == 'feed':
-        __doc__ = sBACfeed__doc__
+    LCOMMANDS += ['feed']
+    def backtest_feed(self):
+        """
+==== OTCmd2 backtest feed
+
+Create feeds (pandas DataFrames) from CSV OHLCV files.
+{{{
+back feed dir                                  - NotImplemented
+back feed dir dirname                          - NotImplemented
+
+back feed read_mt4_csv SYMBOL TIMEFRAME [YEAR] - read a CSV file from Mt4 into pandas
+back feed read_yahoo_csv SYMBOL [STARTYEAR]    - read a Yahoo internet feed into pandas
+back feed list                                 - list the feeds we have read
+back feed get                                  - get the key name of the current feed
+back feed info                                 - concise summary of the DataFrame
+back feed plot                                 - plot the CSV data using OTPpnAmgc
+               This plots the feed, with SMA, RSIs and MACDs, using matplotlib.
+}}}
+        """
+        global dFEED_CACHE
+        global sFEED_CACHE_KEY
+        sDo = 'feed'
+        #!WTF local variable '__doc__' referenced before assignment
+        self.dhelp['feed'] = __doc__
+        lArgs = self.lArgs
+        oValues = self.oValues
+
         #? rename delete
         _lCmds = ['dir', 'list', 'get', 'set',
                   'read_mt4_csv', 'read_yahoo_csv', 'info', 'plot', 'to_hdf']
@@ -264,34 +234,37 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
 
         if sCmd == 'dir':
             if len(lArgs) == 2:
-                if not self.oConfig['feed']['sHistoryDir']:
+                if not self.ocmd2.oConfig['feed']['sHistoryDir']:
                     self.poutput("No default history directory set: use \"feed dir dir\"")
-                elif not os.path.isdir(self.oConfig['feed']['sHistoryDir']):
+                elif not os.path.isdir(self.ocmd2.oConfig['feed']['sHistoryDir']):
                     self.poutput("History directory not found: use \"feed dir dir\": " + \
-                                 self.oConfig['feed']['sHistoryDir'])
+                                 self.ocmd2.oConfig['feed']['sHistoryDir'])
                 else:
                     self.poutput("Default history directory: " + \
-                                 self.oConfig['feed']['sHistoryDir'])
+                                 self.ocmd2.oConfig['feed']['sHistoryDir'])
                 return
 
             sDir = lArgs[2]
             assert os.path.isdir(sDir)
-            self.oConfig['feed']['sHistoryDir'] = sDir
+            self.ocmd2.oConfig['feed']['sHistoryDir'] = sDir
             return
 
         if sCmd == 'read_mt4_csv':
-            from PandasMt4 import oReadMt4Csv
+            from OpenTrader.PandasMt4 import oReadMt4Csv
             assert len(lArgs) >= 3, \
                    "ERROR: " +sDo +" " +sCmd +" FILENAME [SYMBOL TIMEFRAME YEAR]"
             sFile = lArgs[2]
-            if not os.path.isfile(sFile):
-                sHistoryDir = os.path.join(self.oOptions.sMt4Dir, 'history')
-                assert os.path.isdir(sHistoryDir)
-                import glob
-                l = glob.glob(sHistoryDir +"/*/" +sFile)
-                if l:
-                    sFile = l[0]
-                    self.vInfo("Found history file: " + sFile)
+            if not os.path.isabs(sFile):
+               sFile = os.path.join(self.ocmd2.sRoot, sFile)
+            if False and not os.path.isfile(sFile):
+                #? was self.ocmd2.oOptions.sMt4Dir
+                sHistoryDir = os.path.join(self.ocmd2.oConfig['OTCmd2']['sMt4Dir'], 'history')
+                if os.path.isdir(sHistoryDir):
+                    import glob
+                    l = glob.glob(sHistoryDir +"/*/" +sFile)
+                    if l:
+                        sFile = l[0]
+                        self.vInfo("Found history file: " + sFile)
             assert os.path.isfile(sFile), \
                    "ERROR: " +sDo +" " +sCmd +" file not found " +sFile
             if len(lArgs) > 5:
@@ -318,12 +291,12 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
 
             # NaturalNameWarning: object name is not a valid Python identifier: 'Mt4_csv|EURUSD|1440|2014'; it does not match the pattern ``^[a-zA-Z_][a-zA-Z0-9_]*$``;
             sKey = 'Mt4_csv' +'_' +sSymbol +'_' +sTimeFrame +'_' +sYear
-            oOm = oEnsureOmlette(self, oOpts)
+            oOm = oEnsureOmlette(self.ocmd2, oValues)
             _dCurrentFeedFrame = oOm.dGetFeedFrame(sFile,
                                                    sTimeFrame,
                                                    sSymbol,
                                                    sYear)
-            from PandasMt4 import oReadMt4Csv, oPreprocessOhlc, vResampleFiles
+            from OpenTrader.PandasMt4 import oReadMt4Csv, oPreprocessOhlc, vResampleFiles
             mFeedOhlc = oPreprocessOhlc(_dCurrentFeedFrame['mFeedOhlc'])
             sys.stdout.write('INFO:  Data Open length: %d\n' % len(mFeedOhlc))
             _dCurrentFeedFrame['mFeedOhlc'] = mFeedOhlc
@@ -382,7 +355,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
             vRetval = mFeedOhlc.to_hdf(sFile, sKey, format=sType)
             return
 
-        _dPlotParams = self.oConfig['feed.plot.params']
+        _dPlotParams = self.ocmd2.oConfig['feed.plot.params']
 
         if sCmd == 'info':
             """Concise summary of a DataFrame.
@@ -407,14 +380,15 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
 
         # 'download_hst_zip'
         if sCmd == 'plot':
+
             import matplotlib
-            if 'matplotlib.rcParams' in self.oConfig:
-                for sKey, gVal in self.oConfig['matplotlib.rcParams'].items():
+            if 'matplotlib.rcParams' in self.ocmd2.oConfig:
+                for sKey, gVal in self.ocmd2.oConfig['matplotlib.rcParams'].items():
                     matplotlib.rcParams[sKey] = gVal
             import numpy as np
-            from OTPpnAmgc import vGraphData
+            from OpenTrader.OTPpnAmgc import vGraphData
 
-            from OTBackTest import oPreprocessOhlc
+            from OpenTrader.OTBackTest import oPreprocessOhlc
             mFeedOhlc = oPreprocessOhlc(mFeedOhlc)
             # (Pdb) pandas.tseries.converter._dt_to_float_ordinal(mFeedOhlc.index)[0]
             # 735235.33333333337
@@ -428,13 +402,40 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
                        **_dPlotParams)
             return
 
-        self.vError("Unrecognized feed command: " + str(oArgs) +'\n' +__doc__)
+        self.vError("Unrecognized feed command: " + str(lArgs) +'\n' +__doc__)
         return
 
     # Set the recipe that the chef will use, and make the ingredients from the feeds
-    if sDo == 'recipe':
-        __doc__ = sBACrecipe__doc__
-        from .Omlettes import lKnownRecipes
+    LCOMMANDS += ['recipe']
+    def backtest_recipe(self):
+        """
+==== OTCmd2 backtest recipe
+
+Set the recipe that the chef will use, and make the ingredients from the feeds.
+{{{
+back recipe list                        - list the known recipes
+back recipe get                         - show the current recipe
+back recipe set RECIPE                  - set the current recipe
+back recipe ingredients                 - make the ingredients
+back recipe config                      - show the current recipe config
+back recipe config KEY                  - show the current config of KEY
+back recipe config KEY VAL              - set the current config of KEY to VAL
+back recipe config tabview              - view the config with tabview
+}}}
+        """
+        global dFEED_CACHE
+        global sFEED_CACHE_KEY
+        lArgs = self.lArgs
+        oValues = self.oValues
+        sDo = 'recipe'
+        #!WTF local variable '__doc__' referenced before assignment
+        self.dhelp['recipe'] = __doc__
+        lArgs = self.lArgs
+
+        import warnings
+        with warnings.catch_warnings():
+            warnings.filterwarnings('ignore') # ignore problems during import
+            from OpenTrader.Omlettes import lKnownRecipes
         # self.vDebug("lKnownRecipes: " + repr(lKnownRecipes))
         # are ingredients under chef?
         _lCmds = ['set', 'list', 'get', 'make', 'ingredients', 'config']
@@ -445,17 +446,16 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
             return
 
         if sCmd == 'get' or (sCmd == 'set' and len(lArgs) == 2):
-            self.poutput("Current Recipe: %s" % (self.sRecipe,))
+            self.poutput("Current Recipe: %s" % (self.ocmd2.sRecipe,))
             return
 
         assert len(lArgs) > 1, "ERROR: not enough args: " +sDo +str(_lCmds)
         assert sCmd in _lCmds, "ERROR: %s %s not in: %r " % (
             sDo, sCmd, _lCmds)
 
-
         if sCmd == 'config':
-            oRecipe = oEnsureRecipe(self, oOpts)
-            self.vConfigOp(lArgs, oRecipe.oConfig)
+            oRecipe = oEnsureRecipe(self.ocmd2, oValues)
+            self.ocmd2.vConfigOp(lArgs, oRecipe.oConfig)
             return
 
         if sCmd == 'set':
@@ -466,11 +466,11 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
             assert sNewRecipe in lKnownRecipes, \
                    "ERROR: %s %s %s not in: %s" % (
                 sDo, sCmd, sNewRecipe, '|'.join(lKnownRecipes))
-            if self.sRecipe != sNewRecipe:
-                self.sRecipe = sNewRecipe
-                oRecipe = oEnsureRecipe(self, oOpts, sNewRecipe=sNewRecipe)
+            if self.ocmd2.sRecipe != sNewRecipe:
+                self.ocmd2.sRecipe = sNewRecipe
+                oRecipe = oEnsureRecipe(self.ocmd2, oValues, sNewRecipe=sNewRecipe)
             #? do we update the config file? - I think not
-            #? self.oConfig['backtest']['sRecipe'] = sNewRecipe
+            #? self.ocmd2.oConfig['backtest']['sRecipe'] = sNewRecipe
             return
 
         # The following all require that a feed has been loaded
@@ -480,7 +480,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
         assert _dCurrentFeedFrame
         if sCmd == 'make' or sCmd == 'ingredients':
             assert _dCurrentFeedFrame
-            oRecipe = oEnsureRecipe(self, oOpts)
+            oRecipe = oEnsureRecipe(self.ocmd2, oValues)
             # ugly
             dFeedParams = _dCurrentFeedFrame
             mFeedOhlc = _dCurrentFeedFrame['mFeedOhlc']
@@ -490,13 +490,31 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
             assert oRecipe.dIngredients
             return
 
-        self.vError("Unrecognized recipe command: " + str(oArgs) +'\n' +__doc__)
+        self.vError("Unrecognized recipe command: " + str(lArgs) +'\n' +__doc__)
         return
 
-    # Set the chef that we will use, and cook from the ingredients and the feeds
-    if sDo == 'chef':
-        __doc__ = sBACchef__doc__
-        from .Omlettes import lKnownChefs
+    LCOMMANDS += ['chef']
+    def backtest_chef(self):
+        """
+==== OTCmd2 backtest chef
+
+Set the chef that we will use, and cook from the ingredients and the feeds.
+{{{
+back chef list                          - list the known chefs
+back chef set                           - show the current chef
+back chef set CHEF                      - set the current chef
+back chef cook                          - cook the recipe by the chef
+}}}
+        """
+        global dFEED_CACHE
+        global sFEED_CACHE_KEY
+        lArgs = self.lArgs
+        sDo = 'chef'
+        #!WTF local variable '__doc__' referenced before assignment
+        self.dhelp['chef'] = __doc__
+        lArgs = self.lArgs
+
+        from OpenTrader.Omlettes import lKnownChefs
         # self.vDebug("lKnownChefs: " + repr(lKnownChefs))
 
         _lCmds = ['get', 'set', 'list', 'cook']
@@ -508,7 +526,7 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
             return
 
         if sCmd == 'get' or (sCmd == 'set' and len(lArgs) == 2):
-            self.poutput("Current Chef: %s" % (self.sChef,))
+            self.poutput("Current Chef: %s" % (self.ocmd2.sChef,))
             return
 
         assert sCmd in _lCmds, "ERROR: not in: " +sDo +str(_lCmds)
@@ -521,11 +539,11 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
             assert sNewChef in lKnownChefs, \
                    "ERROR: %s %s %s not in: %s" % (
                 sDo, sCmd, sNewChef, '|'.join(lKnownChefs))
-            if self.sChef != sNewChef:
-                self.sChef = sNewChef
-                oChef = oEnsureChef(self, oOpts, sNewChef=sNewChef)
+            if self.ocmd2.sChef != sNewChef:
+                self.ocmd2.sChef = sNewChef
+                oChef = oEnsureChef(self.ocmd2, oValues, sNewChef=sNewChef)
             #? do we update the config file? - I think not
-            #? self.oConfig['backtest']['sChef'] = sNewChef
+            #? self.ocmd2.oConfig['backtest']['sChef'] = sNewChef
             return
 
         # The following all require that a feed has been loaded
@@ -535,12 +553,12 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
         assert _dCurrentFeedFrame
 
         # There's always a default provided of these
-        oOm = oEnsureOmlette(self, oOpts)
-        oRecipe = oEnsureRecipe(self, oOpts)
-        oChefModule = oEnsureChef(self, oOpts)
+        oOm = oEnsureOmlette(self.ocmd2, oValues)
+        oRecipe = oEnsureRecipe(self.ocmd2, oValues)
+        oChefModule = oEnsureChef(self.ocmd2, oValues)
 
         if sCmd == 'cook':
-            from .OTBackTest import oPyBacktestCook
+            from OpenTrader.OTBackTest import oPyBacktestCook
             assert oRecipe.dIngredients
             # ugly
             dFeeds = _dCurrentFeedFrame
@@ -553,16 +571,39 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
             # self.vDebug("Cooked " + oBt.sSummary())
             return
 
-        self.vError("Unrecognized chef command: " + str(oArgs) +'\n' +__doc__)
+        self.vError("Unrecognized chef command: " + str(lArgs) +'\n' +__doc__)
         return
 
-    oOm = oEnsureOmlette(self, oOpts)
-    oRecipe = oEnsureRecipe(self, oOpts)
-    oChefModule = oEnsureChef(self, oOpts)
-
     # List the servings the chef has cooked, and dish out the servings
-    if sDo == 'servings':
-        __doc__ = sBACservings__doc__
+    LCOMMANDS += ['servings']
+    def backtest_servings(self):
+        """
+==== OTCmd2 backtest servings
+
+List the servings the chef has cooked, and dish out the servings.
+{{{
+back servings list            - list the servings that result from the recipe and chef
+back servings signals         - show the signals: when to buy or sell
+back servings trades          - show the trades: what was bought or sold
+back servings positions       - show how the trades effected the positions
+back servings equity          - show the results of the trades as equity differences
+back servings reviews         - show the metrics and reviews of the trades
+back servings tabview SERVING - view with tabview: the SERVING, or reviews
+}}}
+        """
+        #? back reviews get/set/servings/tabview
+
+        lArgs = self.lArgs
+        sDo = 'servings'
+        #!WTF local variable '__doc__' referenced before assignment
+        self.dhelp['servings'] = __doc__
+        lArgs = self.lArgs
+
+        # There's always a default provided of these
+        oOm = oEnsureOmlette(self.ocmd2, oValues)
+        oRecipe = oEnsureRecipe(self.ocmd2, oValues)
+        oChefModule = oEnsureChef(self.ocmd2, oValues)
+
         if not hasattr(oOm, 'oBt') or not oOm.oBt:
             self.vError("You must use \"chef cook\" before you can have servings")
             return
@@ -583,47 +624,52 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
             sDo, sCmd, _lCmds)
 
         oFd = sys.stdout
-        ## oFun = getattr(self.oBt, sCmd)
+        # There's always a default provided of these
+        oOm = oEnsureOmlette(self.ocmd2, oValues)
+        oRecipe = oEnsureRecipe(self.ocmd2, oValues)
+        oChefModule = oEnsureChef(self.ocmd2, oValues)
+
+        ## oFun = getattr(self.ocmd2.oBt, sCmd)
         ## self.poutput(oFun())
         if sCmd == 'signals':
             # this was the same as: oBt._mSignals = bt.mSignals() or oBt.signals
-            oBt._mSignals = oRecipe.mSignals(oBt)
-            oFd.write('INFO:  bt.signals found: %d\n' % len(oBt.signals))
-            oOm.vAppendHdf('recipe/servings/mSignals', oBt.signals)
+            oOm.oBt._mSignals = oRecipe.mSignals(oOm.oBt)
+            oFd.write('INFO:  bt.signals found: %d\n' % len(oOm.oBt.signals))
+            oOm.vAppendHdf('recipe/servings/mSignals', oOm.oBt.signals)
             return
 
         if sCmd == 'trades':
             # this was the same as: oBt._mTrades =  oBt.mTrades() or oBt.trades
-            oBt._mTrades = oRecipe.mTrades(oBt)
-            oFd.write('INFO:  bt.trades found: %d\n' % len(oBt.trades))
-            oOm.vAppendHdf('recipe/servings/mTrades', oBt.trades)
+            oOm.oBt._mTrades = oRecipe.mTrades(oOm.oBt)
+            oFd.write('INFO:  bt.trades found: %d\n' % len(oOm.oBt.trades))
+            oOm.vAppendHdf('recipe/servings/mTrades', oOm.oBt.trades)
             return
 
         if sCmd == 'positions':
             # this was the same as: oBt._rPositions = oBt.rPositions() or oBt.positions
-            oBt._rPositions = oRecipe.rPositions(oBt, init_pos=0)
-            oFd.write('INFO:  bt.positions found: %d\n' % len(oBt.positions))
-            oOm.vAppendHdf('recipe/servings/rPositions', oBt.positions)
+            oOm.oBt._rPositions = oRecipe.rPositions(oOm.oBt, init_pos=0)
+            oFd.write('INFO:  bt.positions found: %d\n' % len(oOm.oBt.positions))
+            oOm.vAppendHdf('recipe/servings/rPositions', oOm.oBt.positions)
             return
 
         if sCmd == 'equity':
             # this was the same as: oBt._rEquity = oBt.rEquity() or oBt.equity
-            oBt._rEquity = oRecipe.rEquity(oBt)
-            oFd.write('INFO:  bt.equity found: %d\n' % len(oBt.equity))
-            oOm.vAppendHdf('recipe/servings/rEquity', oBt.equity)
+            oOm.oBt._rEquity = oRecipe.rEquity(oOm.oBt)
+            oFd.write('INFO:  bt.equity found: %d\n' % len(oOm.oBt.equity))
+            oOm.vAppendHdf('recipe/servings/rEquity', oOm.oBt.equity)
             return
 
         if sCmd == 'trade_price':
             # oFd.write('INFO:  bt.rTradePrice() found: %d\n' % len(oBt.rTradePrice()))
-            oFd.write('INFO:  bt.trade_price found: %d\n' % len(oBt.trade_price))
-            oOm.vAppendHdf('recipe/servings/rTradePrice', oBt.trade_price)
+            oFd.write('INFO:  bt.trade_price found: %d\n' % len(oOm.oBt.trade_price))
+            oOm.vAppendHdf('recipe/servings/rTradePrice', oOm.oBt.trade_price)
             return
 
         if sCmd == 'metrics' or sCmd == 'reviews':
             oOm.vSetTitleHdf('recipe/servings', oOm.oChefModule.sChef)
             #? Leave this as derived or store it? reviews?
-            oOm.vSetMetadataHdf('recipe/servings', oBt.dSummary())
-            oFd.write(oBt.sSummary())
+            oOm.vSetMetadataHdf('recipe/servings', oOm.oBt.dSummary())
+            oFd.write(oOm.oBt.sSummary())
             return
 
         if tabview and sCmd == 'tabview':
@@ -631,30 +677,48 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
                    +": serving required, one of: reviews " +str(oChefModule.lProducedServings)
 
             sServing = lArgs[2]
-            if sServing in ['metrics','reviews']:
+            if sServing in ['metrics', 'reviews']:
                 l = [['Metric', 'Value']]
-                l += oBt.lSummary()
+                l += oOm.oBt.lSummary()
                 l.sort()
                 # , hdr_rows=lHdrRows
                 tabview.view(l, column_width='max')
                 return
 
             assert sServing in oChefModule.lProducedServings
-            mDf = getattr(oBt, sServing)
+            mDf = getattr(oOm.oBt, sServing)
             # FixMe: need index timestamp for mva
             tabview.view(mDf)
             return
 
-        self.vError("Unrecognized servings command: " + str(oArgs) +'\n' +__doc__)
+        self.vError("Unrecognized servings command: " + str(lArgs) +'\n' +__doc__)
         return
 
     # Plot the servings the chef has cooked, using matplotlib
-    if sDo == 'plot':
+    LCOMMANDS += ['plot']
+    def backtest_plot(self):
+        """
+==== OTCmd2 backtest plot
+
+Plot the servings the chef has cooked, using matplotlib.
+{{{
+back plot show      - show the current plot
+back plot trades    - plot the trades
+back plot equity    - plot the cumulative equity
+}}}
+        """
+        lArgs = self.lArgs
+        sDo = 'plot'
+        #!WTF local variable '__doc__' referenced before assignment
+        self.dhelp['plot'] = __doc__
+        lArgs = self.lArgs
+
         __doc__ = sBACplot__doc__
         _lCmds = ['show', 'trades', 'equity']
         if not hasattr(oOm, 'oBt') or not oOm.oBt:
             self.vError("You must use \"chef cook\" before you can plot")
             return
+        # FixMe:
         oBt = oOm.oBt
 
         assert len(lArgs) > 1, "ERROR: " +sDo +str(_lCmds)
@@ -672,8 +736,8 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
 
         if sCmd == 'equity':
             # FixMe: derive the period from the sTimeFrame
-            sPeriod='W'
-            close_label='C'
+            sPeriod = 'W'
+            close_label = 'C'
             mOhlc = oRecipe.dIngredients['mOhlc']
             oChefModule.vPlotEquity(oBt.equity, mOhlc, sTitle="%s\nEquity" % repr(oBt),
                                     sPeriod=sPeriod,
@@ -688,8 +752,62 @@ def vDoBacktestCmd(self, oArgs, oOpts=None):
             pylab.show()
 
             return
-        self.vError("Unrecognized plot command: " + str(oArgs) +"\n" + sBAC__doc__)
+        self.vError("Unrecognized plot command: " + str(lArgs))
         return
 
-    self.vError("Unrecognized backtest command: " + str(oArgs) +"\n" + sBAC__doc__)
+    def bexecute(self, lArgs, oValues):
+        """bexecute executes the backtest command.
+        """
+        self.lArgs = lArgs
+        self.oValues = oValues
 
+        # self.vassert_args(lArgs, LCOMMANDS, imin=1)
+        if self.bis_help(lArgs):
+            return
+
+        sDo = lArgs[0]
+        # An omlette is an HDF5 file that saves all the data from a backtest
+        if sDo in ['omlette']:
+            oMeth = getattr(self, 'backtest_' +sDo)
+            oMeth()
+            return
+
+        if oValues.sRecipe:
+            self.ocmd2.sRecipe = oValues.sRecipe
+            self.poutput("DEBUG: backtest recipe from values: " + oValues.sRecipe)
+        elif not hasattr(self.ocmd2, 'sRecipe') or not self.ocmd2.sRecipe:
+            self.ocmd2.sRecipe = self.ocmd2.oConfig['backtest']['recipe']
+            self.poutput("WARN: backtest recipe from config: " + self.ocmd2.sRecipe)
+        if oValues.sChef:
+            self.ocmd2.sChef = oValues.sChef
+            self.poutput("DEBUG: backtest chef from values: " + oValues.sChef)
+        elif not hasattr(self.ocmd2, 'sChef') or not self.ocmd2.sChef:
+            self.ocmd2.sChef = self.ocmd2.oConfig['backtest']['chef']
+            self.poutput("WARN: backtest chef from config: " + self.ocmd2.sChef)
+
+        if sDo in ['feed', 'recipe', 'chef']:
+            oMeth = getattr(self, 'backtest_' +sDo)
+            oMeth()
+            return
+
+        # Set the chef that we will use, and cook from the ingredients and the feeds
+        oOm = oEnsureOmlette(self.ocmd2, oValues)
+        oRecipe = oEnsureRecipe(self.ocmd2, oValues)
+        oChefModule = oEnsureChef(self.ocmd2, oValues)
+
+        if sDo in ['servings', 'plot']:
+            oMeth = getattr(self, 'backtest_' +sDo)
+            try:
+                oMeth()
+            except KeyboardInterrupt:
+                pass
+            except Exception as e:
+                # This is still in the process of getting wired up and tested
+                print(traceback.format_exc(10))
+            return
+
+        self.poutput("ERROR: Unrecognized backtest command: " + str(lArgs) +'\n' +__doc__)
+
+
+def vDoBacktestCmd(self, lArgs, oValues):
+    __doc__ = sBAC__doc__

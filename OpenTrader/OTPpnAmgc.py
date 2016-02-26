@@ -33,8 +33,8 @@ import matplotlib
 #  ImportError: No module named backend_qt4agg
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
-from matplotlib.finance import candlestick
-import pylab
+from matplotlib.finance import candlestick_ochl
+from matplotlib import pylab
 
 from PandasMt4 import oReadMt4Csv, oPreprocessOhlc
 
@@ -69,7 +69,7 @@ def rsiFunc(prices, n=14):
 
     return rsi
 
-def nSMA(values,window):
+def nSMA(values, window):
     weigths = np.repeat(1.0, window)/window
     smas = np.convolve(values, weigths, 'valid')
     return smas # as a numpy array
@@ -97,7 +97,7 @@ def lPullYahooToTxtfile(sSymbol):
         Use this to dynamically pull a sSymbol:
     '''
     try:
-        print 'Currently Pulling',sSymbol
+        print 'Currently Pulling', sSymbol
         print str(datetime.datetime.fromtimestamp(int(time.time())).strftime('%Y-%m-%d %H:%M:%S'))
         #Keep in mind this is close high low open, lol.
         urlToVisit = 'http://chartapi.finance.yahoo.com/instrument/1.0/'+sSymbol+'/chartdata;type=quote;range=10y/csv'
@@ -107,13 +107,13 @@ def lPullYahooToTxtfile(sSymbol):
             splitSource = sourceCode.split('\n')
             for eachLine in splitSource:
                 splitLine = eachLine.split(',')
-                if len(splitLine)==6:
+                if len(splitLine) == 6:
                     if 'values' not in eachLine:
                         lStockLines.append(eachLine)
             return lStockLines
         except Exception as e:
             print str(e), 'failed to organize pulled data.'
-    except Exception,e:
+    except StandardError, e:
         print str(e), 'failed to pull pricing data'
     return None
 
@@ -130,7 +130,7 @@ def vGraphData(sSymbol, date, closep, highp, lowp, openp, volume,
     y = len(date)
     newAr = []
     while x < y:
-        appendLine = date[x],openp[x],closep[x],highp[x],lowp[x],volume[x]
+        appendLine = (date[x], openp[x], closep[x], highp[x], lowp[x], volume[x],)
         newAr.append(appendLine)
         x+=1
 
@@ -146,7 +146,7 @@ def vGraphData(sSymbol, date, closep, highp, lowp, openp, volume,
     fig = plt.figure(facecolor='#07000d')
 
     ax1 = plt.subplot2grid((6,4), (1,0), rowspan=4, colspan=4, axisbg='#07000d')
-    candlestick(ax1, newAr[-SP:], width=.6, colorup='#53c156', colordown='#ff1717')
+    candlestick_ochl(ax1, newAr[-SP:], width=.6, colorup='#53c156', colordown='#ff1717')
 
     Label1 = str(iShortSMA)+' SMA'
     Label2 = str(iLongSMA)+' SMA'

@@ -1,0 +1,22 @@
+include CHANGELOG.txt
+include LICENSE.txt
+include README.creole
+include behave.ini
+include freeze.bat
+include setup.cfg
+include *.py
+include OpenTrader/*.py
+include OpenTrader/deps/*.py
+include OpenTrader/Omlettes/BtChef.py
+include OpenTrader/Omlettes/Omlette.py
+include OpenTrader/Omlettes/Recipe.py
+include OpenTrader/Omlettes/__init__.py
+include OpenTrader/OTCmd2.ini
+recursive-include share/examples          *.py *.txt *.sh
+recursive-include share/recipe          *.py *.ini
+include tests/conftest.py
+include tests/creole.sh
+include tests/Readme.creole
+recursive-include tests          *.py *.feature
+include wiki/*.png
+include wiki/*.creole

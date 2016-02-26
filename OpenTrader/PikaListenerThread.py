@@ -9,7 +9,7 @@ import traceback
 
 from OTMql427 import PikaListener
 
-from ListenerThread import ListenerThread
+from OpenTrader.ListenerThread import ListenerThread
 
 class PikaListenerThread(ListenerThread, PikaListener.PikaMixin):
 

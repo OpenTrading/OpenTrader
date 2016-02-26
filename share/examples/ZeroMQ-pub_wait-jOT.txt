@@ -6,6 +6,8 @@
 # the RabbitMQ server configured and running.
 # echo the commands from the script so that we can watch the progress
 set echo True
+# turn on debug tracing for now
+set debug True
 # show the on-line targets from OTCmd2.ini
 sub get
 # set the on-line target

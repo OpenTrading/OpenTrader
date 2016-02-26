@@ -66,24 +66,30 @@ class Omlette(object):
         return dFeedParams
     
     def oAddRecipe(self, sRecipe):
-        OpenTraderPkg = __import__('OpenTrader.Omlettes.'+sRecipe)
-        OmlettesPkg = getattr(OpenTraderPkg, 'Omlettes')
-        RecipeModule = getattr(OmlettesPkg, sRecipe)
+        if False:
+            OpenTraderPkg = __import__('OpenTrader.Omlettes.'+sRecipe)
+            OmlettesPkg = getattr(OpenTraderPkg, 'Omlettes')
+            RecipeModule = getattr(OmlettesPkg, sRecipe)
+        else:
+            RecipeModule = __import__(sRecipe)
         RecipeKlass = getattr(RecipeModule, sRecipe)
         self.oRecipe = RecipeKlass()
-        if True or not self.oRecipe.sName:
-            self.oRecipe.sName = sRecipe
-        if True or not self.oRecipe.sFile:
-            self.oRecipe.sFile = RecipeModule.__file__
+        self.oRecipe.sName = sRecipe
+        self.oRecipe.sFile = RecipeModule.__file__
         self.oRecipe.oOm = self
         return self.oRecipe
     
     def oAddChef(self, sChef):
-        OpenTraderPkg = __import__('OpenTrader.Omlettes.'+sChef)
-        OmlettesPkg = getattr(OpenTraderPkg, 'Omlettes')
-        self.oChefModule = getattr(OmlettesPkg, sChef)
+        if False:
+            OpenTraderPkg = __import__('OpenTrader.Omlettes.'+sChef)
+            OmlettesPkg = getattr(OpenTraderPkg, 'Omlettes')
+            self.oChefModule = __import__(sChef)
+        else:
+            self.oChefModule = getattr(OmlettesPkg, sChef)
         # self.sChef = sChef
+        # FixMe: eliminate
         self.oChefModule.sChef = sChef
+        self.oChefModule.sName = sChef
         return self.oChefModule
     
     def dMakeChefsParams(self, **dKw):

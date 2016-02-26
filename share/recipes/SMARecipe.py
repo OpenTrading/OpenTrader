@@ -3,11 +3,11 @@
 """
 """
 
-import sys, os
+import sys
 import datetime
 import pandas
 
-from Recipe import Recipe
+from OpenTrader.Omlettes.Recipe import Recipe
 
 class SMARecipe(Recipe):
         

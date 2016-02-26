@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-"""pytest-bdd package config."""
 
 import codecs
 import os
@@ -44,13 +43,14 @@ setup(
     install_requires=[
         "configobj",
         "pandas",
+        "pyparsing",
         # we'll make zmq default now
         "zmq",
         ],
     extras_require={'plotting': ["matplotlib"],
                     'pybacktest': ["pybacktest"],
                     'rabbit': ["pyrabbit"],
-                    'bdd': ["behave"],
+                    'doc': ["python-creole", "invoke"],
                     # we'll make zmq default now
                     # 'zmq': ["zmq"],
                     'amqp': ["pika"],
@@ -67,7 +67,7 @@ setup(
             "OTPpnAmgc = OpenTrader.OTPpnAmgc:iMain",
         ]
     },
-    tests_require=["behave>=1.2.4"],
+    tests_require=["behave>=1.2.5"],
     cmdclass=behave_test and {"behave_test": behave_test,} or {},
     packages=find_packages(),
     include_package_data=True,

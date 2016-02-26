@@ -74,7 +74,7 @@ def after_all(oCtx):
     if 'oMain' in oCtx.userdata and oCtx.userdata['oMain']:
         try:
             vEnvAtexit(oCtx, "after_all calling oMain.vAtexit")
-        except Exception, e:
+        except StandardError, e:
             sys.stdout.write("Error when calling oMain.vAtexit: " +str(e))
         finally:
             #? del?

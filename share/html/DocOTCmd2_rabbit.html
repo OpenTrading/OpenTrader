@@ -10,18 +10,8 @@
 <h3>OTCmd2 rabbit</h3>
 <p>WARN: sMt4Dir not found: /c/Program Files/MetaTrader 4 Terminal</p>
 
-<p>Introspect some useful information from the RabbitMQ server:<br />
-if we have pyrabbit installed, and iff the rabbitmq_management plugin has been<br />
-installed in your server, we can query the  HTTP interface if it is enabled.<br />
-Commands include:</p>
 <pre>
-  rabbit get vhost_names|channels|connections|queues
-</pre>
-<p>The RabbitMQ host and login information is set in the <tt>[RabbitMQ]</tt><br />
-section of the <tt>OTCmd2.ini</tt> file; see the <tt>-c/--config</tt> command-line options.</p>
-
-<pre>
-Usage: rabbit [options] command
+Usage: rabbit [options] get
 
 Options:
   -h, --help            show this help message and exit

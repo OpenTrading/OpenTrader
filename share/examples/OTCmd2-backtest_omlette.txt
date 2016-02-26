@@ -6,6 +6,8 @@
 # These tests will only work if you have created a CSV file /tmp/EURUSD60-2014.csv
 # echo the commands from the script so that we can watch the progress
 set echo True
+# turn on debug tracing for now
+set debug True
 py assert os.path.exists("tmp/EURUSD60-2014.csv")
 # save the results of this backtest
 back omlette open tmp/EURUSD60-2014.hdf

@@ -2,6 +2,8 @@
 # https://github.com/ematvey/pybacktest
 # You dont need to have a listener thread running
 set echo True
+# turn on debug tracing for now
+set debug True
 # read a CSV file from Mt4
 back feed read_mt4_csv tmp/EURUSD60-2014.csv EURUSD 60 2014
 # list the feeds we have read

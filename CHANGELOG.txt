@@ -1,3 +1,28 @@
+commit 33e04c914c840220f405cdb66b9c231dccf77522
+Date:   Tue Feb 23 05:16:06 2016 +0200
+
+    Updated documentation
+
+commit b041bb45d0a712778a9ed4dddd315fdbf152f734
+Date:   Mon Feb 22 21:46:22 2016 +0200
+
+    Updated documentation
+
+commit 766c32ce090f4aeefe4ca2b4e722082191583c31
+Date:   Mon Feb 22 17:39:10 2016 +0200
+
+    Updated documentation
+
+commit 7d5c97bd402db40ea22342a2ddcdfe2098c60869
+Date:   Sat Feb 20 08:27:53 2016 +0200
+
+    Updated documentation
+
+commit 148e0286058ac7ebd030c66ba5375839aacac2d0
+Date:   Sun Aug 30 17:42:59 2015 +0300
+
+    Fixed Documentation
+
 commit 6b9625ec2b672ba73f0b846913a3d52ae1f1b659
 Date:   Fri Aug 28 20:51:36 2015 +0300
 

@@ -13,7 +13,7 @@ import zmq
 from OTMql427.ZmqListener import ZmqMixin
 from OTMql427.SimpleFormat import gRetvalToPython
 
-from ListenerThread import ListenerThread
+from OpenTrader.ListenerThread import ListenerThread
 
 class ZmqListenerThread(ListenerThread, ZmqMixin):
 
@@ -38,7 +38,7 @@ class ZmqListenerThread(ListenerThread, ZmqMixin):
                 sys.stdout.write("ERROR: starting listener thread eConnectToSub " +str(e))
                 sys.stderr.write(traceback.format_exc(10) +"\n")
                 return
-            
+
         self._running.set()
         while self._running.is_set():
             try:

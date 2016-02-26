@@ -3,6 +3,9 @@
 # https://github.com/ematvey/pybacktest
 # echo the commands from the script so that we can watch the progress
 set echo True
+# turn on debug tracing for now
+set debug True
+set debug true
 # list the known recipes
 back recipe list
 py assert len(self._G) > 0

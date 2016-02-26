@@ -47,11 +47,12 @@ import platform
 import copy
 from code import InteractiveConsole, InteractiveInterpreter
 from optparse import make_option
+
 import pyparsing
 
 __version__ = '0.6.6.1'
 
-# should get this from terminfo or curses
+# should get this from colorama or termcolor
 dANSI_COLORS = {'bold':{True:'\x1b[1m',False:'\x1b[22m'},
                 'cyan':{True:'\x1b[36m',False:'\x1b[39m'},
                 'blue':{True:'\x1b[34m',False:'\x1b[39m'},
@@ -123,7 +124,7 @@ def _attr_get_(obj, attr):
 
 optparse.Values.get = _attr_get_
 
-options_defined = [] # used to distinguish --options from SQL-style --comments
+lOPTIONS_DEFINED = [] # used to distinguish --options from SQL-style --comments
 
 def options(option_list, arg_desc="arg", usage=None):
     '''Used as a decorator and passed a list of optparse-style options,
@@ -141,10 +142,11 @@ def options(option_list, arg_desc="arg", usage=None):
            if opts.quick:
                self.fast_button = True
        '''
+    global lOPTIONS_DEFINED
     if not isinstance(option_list, list):
         option_list = [option_list]
     for opt in option_list:
-        options_defined.append(pyparsing.Literal(opt.get_opt_string()))
+        lOPTIONS_DEFINED.append(pyparsing.Literal(opt.get_opt_string()))
     def option_setup(func):
         optionParser = OptionParser(usage=usage)
         optionParser.disable_interspersed_args()
@@ -403,6 +405,17 @@ class Cmd(cmd.Cmd):
     locals_in_py = True
     kept_state = None
     redirector = '>'                    # for sending output to file
+    colorcodes = dANSI_COLORS
+    colors = (platform.system() != 'Windows')
+    editor = os.environ.get('EDITOR')
+    if not editor:
+        if sys.platform[:3] == 'win':
+            editor = 'notepad'
+        else:
+            editor = os.environ.get('VISUAL')
+            if not editor:
+                editor = 'vi'
+    pdb = False
     settable = stubbornDict('''
         prompt
         colors                Colorized output (*nix only)
@@ -416,6 +429,7 @@ class Cmd(cmd.Cmd):
         echo                  Echo command issued into output
         timing                Report execution times
         abbrev                Accept abbreviated commands
+        pdb                   Drop into the debugger on error if debug is true
         ''')
 
     def poutput(self, msg):
@@ -428,6 +442,8 @@ class Cmd(cmd.Cmd):
         if self.debug:
             traceback.print_exc()
         print (str(errmsg))
+        if self.pdb:
+            set_trace()
 
     def pfeedback(self, msg):
         """For printing nonessential feedback.  Can be silenced with `quiet`.
@@ -439,17 +455,7 @@ class Cmd(cmd.Cmd):
                 print (msg)
     _STOP_AND_EXIT = True  # distinguish end of script file from actual exit
     _STOP_SCRIPT_NO_EXIT = -999
-    editor = os.environ.get('EDITOR')
-    if not editor:
-        if sys.platform[:3] == 'win':
-            editor = 'notepad'
-        else:
-            for editor in ['gedit', 'kate', 'vim', 'vi', 'emacs', 'nano', 'pico']:
-                if subprocess.Popen(['which', editor], stdout=subprocess.PIPE, stderr=subprocess.STDOUT).communicate()[0]:
-                    break
 
-    colorcodes = dANSI_COLORS
-    colors = (platform.system() != 'Windows')
     def colorize(self, val, color):
         '''Given a string (``val``), returns that string wrapped in UNIX-style
            special characters that turn on (and then off) text color and style.
@@ -1610,6 +1616,30 @@ class Cmd2TestCase(unittest.TestCase):
     def tearDown(self):
         if self.CmdApp:
             self.outputTrap.tearDown()
+def set_trace():
+    """Call pdb.set_trace in the caller's frame.
+
+    First restore sys.stdout and sys.stderr.  Note that the streams are
+    NOT reset to whatever they were before the call once pdb is done!
+    """
+    import pdb
+    for stream in 'stdout', 'stderr':
+        output = getattr(sys, stream)
+        orig_output = getattr(sys, '__%s__' % stream)
+        if output != orig_output:
+            # Flush the output before entering pdb
+            if hasattr(output, 'getvalue'):
+                orig_output.write(output.getvalue())
+                orig_output.flush()
+            setattr(sys, stream, orig_output)
+    exc, tb = sys.exc_info()[1:]
+    if tb:
+        if isinstance(exc, AssertionError) and exc.args:
+            # The traceback is not printed yet
+            print_exc()
+        pdb.post_mortem(tb)
+    else:
+        pdb.Pdb().set_trace(sys._getframe().f_back)
 
 if __name__ == '__main__':
     doctest.testmod(optionflags = doctest.NORMALIZE_WHITESPACE)
